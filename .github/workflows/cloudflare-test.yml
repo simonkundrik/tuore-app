@@ -1,0 +1,52 @@
+name: Cloudflare reachability test
+
+on:
+  push:
+    paths:
+      - ".github/workflows/cloudflare-test.yml"
+      - "scraper/cf_test.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Chrome and Xvfb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xvfb
+          wget -q -O /tmp/chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt-get install -y /tmp/chrome.deb
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Playwright client
+        run: pip install playwright
+
+      - name: Launch Chrome with remote debugging under Xvfb
+        run: |
+          xvfb-run -a --server-args="-screen 0 1280x1024x24" \
+            google-chrome-stable --remote-debugging-port=9333 \
+            --user-data-dir=/tmp/chrome-profile --no-first-run \
+            --no-default-browser-check about:blank \
+            > /tmp/chrome.log 2>&1 &
+          sleep 3
+
+      - name: Run reachability test
+        run: python scraper/cf_test.py
+
+      - name: Commit results back to repo
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add scraper/cf_test_result.json scraper/cf_test_screenshot.png
+          git commit -m "Cloudflare reachability test result [skip ci]" || echo "nothing to commit"
+          git push

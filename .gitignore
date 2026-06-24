@@ -1,0 +1,6 @@
+scraper/chrome-profile/
+scraper/probe*.py
+scraper/full_response.json
+scraper/*.png
+!scraper/cf_test_screenshot.png
+__pycache__/
