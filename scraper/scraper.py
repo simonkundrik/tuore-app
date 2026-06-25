@@ -13,10 +13,18 @@ Why this works the way it does:
   site cookies are kept between runs, so repeat runs get smoother (and put less load
   on K-Ruoka's edge) instead of re-proving "not a bot" from scratch every time.
 
+Matching strategy:
+- Free-text search ranks by relevance, not by what we actually meant - "Pirkka
+  pakastebrokkoli" can come back top-ranked as washed potatoes. Each ingredient
+  below carries required/excluded keywords; we scan the top results and pick the
+  first one that actually satisfies them, and flag it "uncertain" if none do
+  (falling back to the top hit) so a bad match is visible rather than silent.
+
 Usage:
     python scraper.py
 Output:
-    stock_data.json - {ean, name, brand, price, unitPrice, inStockAtStore, scrapedAt}
+    stock_data.json - one row per app ingredient key with product, price, and
+    in-store availability for K-Supermarket Hyvätuuli.
 """
 import json
 import re
@@ -33,20 +41,46 @@ DEBUG_PORT = 9333
 STORE_NAME = "Hyvätuuli"
 STORE_ID = "S224"
 
-# Search terms covering the ingredients used by the Tuore recipe catalog.
-SEARCH_TERMS = [
-    "Myllyn Paras Iso Hiutale", "Pirkka pakastemarjat", "Valio kevytmaito",
-    "Pirkka kananmunat", "Vaasan Ruispalat", "Arla viipale",
-    "Pirkka lohifile", "Pirkka tuorepinaatti", "Pirkka porkkana",
-    "Pirkka keltasipuli", "Oddlygood kauraruokakerma", "Pirkka tilli",
-    "Pirkka punaiset linssit", "Pirkka tomaattimurska", "Knorr kasvisliemikuutio",
-    "Atria broilerin koipireisifile", "Pirkka ruokaperuna", "Santa Maria paprikajauhe",
-    "Arla kreikkalainen jogurtti", "Atria broilerinfileesuikale", "Pirkka kurkku",
-    "Santa Maria tortillaleivat", "Pirkka hummus", "Pirkka salaattisekoitus",
-    "Pirkka paprika", "Chiquita banaani", "Oddlygood kauramaito",
-    "Pirkka jasmiiniriisi", "Pirkka jauheliha", "Pirkka tonnikala",
-    "Pirkka spagetti", "Pirkka pakastebrokkoli", "Pirkka fetapala",
-    "Pirkka valkosipuli", "Pirkka sitruuna", "Pirkka punajuuri",
+# key matches the product id used in the app's data model (see index.html's P dict).
+# include/exclude keywords are matched against the Finnish product name, lowercased.
+INGREDIENTS = [
+    {"key": "oats",         "search": "Myllyn Paras hiutale",         "include": ["hiutale"],      "exclude": []},
+    {"key": "berries",      "search": "pakastemarjat",                "include": ["marja"],         "exclude": []},
+    {"key": "milk",         "search": "kevytmaito",                   "include": ["maito"],         "exclude": ["kaura"]},
+    {"key": "eggs",         "search": "kananmunat",                   "include": ["kananmuna"],     "exclude": []},
+    {"key": "bread",        "search": "ruispalat",                    "include": ["ruisp"],         "exclude": []},
+    {"key": "cheese",       "search": "juustoviipale",                "include": ["viipale"],       "exclude": []},
+    {"key": "salmon",       "search": "lohifile",                     "include": ["lohi"],          "exclude": []},
+    {"key": "spinach",      "search": "tuorepinaatti",                "include": ["pinaatti"],      "exclude": []},
+    {"key": "carrot",       "search": "porkkana",                     "include": ["porkkana"],      "exclude": []},
+    {"key": "onion",        "search": "keltasipuli",                  "include": ["sipuli"],        "exclude": ["valkosipuli"]},
+    {"key": "oatcream",     "search": "kauraruokakerma",              "include": ["kerma"],         "exclude": []},
+    {"key": "dill",         "search": "tilli",                        "include": ["tilli"],         "exclude": []},
+    {"key": "lentils",      "search": "punaiset linssit",             "include": ["linssi"],        "exclude": []},
+    {"key": "tomato",       "search": "tomaattimurska",               "include": ["tomaattimurska"],"exclude": []},
+    {"key": "stockcube",    "search": "kasvisliemikuutio",            "include": ["liemikuutio"],   "exclude": []},
+    {"key": "chicken",      "search": "broilerin koipireisifile",     "include": ["koipireisi"],    "exclude": []},
+    {"key": "potato",       "search": "ruokaperuna",                  "include": ["peruna"],        "exclude": []},
+    {"key": "paprika",      "search": "paprikajauhe",                 "include": ["paprikajauhe"],  "exclude": []},
+    {"key": "yogurt",       "search": "kreikkalainen jogurtti",       "include": ["jogurtti"],      "exclude": []},
+    {"key": "cookedchicken","search": "broilerinfileesuikale",        "include": ["suikale"],       "exclude": []},
+    {"key": "cucumber",     "search": "kurkku",                       "include": ["kurkku"],        "exclude": ["mauste", "viipaleet"]},
+    {"key": "tortilla",     "search": "tortillaleivat",               "include": ["tortilla"],      "exclude": []},
+    {"key": "hummus",       "search": "hummus",                       "include": ["hummus"],        "exclude": []},
+    {"key": "salad",        "search": "salaattisekoitus",             "include": ["salaatti"],      "exclude": []},
+    {"key": "pepper",       "search": "paprika",                      "include": ["paprika"],       "exclude": ["jauhe", "murska"]},
+    {"key": "banana",       "search": "banaani",                      "include": ["banaani"],       "exclude": []},
+    {"key": "plantmilk",    "search": "kauramaito",                   "include": ["kauramaito"],    "exclude": []},
+    {"key": "rice",         "search": "jasmiiniriisi",                "include": ["riisi"],         "exclude": []},
+    {"key": "mince",        "search": "naudan jauheliha",             "include": ["jauheliha"],     "exclude": []},
+    {"key": "tuna",         "search": "tonnikala",                    "include": ["tonnikala"],     "exclude": []},
+    {"key": "pasta",        "search": "spagetti",                     "include": ["spagetti"],      "exclude": ["jauheliha"]},
+    {"key": "broccoli",     "search": "pakastebrokkoli",              "include": ["brokkoli"],      "exclude": []},
+    {"key": "feta",         "search": "fetapala",                     "include": ["feta"],          "exclude": []},
+    {"key": "garlic",       "search": "valkosipuli",                  "include": ["valkosipuli"],   "exclude": ["murska", "tomaatti"]},
+    {"key": "lemon",        "search": "sitruuna",                     "include": ["sitruuna"],      "exclude": ["vesi", "kivennäis"]},
+    {"key": "beetroot",     "search": "punajuuri",                    "include": ["punajuuri"],     "exclude": ["salaatti"]},
+    {"key": "oliveoil",     "search": "oliiviöljy",                   "include": ["oliiviöljy"],    "exclude": []},
 ]
 
 
@@ -98,7 +132,7 @@ def ensure_store_selected(page):
     page.wait_for_timeout(1500)
 
 
-def search_product(page, term):
+def raw_search(page, term):
     results = []
 
     def on_response(response):
@@ -118,12 +152,12 @@ def search_product(page, term):
 
     hits = results[0].get("result", [])
     out = []
-    for hit in hits[:5]:
+    for hit in hits[:10]:
         p = hit.get("product", {})
         pricing = p.get("mobilescan", {}).get("pricing", {}).get("normal", {})
         out.append({
             "ean": p.get("ean"),
-            "name": p.get("localizedName", {}).get("finnish"),
+            "name": p.get("localizedName", {}).get("finnish") or "",
             "brand": p.get("brand", {}).get("name"),
             "price": pricing.get("price"),
             "unit": pricing.get("unit"),
@@ -133,6 +167,14 @@ def search_product(page, term):
             "storeId": p.get("store", {}).get("id"),
         })
     return out
+
+
+def pick_best_match(candidates, include, exclude):
+    for c in candidates:
+        name = c["name"].lower()
+        if any(kw.lower() in name for kw in include) and not any(kw.lower() in name for kw in exclude):
+            return c, True
+    return (candidates[0], False) if candidates else (None, False)
 
 
 def main():
@@ -145,23 +187,35 @@ def main():
 
             ensure_store_selected(page)
 
-            all_results = {}
-            for term in SEARCH_TERMS:
-                matches = search_product(page, term)
-                all_results[term] = matches
-                top = matches[0] if matches else None
-                print(f"{term!r:45s} -> {top['name'] if top else 'NO MATCH'} "
-                      f"{('€' + str(top['price'])) if top else ''} "
-                      f"{'IN STOCK' if top and top['inStockAtStore'] else 'OUT/UNKNOWN' if top else ''}")
+            products = {}
+            for ing in INGREDIENTS:
+                candidates = raw_search(page, ing["search"])
+                match, confident = pick_best_match(candidates, ing["include"], ing["exclude"])
+                products[ing["key"]] = {
+                    "match": match,
+                    "confident": confident,
+                    "searchTerm": ing["search"],
+                }
+                status = "OK" if confident else ("UNCERTAIN" if match else "NO MATCH")
+                print(f"{ing['key']:14s} [{status:9s}] -> {match['name'] if match else '-'} "
+                      f"{('€' + str(match['price'])) if match else ''} "
+                      f"{'IN STOCK' if match and match['inStockAtStore'] else 'OUT' if match else ''}")
 
             out_path = Path(__file__).parent / "stock_data.json"
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump({
                     "store": {"name": f"K-Supermarket {STORE_NAME}", "id": STORE_ID},
                     "scrapedAt": datetime.now(timezone.utc).isoformat(),
-                    "searches": all_results,
+                    "products": products,
                 }, f, ensure_ascii=False, indent=2)
             print(f"\nSaved {out_path}")
+
+            uncertain = [k for k, v in products.items() if v["match"] and not v["confident"]]
+            missing = [k for k, v in products.items() if not v["match"]]
+            if uncertain:
+                print(f"Uncertain matches (verify manually): {uncertain}")
+            if missing:
+                print(f"No match at all: {missing}")
     finally:
         chrome_proc.terminate()
 

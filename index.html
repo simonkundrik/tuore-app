@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>Tuore</title>
 <meta name="theme-color" content="#0F6E56" />
-<meta name="description" content="Healthy, affordable meals from what's in stock at S-market Pasaatti and K-Supermarket Hyvätuuli in Kotka." />
+<meta name="description" content="Healthy, affordable meals from what's actually in stock at K-Supermarket Hyvätuuli in Kotka." />
 <link rel="manifest" href="manifest.json" />
 <link rel="apple-touch-icon" href="icons/icon-192.png" />
 <link rel="icon" href="icons/icon-192.png" />
@@ -59,10 +59,10 @@ input[type=range]{height:18px;}
 .type-btn{font-size:11px;padding:5px 10px;border-radius:999px;background:none;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;}
 .type-btn.active{background:var(--color-background-info);color:var(--color-text-info);border-color:var(--color-border-info);}
 .ing-card{margin:0 16px 8px;padding:10px;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);}
-.offer{display:flex;gap:8px;padding:6px 0;border-top:0.5px solid var(--color-border-tertiary);}
-.offer-img{width:32px;height:32px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.offer{display:flex;gap:8px;padding:2px 0;}
+.offer-img{width:36px;height:36px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .offer-body{flex:1;min-width:0;}
-.offer-top{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:500;}
+.offer-top{display:flex;justify-content:space-between;gap:8px;font-size:13px;font-weight:600;}
 .offer-sub{font-size:11px;color:var(--color-text-secondary);margin-top:1px;}
 .like-btn{background:none;border:none;padding:0;cursor:pointer;color:var(--color-text-secondary);display:inline-flex;align-items:center;}
 .like-btn.liked{color:#D4537E;}
@@ -77,7 +77,7 @@ input[type=range]{height:18px;}
 <div id="app">
 
 <div class="app-header">
-<div><p style="font-weight:600;font-size:16px;margin:0;">Tuore</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;"><i class="ti ti-map-pin" style="font-size:12px;vertical-align:-1px;" aria-hidden="true"></i> Kotka · 2 stores tracked</p></div>
+<div><p style="font-weight:600;font-size:16px;margin:0;">Tuore</p><p style="font-size:12px;color:var(--color-text-secondary);margin:0;"><i class="ti ti-building-store" style="font-size:12px;vertical-align:-1px;" aria-hidden="true"></i> K-Supermarket Hyvätuuli, Kotka</p></div>
 <i class="ti ti-bell" style="font-size:20px;color:var(--color-text-secondary);" aria-hidden="true"></i>
 </div>
 
@@ -119,22 +119,9 @@ input[type=range]{height:18px;}
 <div id="detail-body"></div>
 </div>
 
-<div class="screen" id="screen-compare">
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px 4px;">
-<div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;"><p style="font-size:13px;font-weight:600;margin:0 0 2px;color:var(--color-text-info);">S-market Pasaatti</p><p style="font-size:11px;color:var(--color-text-secondary);margin:0;">1.2 km · open to 21:00</p></div>
-<div style="border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px;"><p style="font-size:13px;font-weight:600;margin:0 0 2px;color:#4A1B0C;">K-Supermarket Hyvätuuli</p><p style="font-size:11px;color:var(--color-text-secondary);margin:0;">2.4 km · open to 21:00</p></div>
-</div>
-<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:14px 16px 4px;">Staple price check</p>
-<div class="row"><span>Chicken breast 1kg</span><span><span style="color:var(--color-text-secondary);">S €8.95</span> · <strong style="font-weight:600;color:#4A1B0C;">K €8.49</strong></span></div>
-<div class="row"><span>Rice 1kg</span><span><strong style="font-weight:600;color:var(--color-text-info);">S €1.79</strong> · <span style="color:var(--color-text-secondary);">K €1.89</span></span></div>
-<div class="row"><span>Milk 1L</span><span><span style="color:var(--color-text-secondary);">S €1.15</span> · <strong style="font-weight:600;color:#4A1B0C;">K €1.09</strong></span></div>
-<div class="row" style="border-bottom:none;"><span>Eggs 10pk <span style="color:var(--color-text-warning);">· low at S</span></span><span><strong style="font-weight:600;color:var(--color-text-info);">S €2.69</strong> · <span style="color:var(--color-text-secondary);">K €2.79</span></span></div>
-</div>
-
 <div class="screen" id="screen-profile">
-<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:14px 16px 4px;">Your stores</p>
-<div class="row"><span><i class="ti ti-building-store" style="vertical-align:-2px;margin-right:6px;" aria-hidden="true"></i>S-market Pasaatti</span><i class="ti ti-check" style="color:var(--color-text-success);" aria-hidden="true"></i></div>
-<div class="row" style="border-bottom:none;"><span><i class="ti ti-building-store" style="vertical-align:-2px;margin-right:6px;" aria-hidden="true"></i>K-Supermarket Hyvätuuli</span><i class="ti ti-check" style="color:var(--color-text-success);" aria-hidden="true"></i></div>
+<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:14px 16px 4px;">Your store</p>
+<div class="row" style="border-bottom:none;"><span><i class="ti ti-building-store" style="vertical-align:-2px;margin-right:6px;" aria-hidden="true"></i>K-Supermarket Hyvätuuli, Kotka</span><i class="ti ti-check" style="color:var(--color-text-success);" aria-hidden="true"></i></div>
 <div style="margin:10px 16px;padding:8px;border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);text-align:center;font-size:12px;color:var(--color-text-secondary);"><i class="ti ti-plus" style="vertical-align:-2px;" aria-hidden="true"></i> Add another store</div>
 <p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:16px 16px 4px;">Your kitchen equipment</p>
 <p style="font-size:11px;color:var(--color-text-tertiary);margin:0 16px 8px;">Tap to mark what you own — selected items turn blue with a checkmark, and the Home feed updates right away.</p>
@@ -156,72 +143,72 @@ input[type=range]{height:18px;}
 
 <div class="tabbar">
 <button class="tab-btn active" data-tab="home" onclick="showScreen('home')"><i class="ti ti-home" style="font-size:20px;" aria-hidden="true"></i>Home</button>
-<button class="tab-btn" data-tab="compare" onclick="showScreen('compare')"><i class="ti ti-arrows-left-right" style="font-size:20px;" aria-hidden="true"></i>Compare</button>
 <button class="tab-btn" data-tab="profile" onclick="showScreen('profile')"><i class="ti ti-user" style="font-size:20px;" aria-hidden="true"></i>Profile</button>
 </div>
 
 </div>
 
 <script>
+const SCRAPED_AT = "2026-06-25T00:52:15.571928+00:00";
 const P={
-oats:{nm:'Rolled oats',ic:'ti-coffee',s:{p:'Myllyn Paras Iso Hiutale',pk:'1kg',pr:2.49,st:2,pq:1000,bk:{p:'Myllyn Paras Iso Hiutale',pk:'2kg',pr:4.29,pq:2000}},k:{p:'Pirkka Isohiutaleet',pk:'900g',pr:1.95,st:2}},
-berries:{nm:'Frozen mixed berries',ic:'ti-apple',s:{p:'Rainbow Pakastetut Metsämarjat',pk:'400g',pr:2.29,st:2},k:{p:'Pirkka Pakastemarjat',pk:'400g',pr:2.15,st:1,pq:400,bk:{p:'Pirkka Pakastemarjat',pk:'1kg',pr:4.49,pq:1000}}},
-milk:{nm:'Milk',ic:'ti-glass',s:{p:'Valio Kevytmaito',pk:'1L',pr:1.15,st:2},k:{p:'Valio Kevytmaito',pk:'1L',pr:1.09,st:2}},
-eggs:{nm:'Eggs',ic:'ti-egg',s:{p:'Rainbow Kananmunat',pk:'10kpl',pr:2.69,st:2},k:{p:'Pirkka Kananmunat',pk:'10kpl',pr:2.79,st:2}},
-bread:{nm:'Wholegrain bread',ic:'ti-bread',s:{p:'Vaasan Ruispalat',pk:'500g',pr:2.95,st:2},k:{p:'Vaasan Ruispalat',pk:'500g',pr:3.10,st:2}},
-cheese:{nm:'Cheese slice',ic:'ti-cheese',s:{p:'Valio Edam-viipale',pk:'400g',pr:3.49,st:2},k:{p:'Arla Sandwich-viipale',pk:'350g',pr:3.20,st:1}},
-salmon:{nm:'Salmon fillet',ic:'ti-fish',s:{p:'Kotimaista Lohifile',pk:'400g',pr:5.90,st:2},k:{p:'Pirkka Lohifile',pk:'400g',pr:6.40,st:2}},
-spinach:{nm:'Spinach',ic:'ti-leaf',s:{p:'Rainbow Pakastepinaatti',pk:'400g',pr:2.49,st:0},k:{p:'Pirkka Tuorepinaatti',pk:'200g',pr:1.20,st:2}},
-carrot:{nm:'Carrot',ic:'ti-carrot',s:{p:'Kotimaista Porkkana',pk:'1kg',pr:1.39,st:2},k:{p:'Pirkka Porkkana',pk:'1kg',pr:1.45,st:2}},
-onion:{nm:'Onion',ic:'ti-carrot',s:{p:'Kotimaista Keltasipuli',pk:'1kg',pr:1.19,st:2},k:{p:'Pirkka Keltasipuli',pk:'1kg',pr:1.25,st:2}},
-oatcream:{nm:'Oat cream',ic:'ti-glass',s:{p:'Oddlygood Kauraruokakerma',pk:'2dl',pr:1.10,st:2},k:{p:'Oddlygood Kauraruokakerma',pk:'2dl',pr:1.05,st:1}},
-dill:{nm:'Dill',ic:'ti-leaf',s:{p:'Kotimaista Tilli',pk:'nippu',pr:1.20,st:2},k:{p:'Pirkka Tilli',pk:'nippu',pr:1.10,st:2}},
-lentils:{nm:'Red lentils',ic:'ti-bowl',s:{p:'Menu Punaiset Linssit',pk:'400g',pr:1.95,st:2,pq:400,bk:{p:'Menu Punaiset Linssit',pk:'1kg',pr:4.20,pq:1000}},k:{p:'Pirkka Punaiset Linssit',pk:'400g',pr:2.05,st:2}},
-tomato:{nm:'Canned tomatoes',ic:'ti-bowl',s:{p:'Menu Tomaattimurska',pk:'400g',pr:0.95,st:2},k:{p:'Pirkka Tomaattimurska',pk:'400g',pr:0.89,st:2}},
-stockcube:{nm:'Vegetable stock cube',ic:'ti-bowl',s:{p:'Knorr Kasvisliemikuutio',pk:'8kpl',pr:1.59,st:2},k:{p:'Knorr Kasvisliemikuutio',pk:'8kpl',pr:1.65,st:2}},
-chicken:{nm:'Chicken thigh fillet',ic:'ti-meat',s:{p:'Atria Broilerin Koipireisifile',pk:'600g',pr:6.90,st:2,pq:600,bk:{p:'Atria Broilerin Koipireisifile',pk:'1.2kg',pr:12.90,pq:1200}},k:{p:'Atria Broilerin Koipireisifile',pk:'600g',pr:6.50,st:2}},
-potato:{nm:'Potato',ic:'ti-carrot',s:{p:'Kotimaista Ruokaperuna',pk:'1kg',pr:0.99,st:2},k:{p:'Pirkka Ruokaperuna',pk:'1kg',pr:1.05,st:2}},
-paprika:{nm:'Paprika spice',ic:'ti-bowl',s:{p:'Santa Maria Paprikajauhe',pk:'48g',pr:2.49,st:1},k:{p:'Santa Maria Paprikajauhe',pk:'48g',pr:2.39,st:2}},
-yogurt:{nm:'Greek yogurt',ic:'ti-bowl',s:{p:'Valio Oikein Hyvä Kreikkalaistyylinen Jogurtti',pk:'200g',pr:1.10,st:2},k:{p:'Arla Foss Kreikkalainen Jogurtti',pk:'200g',pr:1.15,st:2}},
-cookedchicken:{nm:'Cooked chicken breast',ic:'ti-meat',s:{p:'Atria Broilerinfileesuikale',pk:'200g',pr:2.80,st:2},k:{p:'Atria Broilerinfileesuikale',pk:'200g',pr:2.60,st:1}},
-cucumber:{nm:'Cucumber',ic:'ti-carrot',s:{p:'Kotimaista Kurkku',pk:'1kpl',pr:0.79,st:2},k:{p:'Pirkka Kurkku',pk:'1kpl',pr:0.85,st:2}},
-tortilla:{nm:'Tortilla wrap',ic:'ti-bread',s:{p:'Santa Maria Tortillaleivät',pk:'8kpl',pr:2.49,st:2},k:{p:'Santa Maria Tortillaleivät',pk:'8kpl',pr:2.39,st:2}},
-hummus:{nm:'Hummus',ic:'ti-bowl',s:{p:'Menu Hummus',pk:'200g',pr:1.95,st:2},k:{p:'Pirkka Hummus',pk:'200g',pr:1.79,st:1,pq:200,bk:{p:'Pirkka Hummus',pk:'400g',pr:3.19,pq:400}}},
-salad:{nm:'Mixed salad leaves',ic:'ti-leaf',s:{p:'Eat Lucky Salaattisekoitus',pk:'150g',pr:2.29,st:2},k:{p:'Pirkka Salaattisekoitus',pk:'150g',pr:1.99,st:2}},
-pepper:{nm:'Bell pepper',ic:'ti-carrot',s:{p:'Kotimaista Paprika',pk:'1kpl',pr:0.89,st:0},k:{p:'Pirkka Paprika',pk:'1kpl',pr:0.69,st:2}},
-banana:{nm:'Banana',ic:'ti-apple',s:{p:'Chiquita Banaani',pk:'1kpl',pr:0.35,st:2},k:{p:'Chiquita Banaani',pk:'1kpl',pr:0.38,st:2}},
-plantmilk:{nm:'Plant milk',ic:'ti-glass',s:{p:'Oddlygood Kauramaito',pk:'1L',pr:2.39,st:2},k:{p:'Oddlygood Kauramaito',pk:'1L',pr:2.29,st:2}},
-rice:{nm:'Rice',ic:'ti-bowl',s:{p:'Kotimaista Jasmiiniriisi',pk:'1kg',pr:1.79,st:2},k:{p:'Pirkka Jasmiiniriisi',pk:'1kg',pr:1.89,st:2}},
-mince:{nm:'Ground beef',ic:'ti-meat',s:{p:'Kotimaista Jauheliha',pk:'400g',pr:4.49,st:2},k:{p:'Pirkka Jauheliha',pk:'400g',pr:4.29,st:1}},
-tuna:{nm:'Canned tuna',ic:'ti-fish',s:{p:'Rainbow Tonnikala Vedessä',pk:'185g',pr:1.69,st:2},k:{p:'Pirkka Tonnikala Vedessä',pk:'185g',pr:1.59,st:2}},
-pasta:{nm:'Pasta',ic:'ti-bowl',s:{p:'Myllyn Paras Spagetti',pk:'500g',pr:1.19,st:2},k:{p:'Pirkka Spagetti',pk:'500g',pr:1.05,st:2}},
-broccoli:{nm:'Broccoli',ic:'ti-leaf',s:{p:'Rainbow Pakastebrokkoli',pk:'400g',pr:1.89,st:2},k:{p:'Pirkka Pakastebrokkoli',pk:'400g',pr:1.75,st:2}},
-feta:{nm:'Feta cheese',ic:'ti-cheese',s:{p:'Apetit Fetapala',pk:'200g',pr:2.79,st:2},k:{p:'Pirkka Fetapala',pk:'200g',pr:2.49,st:1}},
-garlic:{nm:'Garlic',ic:'ti-carrot',s:{p:'Kotimaista Valkosipuli',pk:'3kpl',pr:0.99,st:2},k:{p:'Pirkka Valkosipuli',pk:'3kpl',pr:0.95,st:2}},
-lemon:{nm:'Lemon',ic:'ti-apple',s:{p:'Sitruuna',pk:'1kpl',pr:0.59,st:2},k:{p:'Pirkka Sitruuna',pk:'1kpl',pr:0.55,st:2}},
-beetroot:{nm:'Beetroot',ic:'ti-carrot',s:{p:'Kotimaista Punajuuri',pk:'1kg',pr:1.59,st:2},k:{p:'Pirkka Punajuuri',pk:'1kg',pr:1.65,st:2}},
-oliveoil:{nm:'Olive oil',ic:'ti-glass',s:{p:'Bertolli Oliiviöljy',pk:'500ml',pr:4.99,st:2},k:{p:'Bertolli Oliiviöljy',pk:'500ml',pr:4.79,st:2}}
+oats:{"nm": "Rolled oats", "ic": "ti-coffee", "product": "Elovena kaurahiutale 1 kg", "price": 2.27, "unit": "kpl", "inStock": true, "ean": "6416597113919"},
+berries:{"nm": "Frozen mixed berries", "ic": "ti-apple", "product": "Pirkka marjasekoitus 400g pakaste", "price": 2.98, "unit": "kpl", "inStock": true, "ean": "6410405302458"},
+milk:{"nm": "Milk", "ic": "ti-glass", "product": "Pirkka suomalainen kevytmaito 1l", "price": 1.09, "unit": "kpl", "inStock": true, "ean": "6410405082657"},
+eggs:{"nm": "Eggs", "ic": "ti-egg", "product": "Pirkka vapaa iso kananmuna L15 1020g", "price": 3.99, "unit": "kpl", "inStock": false, "ean": "6410405319661"},
+bread:{"nm": "Wholegrain bread", "ic": "ti-bread", "product": "Vaasan Ruispalat 660 g 12 kpl täysjyväruisleipä", "price": 2.24, "unit": "kpl", "inStock": true, "ean": "6437002001454"},
+cheese:{"nm": "Cheese slice", "ic": "ti-cheese", "product": "Valio Hyvä suomalainen Arki®juustoviipale 500 g n.36 kpl/pak", "price": 4.65, "unit": "kpl", "inStock": true, "ean": "6408430338313"},
+salmon:{"nm": "Salmon fillet", "ic": "ti-fish", "product": "Lohifilee D-leikkuu", "price": 32.9, "unit": "kg", "inStock": true, "ean": "2000460700005"},
+spinach:{"nm": "Spinach", "ic": "ti-leaf", "product": "Pirkka babypinaatti 65g", "price": 1.58, "unit": "kpl", "inStock": true, "ean": "6410405326669"},
+carrot:{"nm": "Carrot", "ic": "ti-carrot", "product": "Pirkka suomalainen pesty porkkana 1kg 1lk", "price": 1.89, "unit": "kpl", "inStock": true, "ean": "6410402008896"},
+onion:{"nm": "Onion", "ic": "ti-carrot", "product": "Sipuli", "price": 0.09, "unit": "kpl", "inStock": true, "ean": "2000613700005"},
+oatcream:{"nm": "Oat cream", "ic": "ti-glass", "product": "Pirkka suomalainen kuohukerma 2dl", "price": 1.35, "unit": "kpl", "inStock": true, "ean": "6410405142597"},
+dill:{"nm": "Dill", "ic": "ti-leaf", "product": "Järvikylä tilli ruukku Suomi", "price": 2.09, "unit": "kpl", "inStock": true, "ean": "6416046654123"},
+lentils:{"nm": "Red lentils", "ic": "ti-bowl", "product": "GoGreen Punaiset Linssit 400 g", "price": 2.25, "unit": "kpl", "inStock": true, "ean": "7312787710182"},
+tomato:{"nm": "Canned tomatoes", "ic": "ti-bowl", "product": "Pirkka tomaattimurska 500 g", "price": 1.09, "unit": "kpl", "inStock": true, "ean": "6410402011865"},
+stockcube:{"nm": "Vegetable stock cube", "ic": "ti-bowl", "product": "Knorr kasvisliemikuutio 10x10g", "price": 1.65, "unit": "kpl", "inStock": true, "ean": "8714100783498"},
+chicken:{"nm": "Chicken thigh fillet", "ic": "ti-meat", "product": "Pirkka suomalainen kanan koipireisi marinoitu 3kpl/n.1,2kg", "price": 3.94, "unit": "kpl", "inStock": true, "ean": "2386495800003"},
+potato:{"nm": "Potato", "ic": "ti-carrot", "product": "Apetit peruna&keittokasvis kasvissekoitus 750g pakaste", "price": 2.08, "unit": "kpl", "inStock": true, "ean": "6430104923853"},
+paprika:{"nm": "Paprika spice", "ic": "ti-bowl", "product": "Pirkka paprikajauhe 25g", "price": 0.65, "unit": "kpl", "inStock": true, "ean": "6410405240569"},
+yogurt:{"nm": "Greek yogurt", "ic": "ti-bowl", "product": "Arla lempi kreikkalainen jogurtti 6% 300g laktoositon", "price": 1.49, "unit": "kpl", "inStock": true, "ean": "6413300019667"},
+cookedchicken:{"nm": "Cooked chicken breast", "ic": "ti-meat", "product": "Jyväbroiler Maustamaton Iso Suikale Broilerin Fileestä 330 g", "price": 4.35, "unit": "kpl", "inStock": true, "ean": "6407830038496"},
+cucumber:{"nm": "Cucumber", "ic": "ti-carrot", "product": "Kurkku Suomi", "price": 0.87, "unit": "kpl", "inStock": true, "ean": "2000604700007"},
+tortilla:{"nm": "Tortilla wrap", "ic": "ti-bread", "product": "Hetki meksikolainen kanatortillaleipä 210g", "price": 4.75, "unit": "kpl", "inStock": true, "ean": "6406510703945"},
+hummus:{"nm": "Hummus", "ic": "ti-bowl", "product": "Pirkka Parhaat hummus 190g original", "price": 2.38, "unit": "kpl", "inStock": true, "ean": "6410405221131"},
+salad:{"nm": "Mixed salad leaves", "ic": "ti-leaf", "product": "Pirkka Provence salaattisekoitus 150 g", "price": 2.49, "unit": "kpl", "inStock": true, "ean": "6410405055194"},
+pepper:{"nm": "Bell pepper", "ic": "ti-carrot", "product": "Pirkka suippopaprika 200g 1lk", "price": 1.59, "unit": "kpl", "inStock": true, "ean": "6410405051844"},
+banana:{"nm": "Banana", "ic": "ti-apple", "product": "Pirkka banaani", "price": 0.32, "unit": "kpl", "inStock": true, "ean": "2000818700008"},
+plantmilk:{"nm": "Plant milk", "ic": "ti-glass", "product": "Oddlygood Barista kaurajuoma 1l gluteeniton UHT", "price": 1.98, "unit": "kpl", "inStock": true, "ean": "6430081490041"},
+rice:{"nm": "Rice", "ic": "ti-bowl", "product": "Pirkka jasmiiniriisi 1kg", "price": 2.59, "unit": "kpl", "inStock": true, "ean": "6410405350091"},
+mince:{"nm": "Ground beef", "ic": "ti-meat", "product": "Pirkka suomalainen naudan jauheliha 10% 400g", "price": 6.99, "unit": "kpl", "inStock": true, "ean": "6410405290175"},
+tuna:{"nm": "Canned tuna", "ic": "ti-fish", "product": "Pirkka tonnikalapalat öljyssä 200g/150g MSC", "price": 1.98, "unit": "kpl", "inStock": true, "ean": "6410405324078"},
+pasta:{"nm": "Pasta", "ic": "ti-bowl", "product": "K-Menu spagetti 1kg", "price": 0.89, "unit": "kpl", "inStock": true, "ean": "6410405294258"},
+broccoli:{"nm": "Broccoli", "ic": "ti-leaf", "product": "Pirkka parsakaali 450 g pakaste", "price": 1.55, "unit": "kpl", "inStock": true, "ean": "6410405067555"},
+feta:{"nm": "Feta cheese", "ic": "ti-cheese", "product": "Mäkitalon Farmi Tupla kana-fetasalaatti 250g", "price": 5.27, "unit": "kpl", "inStock": true, "ean": "6409100076054"},
+garlic:{"nm": "Garlic", "ic": "ti-carrot", "product": "Valkosipuli ulkomainen", "price": 0.37, "unit": "kpl", "inStock": true, "ean": "2000615100001"},
+lemon:{"nm": "Lemon", "ic": "ti-apple", "product": "Sitruuna", "price": 0.66, "unit": "kpl", "inStock": true, "ean": "2000528900002"},
+beetroot:{"nm": "Beetroot", "ic": "ti-carrot", "product": "Felix viipaloituja punajuuria mausteliemessä 570/380g", "price": 2.69, "unit": "kpl", "inStock": true, "ean": "6424908512207"},
+oliveoil:{"nm": "Olive oil", "ic": "ti-glass", "product": "Borges Ekstra neitsytoliiviöljy 500ml", "price": 7.26, "unit": "kpl", "inStock": true, "ean": "8410179100036"}
 };
-const EQNAMES={pot:'Pot',pan:'Frying pan',oven:'Oven',blender:'Blender'};
 const meals=[
-{id:'oats',name:'Oat porridge & berries',icon:'ti-coffee',type:['breakfast','snack'],filters:['budget','vegan','veg','quick'],tags:['Vegan','Quick'],time:5,protein:8,kcal:280,servings:1,equip:['pot'],steps:['Bring the milk to a gentle simmer in a pot.','Stir in the oats and cook 3-4 min, stirring often.','Top with the berries and serve warm.'],ing:[{ref:'oats',sf:.08,kf:.09},{ref:'berries',sf:.25,kf:.25},{ref:'milk',sf:.2,kf:.2}]},
-{id:'omelette',name:'Omelette & wholegrain toast',icon:'ti-egg',type:['breakfast'],filters:['budget','protein','quick','veg'],tags:['Protein','Quick'],time:10,protein:22,kcal:360,servings:1,equip:['pan'],steps:['Whisk the eggs with a pinch of salt.','Melt a little butter in a frying pan and pour in the eggs.','Cook 2-3 min, fold in the cheese, then fold the omelette in half.','Toast the bread and serve alongside.'],ing:[{ref:'eggs',sf:.3,kf:.3},{ref:'bread',sf:.14,kf:.14},{ref:'cheese',sf:.05,kf:.06}]},
-{id:'salmon',name:'Salmon & vegetable soup',icon:'ti-fish',type:['lunch','dinner'],filters:['protein'],tags:['Protein','Omega-3'],time:25,protein:32,kcal:410,servings:2,equip:['pot'],steps:['Sauté the onion and carrot in a pot for 3 min.','Add water or stock and bring to a boil.','Add the salmon and simmer 8 min until just cooked through.','Stir in the spinach and oat cream, season with dill.'],ing:[{ref:'salmon',sf:1,kf:1},{ref:'spinach',sf:.5,kf:1},{ref:'carrot',sf:.3,kf:.3},{ref:'onion',sf:.1,kf:.1},{ref:'oatcream',sf:1,kf:1},{ref:'dill',sf:1,kf:1}]},
-{id:'lentil',name:'Lentil & vegetable soup',icon:'ti-leaf',type:['lunch','dinner'],filters:['veg','vegan','fiber','budget'],tags:['Vegan','Fiber'],time:35,protein:14,kcal:320,servings:4,equip:['pot'],steps:['Sauté the onion and carrot in a pot for 3 min.','Add the lentils, canned tomatoes, stock cube and water.','Simmer 20-25 min until the lentils are soft.'],ing:[{ref:'lentils',sf:1,kf:1},{ref:'carrot',sf:.5,kf:.5},{ref:'onion',sf:.2,kf:.2},{ref:'tomato',sf:1,kf:1},{ref:'stockcube',sf:.13,kf:.13}]},
-{id:'chickenbake',name:'Chicken & root vegetable bake',icon:'ti-meat',type:['dinner'],filters:['protein','lowcarb'],tags:['Protein','Low-carb'],time:45,protein:38,kcal:480,servings:3,equip:['oven'],steps:['Preheat the oven to 200°C.','Toss the chicken, potato and carrot with oil and paprika.','Spread on a tray and roast 35-40 min, turning once.'],ing:[{ref:'chicken',sf:1,kf:1},{ref:'potato',sf:1,kf:1},{ref:'carrot',sf:.5,kf:.5},{ref:'onion',sf:.2,kf:.2},{ref:'paprika',sf:.2,kf:.2}]},
-{id:'yogurt',name:'Greek yogurt & chicken bowl',icon:'ti-bowl',type:['lunch','snack'],filters:['protein','quick'],tags:['Protein','Quick'],time:10,protein:28,kcal:340,servings:1,equip:[],steps:['Spoon the yogurt into a bowl.','Top with the sliced chicken and cucumber.'],ing:[{ref:'yogurt',sf:1,kf:1},{ref:'cookedchicken',sf:.5,kf:.5},{ref:'cucumber',sf:1,kf:1}]},
-{id:'wrap',name:'Veggie hummus wrap',icon:'ti-carrot',type:['lunch','snack'],filters:['budget','veg','vegan','quick'],tags:['Vegan','Quick'],time:10,protein:11,kcal:310,servings:1,equip:[],steps:['Spread the hummus over the tortilla.','Add the salad leaves and bell pepper.','Roll up tightly and slice in half.'],ing:[{ref:'tortilla',sf:.125,kf:.125},{ref:'hummus',sf:.5,kf:.5},{ref:'salad',sf:.33,kf:.33},{ref:'pepper',sf:1,kf:1}]},
-{id:'smoothie',name:'Berry & oat smoothie',icon:'ti-glass',type:['breakfast','snack'],filters:['budget','vegan','veg','quick'],tags:['Vegan','Quick'],time:5,protein:9,kcal:220,servings:1,equip:['blender'],steps:['Add the berries, banana, oats and plant milk to a blender.','Blend until smooth and pour into a glass.'],ing:[{ref:'berries',sf:.375,kf:.375},{ref:'banana',sf:1,kf:1},{ref:'oats',sf:.03,kf:.033},{ref:'plantmilk',sf:.2,kf:.2}]},
-{id:'spaghetti',name:'Spaghetti & tomato mince sauce',icon:'ti-bowl',type:['dinner'],filters:['protein'],tags:['Protein','Family'],time:30,protein:26,kcal:520,servings:4,equip:['pot','pan'],steps:['Boil the pasta in a pot following the pack instructions.','Brown the mince with onion and garlic in a frying pan.','Stir in the canned tomatoes and simmer 10 min.','Drain the pasta and toss with the sauce.'],ing:[{ref:'pasta',sf:.8,kf:.8},{ref:'mince',sf:1,kf:1},{ref:'tomato',sf:1,kf:1},{ref:'onion',sf:.2,kf:.2},{ref:'garlic',sf:.33,kf:.33}]},
-{id:'tunapasta',name:'Tuna pasta salad',icon:'ti-fish',type:['lunch'],filters:['protein','budget'],tags:['Protein','Quick'],time:15,protein:24,kcal:430,servings:2,equip:['pot'],steps:['Boil the pasta in a pot, then drain and cool.','Toss with the tuna, salad leaves and cucumber.','Squeeze over the lemon and serve.'],ing:[{ref:'pasta',sf:.4,kf:.4},{ref:'tuna',sf:1,kf:1},{ref:'salad',sf:.33,kf:.33},{ref:'cucumber',sf:1,kf:1},{ref:'lemon',sf:.5,kf:.5}]},
-{id:'friedrice',name:'Chicken fried rice',icon:'ti-bowl',type:['dinner','lunch'],filters:['protein'],tags:['Protein','Quick'],time:20,protein:29,kcal:470,servings:3,equip:['pot','pan'],steps:['Cook the rice in a pot (or use leftover cooked rice).','Fry the chicken, carrot and onion in a pan until cooked.','Push to one side, scramble in the eggs, then mix everything together.'],ing:[{ref:'rice',sf:.4,kf:.4},{ref:'chicken',sf:.5,kf:.5},{ref:'carrot',sf:.3,kf:.3},{ref:'onion',sf:.2,kf:.2},{ref:'eggs',sf:.2,kf:.2}]},
-{id:'beetfeta',name:'Beetroot & feta salad',icon:'ti-leaf',type:['lunch','snack'],filters:['veg','lowcarb','quick'],tags:['Vegetarian','Low-carb'],time:10,protein:9,kcal:260,servings:2,equip:[],steps:['Slice the beetroot and arrange with the salad leaves.','Crumble over the feta and drizzle with olive oil and lemon.'],ing:[{ref:'beetroot',sf:.5,kf:.5},{ref:'salad',sf:.33,kf:.33},{ref:'feta',sf:.5,kf:.5},{ref:'oliveoil',sf:.1,kf:.1},{ref:'lemon',sf:.5,kf:.5}]},
-{id:'broccolisoup',name:'Broccoli & cheese soup',icon:'ti-leaf',type:['lunch','dinner'],filters:['veg','lowcarb'],tags:['Vegetarian','Low-carb'],time:25,protein:13,kcal:310,servings:3,equip:['pot','blender'],steps:['Simmer the broccoli, potato and onion in a pot with stock until soft.','Blend until smooth.','Stir in the cheese until melted.'],ing:[{ref:'broccoli',sf:1,kf:1},{ref:'potato',sf:.5,kf:.5},{ref:'onion',sf:.2,kf:.2},{ref:'cheese',sf:.25,kf:.29},{ref:'stockcube',sf:.13,kf:.13}]},
-{id:'pancakes',name:'Banana oat pancakes',icon:'ti-coffee',type:['breakfast'],filters:['veg','quick'],tags:['Vegetarian','Quick'],time:15,protein:14,kcal:380,servings:2,equip:['pan'],steps:['Mash the banana and whisk with the eggs, oats and milk.','Cook spoonfuls in a frying pan, about 2 min per side.'],ing:[{ref:'oats',sf:.15,kf:.17},{ref:'banana',sf:2,kf:2},{ref:'eggs',sf:.2,kf:.2},{ref:'milk',sf:.1,kf:.1}]},
-{id:'stirfry',name:'Garlic chicken & broccoli stir-fry',icon:'ti-meat',type:['dinner'],filters:['protein','lowcarb'],tags:['Protein','Low-carb'],time:20,protein:35,kcal:440,servings:2,equip:['pot','pan'],steps:['Cook the rice in a pot.','Stir-fry the chicken in a pan until browned.','Add the broccoli, garlic and paprika, cook 5 min more.','Serve over the rice.'],ing:[{ref:'chicken',sf:1,kf:1},{ref:'broccoli',sf:.5,kf:.5},{ref:'garlic',sf:.67,kf:.67},{ref:'rice',sf:.4,kf:.4},{ref:'paprika',sf:.15,kf:.15}]},
-{id:'tunasandwich',name:'Tuna & cucumber sandwich',icon:'ti-fish',type:['lunch','snack'],filters:['protein','budget','quick'],tags:['Protein','Quick'],time:5,protein:20,kcal:310,servings:1,equip:[],steps:['Mix the tuna with a little mayo if you like.','Layer onto the bread with cheese and cucumber.'],ing:[{ref:'bread',sf:.14,kf:.14},{ref:'tuna',sf:1,kf:1},{ref:'cucumber',sf:.5,kf:.5},{ref:'cheese',sf:.05,kf:.06}]}
+{id:'oats',name:'Oat porridge & berries',icon:'ti-coffee',type:['breakfast','snack'],filters:['budget','vegan','veg','quick'],tags:['Vegan','Quick'],time:5,protein:8,kcal:280,servings:1,equip:['pot'],steps:['Bring the milk to a gentle simmer in a pot.','Stir in the oats and cook 3-4 min, stirring often.','Top with the berries and serve warm.'],ing:[{ref:'oats',frac:.08},{ref:'berries',frac:.25},{ref:'milk',frac:.2}]},
+{id:'omelette',name:'Omelette & wholegrain toast',icon:'ti-egg',type:['breakfast'],filters:['budget','protein','quick','veg'],tags:['Protein','Quick'],time:10,protein:22,kcal:360,servings:1,equip:['pan'],steps:['Whisk the eggs with a pinch of salt.','Melt a little butter in a frying pan and pour in the eggs.','Cook 2-3 min, fold in the cheese, then fold the omelette in half.','Toast the bread and serve alongside.'],ing:[{ref:'eggs',frac:.3},{ref:'bread',frac:.14},{ref:'cheese',frac:.05}]},
+{id:'salmon',name:'Salmon & vegetable soup',icon:'ti-fish',type:['lunch','dinner'],filters:['protein'],tags:['Protein','Omega-3'],time:25,protein:32,kcal:410,servings:2,equip:['pot'],steps:['Sauté the onion and carrot in a pot for 3 min.','Add water or stock and bring to a boil.','Add the salmon and simmer 8 min until just cooked through.','Stir in the spinach and oat cream, season with dill.'],ing:[{ref:'salmon',frac:.4},{ref:'spinach',frac:.5},{ref:'carrot',frac:.3},{ref:'onion',frac:1},{ref:'oatcream',frac:1},{ref:'dill',frac:1}]},
+{id:'lentil',name:'Lentil & vegetable soup',icon:'ti-leaf',type:['lunch','dinner'],filters:['veg','vegan','fiber','budget'],tags:['Vegan','Fiber'],time:35,protein:14,kcal:320,servings:4,equip:['pot'],steps:['Sauté the onion and carrot in a pot for 3 min.','Add the lentils, canned tomatoes, stock cube and water.','Simmer 20-25 min until the lentils are soft.'],ing:[{ref:'lentils',frac:1},{ref:'carrot',frac:.5},{ref:'onion',frac:2},{ref:'tomato',frac:1},{ref:'stockcube',frac:.13}]},
+{id:'chickenbake',name:'Chicken & root vegetable bake',icon:'ti-meat',type:['dinner'],filters:['protein','lowcarb'],tags:['Protein','Low-carb'],time:45,protein:38,kcal:480,servings:3,equip:['oven'],steps:['Preheat the oven to 200°C.','Toss the chicken, potato and carrot with oil and paprika.','Spread on a tray and roast 35-40 min, turning once.'],ing:[{ref:'chicken',frac:1},{ref:'potato',frac:1},{ref:'carrot',frac:.5},{ref:'onion',frac:2},{ref:'paprika',frac:.2}]},
+{id:'yogurt',name:'Greek yogurt & chicken bowl',icon:'ti-bowl',type:['lunch','snack'],filters:['protein','quick'],tags:['Protein','Quick'],time:10,protein:28,kcal:340,servings:1,equip:[],steps:['Spoon the yogurt into a bowl.','Top with the sliced chicken and cucumber.'],ing:[{ref:'yogurt',frac:1},{ref:'cookedchicken',frac:.5},{ref:'cucumber',frac:1}]},
+{id:'wrap',name:'Veggie hummus wrap',icon:'ti-carrot',type:['lunch','snack'],filters:['budget','veg','vegan','quick'],tags:['Vegan','Quick'],time:10,protein:11,kcal:310,servings:1,equip:[],steps:['Spread the hummus over the tortilla.','Add the salad leaves and bell pepper.','Roll up tightly and slice in half.'],ing:[{ref:'tortilla',frac:.125},{ref:'hummus',frac:.5},{ref:'salad',frac:.33},{ref:'pepper',frac:1}]},
+{id:'smoothie',name:'Berry & oat smoothie',icon:'ti-glass',type:['breakfast','snack'],filters:['budget','vegan','veg','quick'],tags:['Vegan','Quick'],time:5,protein:9,kcal:220,servings:1,equip:['blender'],steps:['Add the berries, banana, oats and plant milk to a blender.','Blend until smooth and pour into a glass.'],ing:[{ref:'berries',frac:.375},{ref:'banana',frac:1},{ref:'oats',frac:.03},{ref:'plantmilk',frac:.2}]},
+{id:'spaghetti',name:'Spaghetti & tomato mince sauce',icon:'ti-bowl',type:['dinner'],filters:['protein'],tags:['Protein','Family'],time:30,protein:26,kcal:520,servings:4,equip:['pot','pan'],steps:['Boil the pasta in a pot following the pack instructions.','Brown the mince with onion and garlic in a frying pan.','Stir in the canned tomatoes and simmer 10 min.','Drain the pasta and toss with the sauce.'],ing:[{ref:'pasta',frac:.8},{ref:'mince',frac:1},{ref:'tomato',frac:1},{ref:'onion',frac:2},{ref:'garlic',frac:.33}]},
+{id:'tunapasta',name:'Tuna pasta salad',icon:'ti-fish',type:['lunch'],filters:['protein','budget'],tags:['Protein','Quick'],time:15,protein:24,kcal:430,servings:2,equip:['pot'],steps:['Boil the pasta in a pot, then drain and cool.','Toss with the tuna, salad leaves and cucumber.','Squeeze over the lemon and serve.'],ing:[{ref:'pasta',frac:.4},{ref:'tuna',frac:1},{ref:'salad',frac:.33},{ref:'cucumber',frac:1},{ref:'lemon',frac:.5}]},
+{id:'friedrice',name:'Chicken fried rice',icon:'ti-bowl',type:['dinner','lunch'],filters:['protein'],tags:['Protein','Quick'],time:20,protein:29,kcal:470,servings:3,equip:['pot','pan'],steps:['Cook the rice in a pot (or use leftover cooked rice).','Fry the chicken, carrot and onion in a pan until cooked.','Push to one side, scramble in the eggs, then mix everything together.'],ing:[{ref:'rice',frac:.4},{ref:'chicken',frac:.5},{ref:'carrot',frac:.3},{ref:'onion',frac:2},{ref:'eggs',frac:.2}]},
+{id:'beetfeta',name:'Beetroot & feta salad',icon:'ti-leaf',type:['lunch','snack'],filters:['veg','lowcarb','quick'],tags:['Vegetarian','Low-carb'],time:10,protein:9,kcal:260,servings:2,equip:[],steps:['Slice the beetroot and arrange with the salad leaves.','Crumble over the feta and drizzle with olive oil and lemon.'],ing:[{ref:'beetroot',frac:.5},{ref:'salad',frac:.33},{ref:'feta',frac:.5},{ref:'oliveoil',frac:.1},{ref:'lemon',frac:.5}]},
+{id:'broccolisoup',name:'Broccoli & cheese soup',icon:'ti-leaf',type:['lunch','dinner'],filters:['veg','lowcarb'],tags:['Vegetarian','Low-carb'],time:25,protein:13,kcal:310,servings:3,equip:['pot','blender'],steps:['Simmer the broccoli, potato and onion in a pot with stock until soft.','Blend until smooth.','Stir in the cheese until melted.'],ing:[{ref:'broccoli',frac:1},{ref:'potato',frac:.5},{ref:'onion',frac:2},{ref:'cheese',frac:.25},{ref:'stockcube',frac:.13}]},
+{id:'pancakes',name:'Banana oat pancakes',icon:'ti-coffee',type:['breakfast'],filters:['veg','quick'],tags:['Vegetarian','Quick'],time:15,protein:14,kcal:380,servings:2,equip:['pan'],steps:['Mash the banana and whisk with the eggs, oats and milk.','Cook spoonfuls in a frying pan, about 2 min per side.'],ing:[{ref:'oats',frac:.15},{ref:'banana',frac:2},{ref:'eggs',frac:.2},{ref:'milk',frac:.1}]},
+{id:'stirfry',name:'Garlic chicken & broccoli stir-fry',icon:'ti-meat',type:['dinner'],filters:['protein','lowcarb'],tags:['Protein','Low-carb'],time:20,protein:35,kcal:440,servings:2,equip:['pot','pan'],steps:['Cook the rice in a pot.','Stir-fry the chicken in a pan until browned.','Add the broccoli, garlic and paprika, cook 5 min more.','Serve over the rice.'],ing:[{ref:'chicken',frac:1},{ref:'broccoli',frac:.5},{ref:'garlic',frac:.67},{ref:'rice',frac:.4},{ref:'paprika',frac:.15}]},
+{id:'tunasandwich',name:'Tuna & cucumber sandwich',icon:'ti-fish',type:['lunch','snack'],filters:['protein','budget','quick'],tags:['Protein','Quick'],time:5,protein:20,kcal:310,servings:1,equip:[],steps:['Mix the tuna with a little mayo if you like.','Layer onto the bread with cheese and cucumber.'],ing:[{ref:'bread',frac:.14},{ref:'tuna',frac:1},{ref:'cucumber',frac:.5},{ref:'cheese',frac:.05}]}
 ];
 
+const EQNAMES={pot:'Pot',pan:'Frying pan',oven:'Oven',blender:'Blender'};
 var liked=new Set();
 var myEquip=new Set(['pot','pan']);
 
@@ -230,25 +217,18 @@ function stockColor(inCount,total){
  if(inCount===0) return 'var(--color-text-danger)';
  return 'var(--color-text-warning)';
 }
-function offs(ing){
- var pr=P[ing.ref];
- return {s:{p:pr.s.p,pk:pr.s.pk,pr:pr.s.pr,st:pr.s.st,f:ing.sf,bk:pr.s.bk,pq:pr.s.pq},k:{p:pr.k.p,pk:pr.k.pk,pr:pr.k.pr,st:pr.k.st,f:ing.kf,bk:pr.k.bk,pq:pr.k.pq}};
-}
 function totals(m){
- var buy=0,per=0,best=0;
+ var buy=0,per=0;
  m.ing.forEach(function(ing){
-  var o=offs(ing);
-  var c=(o.s.st>0&&o.k.st>0)?(o.s.pr*o.s.f<=o.k.pr*o.k.f?o.s:o.k):(o.s.st>0?o.s:o.k);
-  buy+=c.pr; per+=c.pr*c.f;
-  var bp=c.pr*c.f;
-  if(c.bk&&c.pq){ var bf=c.f*(c.pq/c.bk.pq); var bv=c.bk.pr*bf; if(bv<bp) bp=bv; }
-  best+=bp;
+  var pr=P[ing.ref];
+  buy+=pr.price;
+  per+=pr.price*ing.frac;
  });
- return {buy:buy,per:per/m.servings,best:best/m.servings};
+ return {buy:buy,per:per/m.servings};
 }
 function syncText(label){
- var full=meals.filter(function(m){return m.ing.every(function(ing){return P[ing.ref].s.st>0&&P[ing.ref].k.st>0;});}).length;
- return '<i class="ti ti-refresh" style="font-size:13px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>Stock synced '+label+' · '+full+'/'+meals.length+' meals fully in stock at both stores';
+ var full=meals.filter(function(m){return m.ing.every(function(ing){return P[ing.ref].inStock;});}).length;
+ return '<i class="ti ti-refresh" style="font-size:13px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>Stock synced '+label+' · '+full+'/'+meals.length+' meals fully in stock';
 }
 function equipMissing(m){ return (m.equip||[]).filter(function(e){return !myEquip.has(e);}); }
 function equipCardHtml(m){
@@ -261,8 +241,7 @@ function equipCardHtml(m){
 function renderMeals(){
  var list=document.getElementById('meal-list');
  list.innerHTML=meals.map(function(m){
-  var sIn=m.ing.filter(function(ing){return P[ing.ref].s.st>0;}).length;
-  var kIn=m.ing.filter(function(ing){return P[ing.ref].k.st>0;}).length;
+  var inStockCount=m.ing.filter(function(ing){return P[ing.ref].inStock;}).length;
   var total=m.ing.length;
   var t=totals(m);
   var tagsHtml=m.tags.map(function(x){return '<span class="tag">'+x+'</span>';}).join('');
@@ -271,11 +250,11 @@ function renderMeals(){
    +'<div style="flex:1;min-width:0;"><div style="display:flex;justify-content:space-between;align-items:baseline;"><p class="meal-title" style="font-weight:600;font-size:14px;margin:0;">'+m.name+'</p>'
    +'<span style="display:flex;align-items:center;gap:6px;"><button class="like-btn" aria-label="Like recipe" onclick="toggleLike(event,\''+m.id+'\')"><i class="ti ti-heart" style="font-size:15px;" aria-hidden="true"></i></button><span style="font-size:14px;font-weight:600;">€'+t.per.toFixed(2)+'</span></span></div>'
    +'<div style="display:flex;gap:6px;margin:6px 0;">'+tagsHtml+'</div>'
-   +'<div style="display:flex;gap:10px;font-size:12px;color:var(--color-text-secondary);"><span><span style="width:6px;height:6px;border-radius:50%;background:'+stockColor(sIn,total)+';display:inline-block;margin-right:4px;"></span>'+sIn+'/'+total+' S-market</span><span><span style="width:6px;height:6px;border-radius:50%;background:'+stockColor(kIn,total)+';display:inline-block;margin-right:4px;"></span>'+kIn+'/'+total+' K-Supermarket</span></div>'
+   +'<div style="display:flex;gap:10px;font-size:12px;color:var(--color-text-secondary);"><span><span style="width:6px;height:6px;border-radius:50%;background:'+stockColor(inStockCount,total)+';display:inline-block;margin-right:4px;"></span>'+inStockCount+'/'+total+' in stock</span></div>'
    +equipCardHtml(m)
    +'</div></div></div>';
  }).join('');
- document.getElementById('syncLine').innerHTML=syncText('08:14 today');
+ document.getElementById('syncLine').innerHTML=syncText('Jun 25, 00:52');
 }
 function setType(btn){
  document.querySelectorAll('.type-btn').forEach(function(b){b.classList.remove('active');});
@@ -331,7 +310,7 @@ function shuffleMeals(){
  var now=new Date();
  var hh=String(now.getHours()).padStart(2,'0');
  var mm=String(now.getMinutes()).padStart(2,'0');
- document.getElementById('syncLine').innerHTML=syncText(hh+':'+mm+' just now');
+ document.getElementById('syncLine').innerHTML=syncText(hh+':'+mm+' just now (re-sorted; price still reflects last scrape)');
 }
 function sortMeals(key){
  var container=document.getElementById('meal-list');
@@ -343,16 +322,10 @@ function sortMeals(key){
  });
  cards.forEach(function(c){container.appendChild(c);});
 }
-function off(label,color,ic,o){
- var need=o.pr*o.f;
- var price=o.st===0?'<span style="color:var(--color-text-danger);">Out</span>':'€'+need.toFixed(2);
- var low=o.st===1?' <span style="color:var(--color-text-warning);font-size:10px;">low</span>':'';
- var bulk='';
- if(o.bk&&o.pq){
-  var bf=o.f*(o.pq/o.bk.pq);
-  bulk='<div class="offer-sub">Bulk: '+o.bk.p+' '+o.bk.pk+' · pack €'+o.bk.pr.toFixed(2)+' → €'+(o.bk.pr*bf).toFixed(2)+' here</div>';
- }
- return '<div class="offer"><div class="offer-img"><i class="ti '+ic+'" style="font-size:16px;color:var(--color-text-secondary);" aria-hidden="true"></i></div><div class="offer-body"><div class="offer-top"><span style="color:'+color+';">'+label+' · '+o.p+'</span><span>'+price+'</span></div><div class="offer-sub">'+o.pk+' pack · €'+o.pr.toFixed(2)+low+'</div>'+bulk+'</div></div>';
+function offRow(pr,frac){
+ var need=pr.price*frac;
+ var price=!pr.inStock?'<span style="color:var(--color-text-danger);">Out of stock</span>':'€'+need.toFixed(2);
+ return '<div class="offer"><div class="offer-img"><i class="ti '+pr.ic+'" style="font-size:18px;color:var(--color-text-secondary);" aria-hidden="true"></i></div><div class="offer-body"><div class="offer-top"><span>'+pr.product+'</span><span>'+price+'</span></div><div class="offer-sub">'+(pr.unit==='kg'?'priced per kg':'unit price')+': €'+pr.price.toFixed(2)+(pr.inStock?'':' · currently out of stock')+'</div></div></div>';
 }
 function equipDetailHtml(m){
  if(!m.equip||m.equip.length===0) return '';
@@ -365,11 +338,10 @@ function equipDetailHtml(m){
 function openMeal(id){
  var m=meals.filter(function(x){return x.id===id;})[0];
  var rows=m.ing.map(function(ing){
-  var pr=P[ing.ref]; var o=offs(ing);
-  return '<div class="ing-card"><p style="font-size:13px;font-weight:600;margin:0 0 2px;">'+pr.nm+'</p>'+off('S','var(--color-text-info)',pr.ic,o.s)+off('K','#4A1B0C',pr.ic,o.k)+'</div>';
+  var pr=P[ing.ref];
+  return '<div class="ing-card"><p style="font-size:13px;font-weight:600;margin:0 0 4px;">'+pr.nm+'</p>'+offRow(pr,ing.frac)+'</div>';
  }).join('');
  var t=totals(m);
- var bulkLine=t.best<t.per-0.005?'<br/>Buying bulk packs where available: <strong style="font-weight:600;">€'+t.best.toFixed(2)+'</strong>/serving — best value if you\'ll make this again.':'';
  var stepsHtml='<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:16px 16px 6px;">How to make it</p><ol style="margin:0 16px 4px;padding-left:18px;font-size:13px;">'+m.steps.map(function(s){return '<li style="margin-bottom:6px;">'+s+'</li>';}).join('')+'</ol>';
  document.getElementById('detail-body').innerHTML=
   '<p style="font-weight:600;font-size:16px;margin:4px 16px;">'+m.name+'</p>'
@@ -378,7 +350,7 @@ function openMeal(id){
   +'<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:12px 16px 6px;">Ingredients &amp; the exact product to grab</p>'
   +rows
   +stepsHtml
-  +'<div style="margin:14px 16px;padding:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:13px;">Buying everything today: <strong style="font-weight:600;">€'+t.buy.toFixed(2)+'</strong> (full packs)<br/>Cost per serving (this batch): <strong style="font-weight:600;">€'+t.per.toFixed(2)+'</strong>'+bulkLine+'</div>'
+  +'<div style="margin:14px 16px;padding:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:13px;">Buying everything today: <strong style="font-weight:600;">€'+t.buy.toFixed(2)+'</strong> (full packs)<br/>Cost per serving (this batch): <strong style="font-weight:600;">€'+t.per.toFixed(2)+'</strong></div>'
   +'<button style="margin:0 16px 16px;width:calc(100% - 32px);">Add to meal plan</button>';
  showScreen('detail');
  window.scrollTo(0,0);

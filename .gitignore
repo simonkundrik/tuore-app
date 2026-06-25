@@ -1,4 +1,5 @@
 scraper/chrome-profile/
+scraper/keys/
 scraper/probe*.py
 scraper/full_response.json
 scraper/*.png
