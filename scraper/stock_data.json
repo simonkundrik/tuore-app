@@ -784,6 +784,441 @@
       },
       "confident": true,
       "searchTerm": "omena"
+    },
+    "beef": {
+      "match": {
+        "ean": "2358689600003",
+        "name": "Tamminen naudan ulkofileepala n1kg kalvoton",
+        "brand": "Tamminen",
+        "price": 34.9,
+        "unit": "kpl",
+        "unitPrice": 34.9,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "naudan ulkofile"
+    },
+    "pork": {
+      "match": {
+        "ean": "2386455900002",
+        "name": "Pirkka Grillaa suomalainen porsaan sisäfilee n. 550 g",
+        "brand": "Pirkka",
+        "price": 6.32,
+        "unit": "kpl",
+        "unitPrice": 11.49,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "porsaan sisäfile"
+    },
+    "whitefish": {
+      "match": {
+        "ean": "7310500143712",
+        "name": "Findus täysjyvä kalafileet 250g MSC pakaste",
+        "brand": "Findus",
+        "price": 4.55,
+        "unit": "kpl",
+        "unitPrice": 18.2,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "kalafile"
+    },
+    "sausage": {
+      "match": {
+        "ean": "6409620000324",
+        "name": "Snellman Kunnon kuoreton nakkimakkara 280 g",
+        "brand": "Snellman",
+        "price": 2.48,
+        "unit": "kpl",
+        "unitPrice": 8.86,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "nakki"
+    },
+    "bacon": {
+      "match": {
+        "ean": "6409100046286",
+        "name": "HK Amerikan pekoni 170g",
+        "brand": "HK",
+        "price": 2.48,
+        "unit": "kpl",
+        "unitPrice": 14.59,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "pekoni"
+    },
+    "tofu": {
+      "match": {
+        "ean": "6410405200334",
+        "name": "Pirkka Luomu tofu 250g maustamaton laktoositon",
+        "brand": "Pirkka",
+        "price": 1.99,
+        "unit": "kpl",
+        "unitPrice": 7.96,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "tofu"
+    },
+    "cream": {
+      "match": {
+        "ean": "6410405318060",
+        "name": "Pirkka laktoositon ruokakerma 15% 2 dl",
+        "brand": "Pirkka",
+        "price": 0.64,
+        "unit": "kpl",
+        "unitPrice": 3.2,
+        "unitPriceUnit": "l",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "ruokakerma"
+    },
+    "butter": {
+      "match": {
+        "ean": "6408430030002",
+        "name": "Valio palavoi 500g normaalisuolainen",
+        "brand": "Valio",
+        "price": 4.85,
+        "unit": "kpl",
+        "unitPrice": 9.7,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "Valio voi"
+    },
+    "mozzarella": {
+      "match": {
+        "ean": "6410405132376",
+        "name": "Pirkka mozzarella 200g/125g",
+        "brand": "Pirkka",
+        "price": 1.49,
+        "unit": "kpl",
+        "unitPrice": 11.92,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "mozzarella"
+    },
+    "freshtomato": {
+      "match": {
+        "ean": "6410405060457",
+        "name": "Pirkka miniluumutomaatti 250g ulkomainen 1lk",
+        "brand": "Pirkka",
+        "price": 1.79,
+        "unit": "kpl",
+        "unitPrice": 7.16,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "tomaatti"
+    },
+    "cabbage": {
+      "match": {
+        "ean": "2000602400008",
+        "name": "Keräkaali",
+        "brand": null,
+        "price": 1.81,
+        "unit": "kpl",
+        "unitPrice": 1.29,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": false,
+      "searchTerm": "valkokaali"
+    },
+    "cauliflower": {
+      "match": {
+        "ean": "2000604100005",
+        "name": "Kukkakaali",
+        "brand": null,
+        "price": 5.51,
+        "unit": "kpl",
+        "unitPrice": 6.89,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "kukkakaali"
+    },
+    "eggplant": {
+      "match": {
+        "ean": "6410405214119",
+        "name": "Pirkka munakoiso 300g Alankomaat 1lk",
+        "brand": "Pirkka",
+        "price": 1.49,
+        "unit": "kpl",
+        "unitPrice": 4.97,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "munakoiso"
+    },
+    "zucchini": {
+      "match": {
+        "ean": "2000592600006",
+        "name": "Pirkka kesäkurpitsa ulkomainen",
+        "brand": "Pirkka",
+        "price": 0.6,
+        "unit": "kpl",
+        "unitPrice": 2.39,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "kesäkurpitsa"
+    },
+    "sweetcorn": {
+      "match": {
+        "ean": "6410405045874",
+        "name": "Pirkka maissi 200 g pakaste",
+        "brand": "Pirkka",
+        "price": 0.99,
+        "unit": "kpl",
+        "unitPrice": 4.95,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "maissi"
+    },
+    "peas": {
+      "match": {
+        "ean": "6410405155979",
+        "name": "Pirkka suomalainen herne 200g pakaste",
+        "brand": "Pirkka",
+        "price": 0.89,
+        "unit": "kpl",
+        "unitPrice": 4.45,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "herne"
+    },
+    "orange": {
+      "match": {
+        "ean": "2000798000006",
+        "name": "Pirkka appelsiini",
+        "brand": "Pirkka",
+        "price": 0.73,
+        "unit": "kpl",
+        "unitPrice": 2.69,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "appelsiini"
+    },
+    "blueberries": {
+      "match": {
+        "ean": "6408430062119",
+        "name": "Valio mustikkakeitto 1kg",
+        "brand": "Valio",
+        "price": 2.94,
+        "unit": "kpl",
+        "unitPrice": 2.94,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "mustikka"
+    },
+    "strawberries": {
+      "match": {
+        "ean": "6410402017539",
+        "name": "Pirkka mansikka 250 g Suomi 1lk",
+        "brand": "Pirkka",
+        "price": 5.49,
+        "unit": "kpl",
+        "unitPrice": 21.96,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "mansikka"
+    },
+    "chickpeas": {
+      "match": {
+        "ean": "6410405088383",
+        "name": "Pirkka kikherneet suolaliemessä 380g/230g",
+        "brand": "Pirkka",
+        "price": 1.09,
+        "unit": "kpl",
+        "unitPrice": 4.74,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "kikherne"
+    },
+    "couscous": {
+      "match": {
+        "ean": "6418675195930",
+        "name": "Linea verde couscous 500g",
+        "brand": "Linea Verde",
+        "price": 2.09,
+        "unit": "kpl",
+        "unitPrice": 4.18,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "couscous"
+    },
+    "blackbeans": {
+      "match": {
+        "ean": "6410405175809",
+        "name": "Pirkka papusekoitus suolaliemessä 380g/230g",
+        "brand": "Pirkka",
+        "price": 0.99,
+        "unit": "kpl",
+        "unitPrice": 4.3,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "mustapapu"
+    },
+    "basil": {
+      "match": {
+        "ean": "6416046672127",
+        "name": "Järvikylä basilika rkk FI",
+        "brand": "Järvikylä",
+        "price": 2.18,
+        "unit": "kpl",
+        "unitPrice": 2.18,
+        "unitPriceUnit": "kpl",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "basilika"
+    },
+    "parsley": {
+      "match": {
+        "ean": "6416046652129",
+        "name": "Järvikylä persilja rkk FI",
+        "brand": "Järvikylä",
+        "price": 2.09,
+        "unit": "kpl",
+        "unitPrice": 2.09,
+        "unitPriceUnit": "kpl",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "persilja"
+    },
+    "cumin": {
+      "match": {
+        "ean": "6414201001355",
+        "name": "Meira juustokumina (jeera) 25g jauhettu pussi mauste",
+        "brand": "Meira",
+        "price": 1.29,
+        "unit": "kpl",
+        "unitPrice": 51.6,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "juustokumina"
+    },
+    "cinnamon": {
+      "match": {
+        "ean": "6410405240422",
+        "name": "Pirkka kaneli 15 g jauhettu",
+        "brand": "Pirkka",
+        "price": 0.69,
+        "unit": "kpl",
+        "unitPrice": 46,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "kaneli"
+    },
+    "chiliflakes": {
+      "match": {
+        "ean": "6410405255617",
+        "name": "Pirkka chilirouhe 17g",
+        "brand": "Pirkka",
+        "price": 0.85,
+        "unit": "kpl",
+        "unitPrice": 50,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "chilihiutale"
+    },
+    "honey": {
+      "match": {
+        "ean": "6410405197641",
+        "name": "Pirkka juokseva hunaja 350g",
+        "brand": "Pirkka",
+        "price": 3.53,
+        "unit": "kpl",
+        "unitPrice": 10.09,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "hunaja"
+    },
+    "vinegar": {
+      "match": {
+        "ean": "6414505169416",
+        "name": "Rajamäen valkoviinietikka 0,4l",
+        "brand": null,
+        "price": 3.45,
+        "unit": "kpl",
+        "unitPrice": 8.63,
+        "unitPriceUnit": "l",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "viinietikka"
     }
   }
 }
