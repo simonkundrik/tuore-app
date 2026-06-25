@@ -5,3 +5,15 @@ scraper/full_response.json
 scraper/*.png
 !scraper/cf_test_screenshot.png
 __pycache__/
+
+# Food.com Kaggle dataset (c) original authors -- never publish raw/derived
+# extracts, only our own scripts and the freshly-authored foodcom_recipes.json
+data/RAW_*.csv
+data/PP_*.csv
+data/interactions_*.csv
+data/ingr_map.pkl
+data/recipe_ings.json
+data/recipe_bucket_results.json
+data/zero_new_pool.json
+data/final_candidates.json
+data/top_phrases.json
