@@ -559,6 +559,231 @@
       },
       "confident": true,
       "searchTerm": "oliiviöljy"
+    },
+    "mushroom": {
+      "match": {
+        "ean": "2000646200008",
+        "name": "Jumboherkkusieni ulkomainen",
+        "brand": null,
+        "price": 0.41,
+        "unit": "kpl",
+        "unitPrice": 5.9,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "herkkusieni"
+    },
+    "sweetpotato": {
+      "match": {
+        "ean": "2000600100009",
+        "name": "Bataatti",
+        "brand": null,
+        "price": 1.53,
+        "unit": "kpl",
+        "unitPrice": 3.39,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "bataatti"
+    },
+    "halloumi": {
+      "match": {
+        "ean": "6416710301391",
+        "name": "Filos Original halloumi-juusto PDO 200g",
+        "brand": "Filos",
+        "price": 3.69,
+        "unit": "kpl",
+        "unitPrice": 18.45,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "halloumi"
+    },
+    "prawns": {
+      "match": {
+        "ean": "6410405250148",
+        "name": "Pirkka Parhaat katkarapusalaatti skagen 200g MSC",
+        "brand": "Pirkka",
+        "price": 4.57,
+        "unit": "kpl",
+        "unitPrice": 22.85,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "katkarapu"
+    },
+    "coconutmilk": {
+      "match": {
+        "ean": "6410405211385",
+        "name": "Pirkka Parhaat kookosmaito 250ml",
+        "brand": "Pirkka",
+        "price": 1.98,
+        "unit": "kpl",
+        "unitPrice": 7.92,
+        "unitPriceUnit": "l",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "kookosmaito"
+    },
+    "currypaste": {
+      "match": {
+        "ean": "6410405153289",
+        "name": "Pirkka punainen currytahna 114g",
+        "brand": "Pirkka",
+        "price": 1.89,
+        "unit": "kpl",
+        "unitPrice": 16.58,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "currytahna"
+    },
+    "leek": {
+      "match": {
+        "ean": "2000611500003",
+        "name": "Purjo ulkomainen",
+        "brand": null,
+        "price": 1.25,
+        "unit": "kpl",
+        "unitPrice": 4.99,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "purjo"
+    },
+    "soysauce": {
+      "match": {
+        "ean": "8715035110106",
+        "name": "Kikkoman soijakastike 150ml",
+        "brand": "Kikkoman",
+        "price": 3.39,
+        "unit": "kpl",
+        "unitPrice": 22.6,
+        "unitPriceUnit": "l",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "soijakastike"
+    },
+    "peanutbutter": {
+      "match": {
+        "ean": "6410405327901",
+        "name": "Pirkka Smooth Peanut Butter maapähkinävoi 350g",
+        "brand": "Pirkka",
+        "price": 2.98,
+        "unit": "kpl",
+        "unitPrice": 8.51,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "maapähkinävoi"
+    },
+    "quinoa": {
+      "match": {
+        "ean": "6410405357199",
+        "name": "Pirkka Kvinoa 400g",
+        "brand": "Pirkka",
+        "price": 2.75,
+        "unit": "kpl",
+        "unitPrice": 6.88,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "quinoa"
+    },
+    "chorizo": {
+      "match": {
+        "ean": "6409620005978",
+        "name": "Snellman All Natural chorizo 230g",
+        "brand": "Snellman",
+        "price": 3.47,
+        "unit": "kpl",
+        "unitPrice": 15.09,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "chorizo"
+    },
+    "pita": {
+      "match": {
+        "ean": "7350090454072",
+        "name": "Super Safkaa Pitaleipä 5kpl/350g",
+        "brand": "Super Safkaa",
+        "price": 2.79,
+        "unit": "kpl",
+        "unitPrice": 7.97,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "pitaleipä"
+    },
+    "avocado": {
+      "match": {
+        "ean": "2000388400001",
+        "name": "Pirkka syöntikypsä avokado 1lk",
+        "brand": "Pirkka",
+        "price": 1.52,
+        "unit": "kpl",
+        "unitPrice": 7.59,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "avokado"
+    },
+    "rahka": {
+      "match": {
+        "ean": "6408430042081",
+        "name": "Valio pehmeä maitorahka 250 g",
+        "brand": "Valio",
+        "price": 0.99,
+        "unit": "kpl",
+        "unitPrice": 3.96,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "rahka"
+    },
+    "apple": {
+      "match": {
+        "ean": "2000797000007",
+        "name": "Pirkka Royal Gala omena irtomyynti, ulkomainen",
+        "brand": "Pirkka",
+        "price": 0.46,
+        "unit": "kpl",
+        "unitPrice": 2.89,
+        "unitPriceUnit": "kg",
+        "inStockAtStore": true,
+        "storeId": "S224"
+      },
+      "confident": true,
+      "searchTerm": "omena"
     }
   }
 }
