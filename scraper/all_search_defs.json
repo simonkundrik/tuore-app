@@ -1,0 +1,921 @@
+{
+ "oats": {
+  "key": "oats",
+  "search": "Myllyn Paras hiutale",
+  "include": [
+   "hiutale"
+  ],
+  "exclude": []
+ },
+ "berries": {
+  "key": "berries",
+  "search": "pakastemarjat",
+  "include": [
+   "marja"
+  ],
+  "exclude": []
+ },
+ "milk": {
+  "key": "milk",
+  "search": "kevytmaito",
+  "include": [
+   "maito"
+  ],
+  "exclude": [
+   "kaura"
+  ]
+ },
+ "eggs": {
+  "key": "eggs",
+  "search": "kananmunat",
+  "include": [
+   "kananmuna"
+  ],
+  "exclude": []
+ },
+ "bread": {
+  "key": "bread",
+  "search": "ruispalat",
+  "include": [
+   "ruisp"
+  ],
+  "exclude": []
+ },
+ "cheese": {
+  "key": "cheese",
+  "search": "juustoviipale",
+  "include": [
+   "viipale"
+  ],
+  "exclude": []
+ },
+ "salmon": {
+  "key": "salmon",
+  "search": "lohifile",
+  "include": [
+   "lohi"
+  ],
+  "exclude": []
+ },
+ "spinach": {
+  "key": "spinach",
+  "search": "tuorepinaatti",
+  "include": [
+   "pinaatti"
+  ],
+  "exclude": []
+ },
+ "carrot": {
+  "key": "carrot",
+  "search": "porkkana",
+  "include": [
+   "porkkana"
+  ],
+  "exclude": []
+ },
+ "onion": {
+  "key": "onion",
+  "search": "keltasipuli",
+  "include": [
+   "sipuli"
+  ],
+  "exclude": [
+   "valkosipuli"
+  ]
+ },
+ "oatcream": {
+  "key": "oatcream",
+  "search": "kauraruokakerma",
+  "include": [
+   "kerma"
+  ],
+  "exclude": []
+ },
+ "dill": {
+  "key": "dill",
+  "search": "tilli",
+  "include": [
+   "tilli"
+  ],
+  "exclude": []
+ },
+ "lentils": {
+  "key": "lentils",
+  "search": "punaiset linssit",
+  "include": [
+   "linssi"
+  ],
+  "exclude": []
+ },
+ "tomato": {
+  "key": "tomato",
+  "search": "tomaattimurska",
+  "include": [
+   "tomaattimurska"
+  ],
+  "exclude": []
+ },
+ "stockcube": {
+  "key": "stockcube",
+  "search": "kasvisliemikuutio",
+  "include": [
+   "liemikuutio"
+  ],
+  "exclude": []
+ },
+ "chicken": {
+  "key": "chicken",
+  "search": "koipireisi",
+  "include": [
+   "koipireisi"
+  ],
+  "exclude": []
+ },
+ "potato": {
+  "key": "potato",
+  "search": "ruokaperuna",
+  "include": [
+   "peruna"
+  ],
+  "exclude": []
+ },
+ "paprika": {
+  "key": "paprika",
+  "search": "paprikajauhe",
+  "include": [
+   "paprikajauhe"
+  ],
+  "exclude": []
+ },
+ "yogurt": {
+  "key": "yogurt",
+  "search": "kreikkalainen jogurtti",
+  "include": [
+   "jogurtti"
+  ],
+  "exclude": []
+ },
+ "cookedchicken": {
+  "key": "cookedchicken",
+  "search": "broilerinfileesuikale",
+  "include": [
+   "suikale"
+  ],
+  "exclude": []
+ },
+ "cucumber": {
+  "key": "cucumber",
+  "search": "kurkku",
+  "include": [
+   "kurkku"
+  ],
+  "exclude": [
+   "mauste",
+   "viipaleet"
+  ]
+ },
+ "tortilla": {
+  "key": "tortilla",
+  "search": "tortillaleivat",
+  "include": [
+   "tortilla"
+  ],
+  "exclude": []
+ },
+ "hummus": {
+  "key": "hummus",
+  "search": "hummus",
+  "include": [
+   "hummus"
+  ],
+  "exclude": []
+ },
+ "salad": {
+  "key": "salad",
+  "search": "salaattisekoitus",
+  "include": [
+   "salaatti"
+  ],
+  "exclude": []
+ },
+ "pepper": {
+  "key": "pepper",
+  "search": "paprika",
+  "include": [
+   "paprika"
+  ],
+  "exclude": [
+   "jauhe",
+   "murska"
+  ]
+ },
+ "banana": {
+  "key": "banana",
+  "search": "banaani",
+  "include": [
+   "banaani"
+  ],
+  "exclude": []
+ },
+ "plantmilk": {
+  "key": "plantmilk",
+  "search": "kauramaito",
+  "include": [
+   "kauramaito",
+   "kaurajuoma"
+  ],
+  "exclude": []
+ },
+ "rice": {
+  "key": "rice",
+  "search": "jasmiiniriisi",
+  "include": [
+   "riisi"
+  ],
+  "exclude": []
+ },
+ "mince": {
+  "key": "mince",
+  "search": "naudan jauheliha",
+  "include": [
+   "jauheliha"
+  ],
+  "exclude": []
+ },
+ "tuna": {
+  "key": "tuna",
+  "search": "tonnikala",
+  "include": [
+   "tonnikala"
+  ],
+  "exclude": []
+ },
+ "pasta": {
+  "key": "pasta",
+  "search": "spagetti",
+  "include": [
+   "spagetti"
+  ],
+  "exclude": [
+   "jauheliha"
+  ]
+ },
+ "broccoli": {
+  "key": "broccoli",
+  "search": "parsakaali",
+  "include": [
+   "parsakaali"
+  ],
+  "exclude": []
+ },
+ "feta": {
+  "key": "feta",
+  "search": "fetapala",
+  "include": [
+   "feta"
+  ],
+  "exclude": []
+ },
+ "garlic": {
+  "key": "garlic",
+  "search": "valkosipuli",
+  "include": [
+   "valkosipuli"
+  ],
+  "exclude": [
+   "murska",
+   "tomaatti"
+  ]
+ },
+ "lemon": {
+  "key": "lemon",
+  "search": "sitruuna",
+  "include": [
+   "sitruuna"
+  ],
+  "exclude": [
+   "vesi",
+   "kivennäis"
+  ]
+ },
+ "beetroot": {
+  "key": "beetroot",
+  "search": "punajuuri",
+  "include": [
+   "punajuuri"
+  ],
+  "exclude": [
+   "salaatti"
+  ]
+ },
+ "oliveoil": {
+  "key": "oliveoil",
+  "search": "oliiviöljy",
+  "include": [
+   "oliiviöljy"
+  ],
+  "exclude": []
+ },
+ "mushroom": {
+  "key": "mushroom",
+  "search": "herkkusieni",
+  "include": [
+   "sieni"
+  ],
+  "exclude": []
+ },
+ "sweetpotato": {
+  "key": "sweetpotato",
+  "search": "bataatti",
+  "include": [
+   "bataatti"
+  ],
+  "exclude": []
+ },
+ "halloumi": {
+  "key": "halloumi",
+  "search": "halloumi",
+  "include": [
+   "halloumi"
+  ],
+  "exclude": []
+ },
+ "prawns": {
+  "key": "prawns",
+  "search": "katkarapu",
+  "include": [
+   "katkarapu"
+  ],
+  "exclude": []
+ },
+ "coconutmilk": {
+  "key": "coconutmilk",
+  "search": "kookosmaito",
+  "include": [
+   "kookosmaito"
+  ],
+  "exclude": []
+ },
+ "currypaste": {
+  "key": "currypaste",
+  "search": "currytahna",
+  "include": [
+   "curry"
+  ],
+  "exclude": []
+ },
+ "leek": {
+  "key": "leek",
+  "search": "purjo",
+  "include": [
+   "purjo"
+  ],
+  "exclude": []
+ },
+ "soysauce": {
+  "key": "soysauce",
+  "search": "soijakastike",
+  "include": [
+   "soija"
+  ],
+  "exclude": []
+ },
+ "peanutbutter": {
+  "key": "peanutbutter",
+  "search": "maapähkinävoi",
+  "include": [
+   "pähkinävoi"
+  ],
+  "exclude": []
+ },
+ "quinoa": {
+  "key": "quinoa",
+  "search": "quinoa",
+  "include": [
+   "quinoa",
+   "kvinoa"
+  ],
+  "exclude": []
+ },
+ "chorizo": {
+  "key": "chorizo",
+  "search": "chorizo",
+  "include": [
+   "chorizo"
+  ],
+  "exclude": []
+ },
+ "pita": {
+  "key": "pita",
+  "search": "pitaleipä",
+  "include": [
+   "pita"
+  ],
+  "exclude": []
+ },
+ "avocado": {
+  "key": "avocado",
+  "search": "avokado",
+  "include": [
+   "avokado"
+  ],
+  "exclude": []
+ },
+ "rahka": {
+  "key": "rahka",
+  "search": "rahka",
+  "include": [
+   "rahka"
+  ],
+  "exclude": []
+ },
+ "apple": {
+  "key": "apple",
+  "search": "omena",
+  "include": [
+   "omena"
+  ],
+  "exclude": []
+ },
+ "beef": {
+  "key": "beef",
+  "search": "naudan ulkofile",
+  "include": [
+   "ulkofile"
+  ],
+  "exclude": []
+ },
+ "pork": {
+  "key": "pork",
+  "search": "porsaan sisäfile",
+  "include": [
+   "sisäfile"
+  ],
+  "exclude": []
+ },
+ "whitefish": {
+  "key": "whitefish",
+  "search": "kalafile",
+  "include": [
+   "kala"
+  ],
+  "exclude": []
+ },
+ "sausage": {
+  "key": "sausage",
+  "search": "nakki",
+  "include": [
+   "nakki"
+  ],
+  "exclude": []
+ },
+ "bacon": {
+  "key": "bacon",
+  "search": "pekoni",
+  "include": [
+   "pekoni"
+  ],
+  "exclude": []
+ },
+ "tofu": {
+  "key": "tofu",
+  "search": "tofu",
+  "include": [
+   "tofu"
+  ],
+  "exclude": []
+ },
+ "cream": {
+  "key": "cream",
+  "search": "ruokakerma",
+  "include": [
+   "ruokakerma"
+  ],
+  "exclude": [
+   "kaura"
+  ]
+ },
+ "butter": {
+  "key": "butter",
+  "search": "Valio voi",
+  "include": [
+   "voi"
+  ],
+  "exclude": [
+   "pähkinävoi"
+  ]
+ },
+ "mozzarella": {
+  "key": "mozzarella",
+  "search": "mozzarella",
+  "include": [
+   "mozzarella"
+  ],
+  "exclude": []
+ },
+ "freshtomato": {
+  "key": "freshtomato",
+  "search": "tomaatti",
+  "include": [
+   "tomaatti"
+  ],
+  "exclude": [
+   "murska",
+   "kastike",
+   "mehu"
+  ]
+ },
+ "cabbage": {
+  "key": "cabbage",
+  "search": "valkokaali",
+  "include": [
+   "valkokaali"
+  ],
+  "exclude": []
+ },
+ "cauliflower": {
+  "key": "cauliflower",
+  "search": "kukkakaali",
+  "include": [
+   "kukkakaali"
+  ],
+  "exclude": []
+ },
+ "eggplant": {
+  "key": "eggplant",
+  "search": "munakoiso",
+  "include": [
+   "munakoiso"
+  ],
+  "exclude": []
+ },
+ "zucchini": {
+  "key": "zucchini",
+  "search": "kesäkurpitsa",
+  "include": [
+   "kesäkurpitsa"
+  ],
+  "exclude": []
+ },
+ "sweetcorn": {
+  "key": "sweetcorn",
+  "search": "maissi",
+  "include": [
+   "maissi"
+  ],
+  "exclude": [
+   "naksu",
+   "popcorn"
+  ]
+ },
+ "peas": {
+  "key": "peas",
+  "search": "herne",
+  "include": [
+   "herne"
+  ],
+  "exclude": [
+   "keitto"
+  ]
+ },
+ "orange": {
+  "key": "orange",
+  "search": "appelsiini",
+  "include": [
+   "appelsiini"
+  ],
+  "exclude": []
+ },
+ "blueberries": {
+  "key": "blueberries",
+  "search": "mustikka",
+  "include": [
+   "mustikka"
+  ],
+  "exclude": [
+   "mehu",
+   "jogurtti"
+  ]
+ },
+ "strawberries": {
+  "key": "strawberries",
+  "search": "mansikka",
+  "include": [
+   "mansikka"
+  ],
+  "exclude": [
+   "jogurtti",
+   "mehu"
+  ]
+ },
+ "chickpeas": {
+  "key": "chickpeas",
+  "search": "kikherne",
+  "include": [
+   "kikherne"
+  ],
+  "exclude": []
+ },
+ "couscous": {
+  "key": "couscous",
+  "search": "couscous",
+  "include": [
+   "couscous",
+   "kuskus"
+  ],
+  "exclude": []
+ },
+ "blackbeans": {
+  "key": "blackbeans",
+  "search": "mustapapu",
+  "include": [
+   "papu"
+  ],
+  "exclude": []
+ },
+ "basil": {
+  "key": "basil",
+  "search": "basilika",
+  "include": [
+   "basilika"
+  ],
+  "exclude": []
+ },
+ "parsley": {
+  "key": "parsley",
+  "search": "persilja",
+  "include": [
+   "persilja"
+  ],
+  "exclude": []
+ },
+ "cumin": {
+  "key": "cumin",
+  "search": "juustokumina",
+  "include": [
+   "kumina"
+  ],
+  "exclude": []
+ },
+ "cinnamon": {
+  "key": "cinnamon",
+  "search": "kaneli",
+  "include": [
+   "kaneli"
+  ],
+  "exclude": []
+ },
+ "chiliflakes": {
+  "key": "chiliflakes",
+  "search": "chilihiutale",
+  "include": [
+   "chili"
+  ],
+  "exclude": []
+ },
+ "honey": {
+  "key": "honey",
+  "search": "hunaja",
+  "include": [
+   "hunaja"
+  ],
+  "exclude": []
+ },
+ "vinegar": {
+  "key": "vinegar",
+  "search": "viinietikka",
+  "include": [
+   "etikka"
+  ],
+  "exclude": []
+ },
+ "turkey": {
+  "key": "turkey",
+  "search": "kalkkuna",
+  "include": [
+   "kalkkuna"
+  ],
+  "exclude": []
+ },
+ "lamb": {
+  "key": "lamb",
+  "search": "karitsan ulkofile",
+  "include": [
+   "karitsa"
+  ],
+  "exclude": []
+ },
+ "herring": {
+  "key": "herring",
+  "search": "silakka",
+  "include": [
+   "silakka"
+  ],
+  "exclude": []
+ },
+ "mussels": {
+  "key": "mussels",
+  "search": "simpukka",
+  "include": [
+   "simpukka"
+  ],
+  "exclude": []
+ },
+ "parmesan": {
+  "key": "parmesan",
+  "search": "parmesan",
+  "include": [
+   "parmesan"
+  ],
+  "exclude": []
+ },
+ "ricotta": {
+  "key": "ricotta",
+  "search": "ricotta",
+  "include": [
+   "ricotta"
+  ],
+  "exclude": []
+ },
+ "skyr": {
+  "key": "skyr",
+  "search": "skyr",
+  "include": [
+   "skyr"
+  ],
+  "exclude": []
+ },
+ "radish": {
+  "key": "radish",
+  "search": "retiisi",
+  "include": [
+   "retiisi"
+  ],
+  "exclude": []
+ },
+ "fennel": {
+  "key": "fennel",
+  "search": "fenkoli",
+  "include": [
+   "fenkoli"
+  ],
+  "exclude": []
+ },
+ "asparagus": {
+  "key": "asparagus",
+  "search": "parsa",
+  "include": [
+   "parsa"
+  ],
+  "exclude": []
+ },
+ "kale": {
+  "key": "kale",
+  "search": "lehtikaali",
+  "include": [
+   "lehtikaali"
+  ],
+  "exclude": []
+ },
+ "rutabaga": {
+  "key": "rutabaga",
+  "search": "lanttu",
+  "include": [
+   "lanttu"
+  ],
+  "exclude": []
+ },
+ "pumpkin": {
+  "key": "pumpkin",
+  "search": "kurpitsa",
+  "include": [
+   "kurpitsa"
+  ],
+  "exclude": [
+   "kesäkurpitsa"
+  ]
+ },
+ "barley": {
+  "key": "barley",
+  "search": "ohrasuurimo",
+  "include": [
+   "ohra"
+  ],
+  "exclude": []
+ },
+ "buckwheat": {
+  "key": "buckwheat",
+  "search": "tattari",
+  "include": [
+   "tattari"
+  ],
+  "exclude": []
+ },
+ "breadcrumbs": {
+  "key": "breadcrumbs",
+  "search": "korppujauho",
+  "include": [
+   "korppujauho"
+  ],
+  "exclude": []
+ },
+ "pineapple": {
+  "key": "pineapple",
+  "search": "ananas",
+  "include": [
+   "ananas"
+  ],
+  "exclude": []
+ },
+ "mango": {
+  "key": "mango",
+  "search": "mango",
+  "include": [
+   "mango"
+  ],
+  "exclude": []
+ },
+ "raspberries": {
+  "key": "raspberries",
+  "search": "vadelma",
+  "include": [
+   "vadelma"
+  ],
+  "exclude": [
+   "jogurtti",
+   "mehu"
+  ]
+ },
+ "almonds": {
+  "key": "almonds",
+  "search": "manteli",
+  "include": [
+   "manteli"
+  ],
+  "exclude": []
+ },
+ "walnuts": {
+  "key": "walnuts",
+  "search": "saksanpähkinä",
+  "include": [
+   "saksanpähkinä"
+  ],
+  "exclude": []
+ },
+ "sesameseeds": {
+  "key": "sesameseeds",
+  "search": "seesaminsiemen",
+  "include": [
+   "seesami"
+  ],
+  "exclude": []
+ },
+ "pesto": {
+  "key": "pesto",
+  "search": "pesto",
+  "include": [
+   "pesto"
+  ],
+  "exclude": []
+ },
+ "mayo": {
+  "key": "mayo",
+  "search": "majoneesi",
+  "include": [
+   "majoneesi"
+  ],
+  "exclude": []
+ },
+ "tahini": {
+  "key": "tahini",
+  "search": "tahini",
+  "include": [
+   "tahini"
+  ],
+  "exclude": []
+ },
+ "flour": {
+  "key": "flour",
+  "search": "vehnäjauho",
+  "include": [
+   "jauho"
+  ],
+  "exclude": []
+ },
+ "vanilla": {
+  "key": "vanilla",
+  "search": "vaniljasokeri",
+  "include": [
+   "vanilja"
+  ],
+  "exclude": []
+ },
+ "darkchocolate": {
+  "key": "darkchocolate",
+  "search": "tumma suklaa",
+  "include": [
+   "suklaa"
+  ],
+  "exclude": []
+ }
+}
