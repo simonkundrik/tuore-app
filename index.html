@@ -137,6 +137,11 @@ input[type=range]{height:18px;}
 <button class="chip" onclick="this.classList.toggle('active')"><i class="ti ti-check chk" style="font-size:11px;vertical-align:-1px;margin-right:4px;" aria-hidden="true"></i>Vegetarian</button>
 <button class="chip" onclick="this.classList.toggle('active')"><i class="ti ti-check chk" style="font-size:11px;vertical-align:-1px;margin-right:4px;" aria-hidden="true"></i>Low-carb</button>
 </div>
+<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:16px 16px 4px;">Foods you don't like</p>
+<p style="font-size:11px;color:var(--color-text-tertiary);margin:0 16px 8px;">Search and tap an ingredient to hide any recipe that uses it.</p>
+<div style="padding:0 16px;"><input type="text" id="dislikeSearch" placeholder="Search ingredients e.g. mushroom" oninput="renderDislikeSuggestions(this.value)" style="width:100%;" /></div>
+<div id="dislikeSuggestions" style="display:flex;gap:6px;padding:8px 16px 0;flex-wrap:wrap;"></div>
+<div id="dislikeChips" style="display:flex;gap:6px;padding:8px 16px 0;flex-wrap:wrap;"></div>
 <p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:18px 16px 4px;">Budget per meal: <span id="budgetOut" style="color:var(--color-text-primary);">€5</span></p>
 <input type="range" min="1" max="10" step="1" value="5" oninput="document.getElementById('budgetOut').textContent='€'+this.value" style="margin:0 16px 16px;width:calc(100% - 32px);" />
 </div>
@@ -337,6 +342,33 @@ const meals=[
 const EQNAMES={pot:'Pot',pan:'Frying pan',oven:'Oven',blender:'Blender'};
 var liked=new Set();
 var myEquip=new Set(['pot','pan']);
+var dislikes=new Set();
+function renderDislikeSuggestions(q){
+ var box=document.getElementById('dislikeSuggestions');
+ q=q.trim().toLowerCase();
+ if(!q){ box.innerHTML=''; return; }
+ var matches=Object.keys(P).filter(function(k){return !dislikes.has(k)&&P[k].nm.toLowerCase().indexOf(q)>-1;}).slice(0,6);
+ box.innerHTML=matches.map(function(k){return '<button class="chip" onclick="addDislike(\''+k+'\')"><i class="ti ti-plus" style="font-size:11px;vertical-align:-1px;margin-right:4px;" aria-hidden="true"></i>'+P[k].nm+'</button>';}).join('');
+}
+function renderDislikeChips(){
+ var box=document.getElementById('dislikeChips');
+ box.innerHTML=Array.from(dislikes).map(function(k){return '<button class="chip active" onclick="removeDislike(\''+k+'\')">'+P[k].nm+' <i class="ti ti-x" style="font-size:10px;vertical-align:-1px;margin-left:4px;" aria-hidden="true"></i></button>';}).join('');
+}
+function addDislike(key){
+ dislikes.add(key);
+ document.getElementById('dislikeSearch').value='';
+ document.getElementById('dislikeSuggestions').innerHTML='';
+ renderDislikeChips();
+ renderMeals();
+ applyFilters();
+}
+function removeDislike(key){
+ dislikes.delete(key);
+ renderDislikeChips();
+ renderMeals();
+ applyFilters();
+}
+function visibleMealList(){ return meals.filter(function(m){return !m.ing.some(function(ing){return dislikes.has(ing.ref);});}); }
 
 function stockColor(inCount,total){
  if(inCount===total) return 'var(--color-text-success)';
@@ -352,9 +384,10 @@ function totals(m){
  });
  return {buy:buy,per:per/m.servings};
 }
-function syncText(label){
- var full=meals.filter(function(m){return m.ing.every(function(ing){return P[ing.ref].inStock;});}).length;
- return '<i class="ti ti-refresh" style="font-size:13px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>Stock synced '+label+' · '+full+'/'+meals.length+' meals fully in stock';
+function syncText(label,list){
+ list=list||meals;
+ var full=list.filter(function(m){return m.ing.every(function(ing){return P[ing.ref].inStock;});}).length;
+ return '<i class="ti ti-refresh" style="font-size:13px;vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>Stock synced '+label+' · '+full+'/'+list.length+' meals fully in stock';
 }
 function equipMissing(m){ return (m.equip||[]).filter(function(e){return !myEquip.has(e);}); }
 function equipCardHtml(m){
@@ -366,7 +399,8 @@ function equipCardHtml(m){
 }
 function renderMeals(){
  var list=document.getElementById('meal-list');
- list.innerHTML=meals.map(function(m){
+ var vis=visibleMealList();
+ list.innerHTML=vis.map(function(m){
   var inStockCount=m.ing.filter(function(ing){return P[ing.ref].inStock;}).length;
   var total=m.ing.length;
   var t=totals(m);
@@ -380,7 +414,7 @@ function renderMeals(){
    +equipCardHtml(m)
    +'</div></div></div>';
  }).join('');
- document.getElementById('syncLine').innerHTML=syncText('Jun 25, 00:52');
+ document.getElementById('syncLine').innerHTML=syncText('Jun 25, 00:52',vis);
 }
 function setType(btn){
  document.querySelectorAll('.type-btn').forEach(function(b){b.classList.remove('active');});
@@ -436,7 +470,7 @@ function shuffleMeals(){
  var now=new Date();
  var hh=String(now.getHours()).padStart(2,'0');
  var mm=String(now.getMinutes()).padStart(2,'0');
- document.getElementById('syncLine').innerHTML=syncText(hh+':'+mm+' just now (re-sorted; price still reflects last scrape)');
+ document.getElementById('syncLine').innerHTML=syncText(hh+':'+mm+' just now (re-sorted; price still reflects last scrape)',visibleMealList());
 }
 function sortMeals(key){
  var container=document.getElementById('meal-list');
