@@ -14,7 +14,7 @@ recipes = []
 def add_recipe(parts_for_id, name, icon, mtype, time, servings, equip, steps, ing, tags_extra=None):
     refs = [i['ref'] for i in ing]
     fracs = [(i['ref'], i['frac']) for i in ing]
-    protein, kcal = macro(refs, servings)
+    protein, carbs, fat, kcal = macro(refs, servings)
     filters = []
     tags = []
     if is_vegan(refs):
@@ -41,8 +41,8 @@ def add_recipe(parts_for_id, name, icon, mtype, time, servings, equip, steps, in
     cid = make_id(parts_for_id, used_ids)
     recipes.append({
         'id': cid, 'name': name, 'icon': icon, 'type': mtype, 'filters': filters, 'tags': tags,
-        'time': time, 'protein': protein, 'kcal': kcal, 'servings': servings, 'equip': equip,
-        'steps': steps, 'ing': ing,
+        'time': time, 'protein': protein, 'carbs': carbs, 'fat': fat, 'kcal': kcal,
+        'servings': servings, 'equip': equip, 'steps': steps, 'ing': ing,
     })
 
 # ================= STIR-FRY =================
@@ -514,7 +514,7 @@ def js_str(r):
     name_js = json.dumps(r['name'], ensure_ascii=False)
     return (f"{{id:'{r['id']}',name:{name_js},icon:'{r['icon']}',type:{arr(r['type'])},"
             f"filters:{arr(r['filters'])},tags:{arr(r['tags'])},time:{r['time']},"
-            f"protein:{r['protein']},kcal:{r['kcal']},servings:{r['servings']},"
+            f"protein:{r['protein']},carbs:{r['carbs']},fat:{r['fat']},kcal:{r['kcal']},servings:{r['servings']},"
             f"equip:{arr(r['equip'])},steps:{steparr(r['steps'])},ing:{ingarr(r['ing'])}}}")
 
 snippet = ',\n'.join(js_str(r) for r in recipes)

@@ -357,7 +357,7 @@ def build_recipe(buckets, minutes, used_ids):
     time = max(lo, min(hi, round(raw_time/5)*5))
     ing = [{'ref':r,'frac':FRAC.get(r,1)} for r in buckets]
     refs = [i['ref'] for i in ing]
-    protein, kcal = macro(refs, servings)
+    protein, carbs, fat, kcal = macro(refs, servings)
     filters = []
     tags = []
     if is_vegan(refs):
@@ -378,8 +378,8 @@ def build_recipe(buckets, minutes, used_ids):
     tags = tags[:2]
     cid = make_id([archetype]+sorted(buckets), used_ids)
     return {'id':cid,'name':name,'icon':icon,'type':mtype,'filters':filters,'tags':tags,
-            'time':time,'protein':protein,'kcal':kcal,'servings':servings,'equip':equip,
-            'steps':steps,'ing':ing}
+            'time':time,'protein':protein,'carbs':carbs,'fat':fat,'kcal':kcal,'servings':servings,
+            'equip':equip,'steps':steps,'ing':ing}
 
 if __name__ == '__main__':
     import pandas as pd

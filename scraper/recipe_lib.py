@@ -87,14 +87,48 @@ PROTEIN_G = {'chicken':30,'cookedchicken':22,'beef':28,'pork':30,'turkey':26,'la
  'mozzarella':11,'parmesan':8,'ricotta':10,'cheese':7,'cream':2,'yogurt':9,'skyr':15,'rahka':11,
  'quinoa':6,'barley':4,'buckwheat':5,'almonds':5,'walnuts':4,'peanutbutter':6,'tahini':5}
 
+# grams of carbohydrate contributed by a typical recipe-serving usage of each ingredient
+CARB_G = {
+ 'oats':10,'berries':8,'milk':5,'eggs':1,'bread':12,'cheese':1,'salmon':0,'spinach':1,'carrot':6,
+ 'onion':5,'oatcream':2,'dill':0,'lentils':30,'tomato':5,'stockcube':1,'chicken':0,'potato':20,
+ 'paprika':1,'yogurt':5,'cookedchicken':0,'cucumber':2,'tortilla':15,'hummus':4,'salad':1,'pepper':4,
+ 'banana':23,'plantmilk':4,'rice':45,'mince':0,'tuna':0,'pasta':40,'broccoli':4,'feta':2,'garlic':1,
+ 'lemon':2,'beetroot':8,'oliveoil':0,'mushroom':2,'sweetpotato':18,'halloumi':2,'prawns':1,
+ 'coconutmilk':2,'currypaste':2,'leek':5,'soysauce':1,'peanutbutter':3,'quinoa':20,'chorizo':1,
+ 'pita':20,'avocado':4,'rahka':4,'apple':14,'beef':0,'pork':0,'whitefish':0,'sausage':2,'bacon':0,
+ 'tofu':2,'cream':3,'butter':0,'mozzarella':2,'freshtomato':4,'cabbage':3,'cauliflower':3,
+ 'eggplant':4,'zucchini':3,'sweetcorn':10,'peas':7,'orange':12,'blueberries':14,'strawberries':6,
+ 'chickpeas':27,'couscous':25,'blackbeans':22,'basil':0,'parsley':0,'cumin':0,'cinnamon':1,
+ 'chiliflakes':0,'honey':8,'vinegar':0,'turkey':0,'lamb':0,'herring':8,'mussels':4,'parmesan':1,
+ 'ricotta':4,'skyr':5,'radish':2,'fennel':4,'asparagus':3,'kale':3,'rutabaga':6,'pumpkin':6,
+ 'barley':22,'buckwheat':15,'breadcrumbs':8,'pineapple':11,'mango':13,'raspberries':5,'almonds':2,
+ 'walnuts':1,'sesameseeds':1,'pesto':1,'mayo':0,'tahini':1,'flour':20,'vanilla':1,'darkchocolate':8,
+}
+# grams of fat contributed by a typical recipe-serving usage of each ingredient
+FAT_G = {
+ 'oats':2,'berries':0,'milk':2,'eggs':10,'bread':1,'cheese':5,'salmon':14,'spinach':0,'carrot':0,
+ 'onion':0,'oatcream':4,'dill':0,'lentils':1,'tomato':0,'stockcube':0,'chicken':12,'potato':0,
+ 'paprika':0,'yogurt':5,'cookedchicken':3,'cucumber':0,'tortilla':3,'hummus':4,'salad':0,'pepper':0,
+ 'banana':0,'plantmilk':2,'rice':0,'mince':10,'tuna':6,'pasta':1,'broccoli':0,'feta':13,'garlic':0,
+ 'lemon':0,'beetroot':0,'oliveoil':13,'mushroom':0,'sweetpotato':0,'halloumi':18,'prawns':1,
+ 'coconutmilk':9,'currypaste':1,'leek':0,'soysauce':0,'peanutbutter':8,'quinoa':2,'chorizo':18,
+ 'pita':1,'avocado':15,'rahka':1,'apple':0,'beef':15,'pork':6,'whitefish':2,'sausage':20,'bacon':12,
+ 'tofu':9,'cream':15,'butter':12,'mozzarella':8,'freshtomato':0,'cabbage':0,'cauliflower':0,
+ 'eggplant':0,'zucchini':0,'sweetcorn':1,'peas':0,'orange':0,'blueberries':0,'strawberries':0,
+ 'chickpeas':3,'couscous':0,'blackbeans':1,'basil':0,'parsley':0,'cumin':0,'cinnamon':0,
+ 'chiliflakes':0,'honey':0,'vinegar':0,'turkey':3,'lamb':18,'herring':14,'mussels':3,'parmesan':6,
+ 'ricotta':11,'skyr':0,'radish':0,'fennel':0,'asparagus':0,'kale':0,'rutabaga':0,'pumpkin':0,
+ 'barley':0,'buckwheat':1,'breadcrumbs':0,'pineapple':0,'mango':0,'raspberries':0,'almonds':7,
+ 'walnuts':8,'sesameseeds':5,'pesto':8,'mayo':10,'tahini':8,'flour':1,'vanilla':0,'darkchocolate':6,
+}
+
 def macro(ing_refs, servings):
     protein = sum(PROTEIN_G.get(r, 0) for r in ing_refs)
-    has_carb = any(r in CARBY for r in ing_refs)
-    has_fat = any(r in RICHFAT for r in ing_refs)
-    kcal = 200 + protein*4 + (130 if has_carb else 0) + (80 if has_fat else 20)
-    kcal = max(150, min(580, round(kcal/10)*10))
+    carbs = sum(CARB_G.get(r, 0) for r in ing_refs)
+    fat = sum(FAT_G.get(r, 0) for r in ing_refs)
     protein = max(3, min(45, protein))
-    return protein, kcal
+    kcal = round((protein*4 + carbs*4 + fat*9)/10)*10
+    return protein, carbs, fat, kcal
 
 def is_vegan(ing_refs):
     return not any(r in ANIMAL_NONVEGAN for r in ing_refs)
