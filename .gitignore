@@ -1,5 +1,6 @@
 scraper/chrome-profile/
 scraper/keys/
+.claude/settings.local.json
 scraper/probe*.py
 scraper/test_fetch_search.py
 scraper/full_response.json

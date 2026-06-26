@@ -1,8 +1,15 @@
 # -*- coding: utf-8 -*-
 """Serializes kruoka_recipes.json into the same single-line minified JS
 object literal format already used for every other recipe in index.html's
-`meals` array, and splices them in right before the closing `];`."""
+`meals` array, and splices them into the array.
+
+Idempotent: every recipe this pipeline generates gets an id starting with
+'kr' (see build_kruoka_recipes.py's make_id(['kr', ...])), so a re-run
+first strips any 'kr*' entries left by a previous run before inserting the
+freshly rebuilt batch -- safe to run on a schedule without the recipe
+count growing unbounded."""
 import json
+import re
 from pathlib import Path
 
 HTML_PATH = Path(r"C:\Users\swath\tuore-app\index.html")
@@ -46,15 +53,28 @@ def main():
     recipes = json.load(open(Path(__file__).parent / "kruoka_recipes.json", encoding="utf-8"))
     html = HTML_PATH.read_text(encoding="utf-8")
 
-    marker = "\n];\n\nconst EQNAMES="
-    assert html.count(marker) == 1, f"expected exactly one marker, found {html.count(marker)}"
+    start_marker = "\nlet meals=[\n"
+    end_marker = "\n];\n\nconst EQNAMES="
+    assert html.count(start_marker) == 1, f"expected exactly one start marker, found {html.count(start_marker)}"
+    assert html.count(end_marker) == 1, f"expected exactly one end marker, found {html.count(end_marker)}"
 
-    lines = [serialize(r) for r in recipes]
-    insertion = ",\n" + ",\n".join(lines) + "\n];\n\nconst EQNAMES="
-    html = html.replace(marker, insertion, 1)
+    start = html.index(start_marker) + len(start_marker)
+    end = html.index(end_marker, start)
+    body = html[start:end]
 
+    existing_lines = [l for l in body.split('\n') if l.strip()]
+    kept = [l for l in existing_lines if not re.match(r"\{id:'kr", l)]
+    removed = len(existing_lines) - len(kept)
+
+    new_lines = [serialize(r) for r in recipes]
+    all_lines = kept + new_lines
+    # every line needs a trailing comma except the last
+    body_out = ',\n'.join(l.rstrip(',') for l in all_lines)
+
+    html = html[:start] + body_out + html[end:]
     HTML_PATH.write_text(html, encoding="utf-8")
-    print(f"Inserted {len(recipes)} recipes into index.html")
+    print(f"Removed {removed} stale kr* recipes, inserted {len(recipes)} fresh ones "
+          f"({len(all_lines)} total in meals array)")
 
 
 if __name__ == "__main__":
