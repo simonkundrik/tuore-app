@@ -188,6 +188,24 @@ input[type=range]{height:18px;}
 <div id="planTotals" style="margin:0 16px 16px;padding:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:13px;"></div>
 <div style="padding:0 16px;"><button onclick="openScanner()" style="width:100%;color:var(--color-text-info);border-color:var(--color-border-info);"><i class="ti ti-barcode" style="vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>Scan a product</button></div>
 <p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 16px 0;">Looks up real nutrition data from Open Food Facts for any product — not just K-Supermarket Hyvätuuli's own range.</p>
+<div style="padding:8px 16px 0;display:flex;gap:8px;">
+<button onclick="openManualBarcodeEntry()" style="flex:1;background:none;font-size:12px;">Barcode won't scan? Type it in</button>
+<button onclick="toggleManualLogForm()" style="flex:1;background:none;font-size:12px;">Log food manually</button>
+</div>
+<div id="manualLogForm" style="display:none;margin:10px 16px 0;padding:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);">
+<p style="margin:0 0 8px;font-size:12px;font-weight:600;">Log food manually</p>
+<input type="text" id="manualLogName" placeholder="What did you eat?" style="width:100%;margin-bottom:8px;box-sizing:border-box;" />
+<div style="display:flex;gap:8px;margin-bottom:8px;">
+<input type="text" inputmode="decimal" id="manualLogKcal" placeholder="kcal" style="width:100%;box-sizing:border-box;" />
+<input type="text" inputmode="decimal" id="manualLogProtein" placeholder="protein g" style="width:100%;box-sizing:border-box;" />
+</div>
+<div style="display:flex;gap:8px;margin-bottom:10px;">
+<input type="text" inputmode="decimal" id="manualLogCarbs" placeholder="carbs g" style="width:100%;box-sizing:border-box;" />
+<input type="text" inputmode="decimal" id="manualLogFat" placeholder="fat g" style="width:100%;box-sizing:border-box;" />
+</div>
+<p style="font-size:11px;color:var(--color-text-tertiary);margin:0 0 10px;">Nutrition fields are optional — leave blank if you don't know them.</p>
+<button onclick="submitManualLog()" style="margin-right:8px;">Add to today</button><button onclick="toggleManualLogForm()">Cancel</button>
+</div>
 <p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:18px 16px 6px;">Logged today</p>
 <div id="planList"></div>
 <p id="planEmptyState" style="display:none;text-align:center;font-size:12px;color:var(--color-text-secondary);padding:20px 16px;">Nothing logged yet today — cook a recipe or scan a product to start.</p>
@@ -1028,6 +1046,26 @@ function removeLogEntry(id){
  saveMealLog();
  renderPlan();
 }
+function toggleManualLogForm(){
+ var box=document.getElementById('manualLogForm');
+ var show=box.style.display==='none';
+ box.style.display=show?'':'none';
+ if(show){
+  ['manualLogName','manualLogKcal','manualLogProtein','manualLogCarbs','manualLogFat'].forEach(function(id){
+   document.getElementById(id).value='';
+  });
+  document.getElementById('manualLogName').focus();
+ }
+}
+function submitManualLog(){
+ var name=document.getElementById('manualLogName').value.trim();
+ if(!name) return;
+ var num=function(id){ var v=parseFloat(document.getElementById(id).value); return isNaN(v)?0:v; };
+ addLogEntry({type:'manual',name:name,kcal:Math.round(num('manualLogKcal')),
+  protein:num('manualLogProtein'),carbs:num('manualLogCarbs'),fat:num('manualLogFat'),price:0});
+ toggleManualLogForm();
+ showScreen('plan');
+}
 function logMeal(mealId){
  var m=meals.find(function(x){return x.id===mealId;});
  if(!m) return;
@@ -1091,28 +1129,55 @@ function fetchOpenFoodFacts(code){
 var zxingLoaded=false;
 var zxingReader=null;
 var pendingScan=null;
+function manualBarcodeLinkHtml(){
+ return '<div style="margin-top:10px;"><button onclick="showManualBarcodeEntry()" style="background:none;border-color:rgba(255,255,255,0.4);color:#fff;font-size:12px;">Type in barcode instead</button></div>';
+}
 function ensureZXingLoaded(cb){
  if(zxingLoaded){ cb(); return; }
  var s=document.createElement('script');
  s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';
  s.onload=function(){ zxingLoaded=true; cb(); };
- s.onerror=function(){ document.getElementById('scannerStatus').textContent='Could not load the barcode scanner. Check your connection and try again.'; };
+ s.onerror=function(){ document.getElementById('scannerStatus').innerHTML='Could not load the barcode scanner. Check your connection and try again.'+manualBarcodeLinkHtml(); };
  document.head.appendChild(s);
 }
 function openScanner(){
  pendingScan=null;
+ document.getElementById('scannerVideo').style.display='';
  document.getElementById('scannerOverlay').style.display='block';
  document.getElementById('scannerStatus').innerHTML='Loading scanner…';
  ensureZXingLoaded(function(){
-  document.getElementById('scannerStatus').innerHTML='Point the camera at a barcode…';
+  document.getElementById('scannerStatus').innerHTML='Point the camera at a barcode…'+manualBarcodeLinkHtml();
   var video=document.getElementById('scannerVideo');
   zxingReader=new ZXing.BrowserMultiFormatReader();
   zxingReader.decodeFromVideoDevice(undefined, video, function(result){
    if(result) handleScanResult(result.getText());
   }).catch(function(e){
-   document.getElementById('scannerStatus').innerHTML='Camera unavailable: '+e.message;
+   document.getElementById('scannerStatus').innerHTML='Camera unavailable: '+e.message+manualBarcodeLinkHtml();
   });
  });
+}
+function openManualBarcodeEntry(){
+ pendingScan=null;
+ if(zxingReader){ try{ zxingReader.reset(); }catch(e){} zxingReader=null; }
+ document.getElementById('scannerVideo').style.display='none';
+ document.getElementById('scannerOverlay').style.display='block';
+ showManualBarcodeEntry();
+}
+function showManualBarcodeEntry(){
+ if(zxingReader){ try{ zxingReader.reset(); }catch(e){} zxingReader=null; }
+ var statusBox=document.getElementById('scannerStatus');
+ statusBox.innerHTML='<p style="margin:0 0 8px;">Enter the barcode number (the digits printed under the barcode lines):</p>'
+  +'<input type="text" inputmode="numeric" id="manualBarcodeInput" placeholder="e.g. 7622210449283" style="width:100%;margin-bottom:8px;color:#000;box-sizing:border-box;" />'
+  +'<button onclick="submitManualBarcode()" style="margin-right:8px;">Look up</button><button onclick="closeScanner()">Cancel</button>';
+ var input=document.getElementById('manualBarcodeInput');
+ input.focus();
+ input.addEventListener('keydown', function(e){ if(e.key==='Enter') submitManualBarcode(); });
+}
+function submitManualBarcode(){
+ var input=document.getElementById('manualBarcodeInput');
+ var code=input.value.replace(/\D/g,'');
+ if(!code){ input.style.outline='1px solid red'; return; }
+ handleScanResult(code);
 }
 function closeScanner(){
  if(zxingReader){ try{ zxingReader.reset(); }catch(e){} zxingReader=null; }
