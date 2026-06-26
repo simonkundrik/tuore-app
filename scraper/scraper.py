@@ -129,15 +129,36 @@ def launch_chrome():
     raise RuntimeError("Chrome DevTools port never came up")
 
 
+def dismiss_cookie_banner(page):
+    """The OneTrust consent banner blocks pointer events on everything
+    beneath it until dismissed. A profile that's already consented once
+    (e.g. the long-lived local dev profile) never sees it again, but a
+    fresh profile (a new VM, a clean chrome-profile dir) hits it on the
+    very first page load -- so this can't be a best-effort single
+    attempt, it has to actually confirm the banner is gone."""
+    for _ in range(3):
+        if page.locator("#onetrust-consent-sdk").count() == 0:
+            return
+        for selector in ["#onetrust-reject-all-handler", "#onetrust-accept-btn-handler"]:
+            try:
+                page.locator(selector).click(timeout=2000)
+                page.wait_for_timeout(500)
+                if page.locator("#onetrust-consent-sdk").count() == 0:
+                    return
+            except Exception:
+                pass
+        try:
+            page.get_by_text("Vain välttämättömät", exact=False).click(timeout=2000)
+            page.wait_for_timeout(500)
+        except Exception:
+            pass
+        page.wait_for_timeout(800)
+
+
 def ensure_store_selected(page):
     page.goto("https://www.k-ruoka.fi/kauppa", wait_until="domcontentloaded")
     page.wait_for_timeout(1500)
-
-    try:
-        page.get_by_text("Vain välttämättömät", exact=False).click(timeout=3000)
-        page.wait_for_timeout(500)
-    except Exception:
-        pass
+    dismiss_cookie_banner(page)
 
     if f"storeId={STORE_ID}" in page.url or page.locator(f"text={STORE_NAME}").count() > 0:
         return
@@ -150,6 +171,7 @@ def ensure_store_selected(page):
 
     page.goto("https://www.k-ruoka.fi/kauppa?kaupat", wait_until="domcontentloaded")
     page.wait_for_timeout(1000)
+    dismiss_cookie_banner(page)
     box = page.get_by_placeholder(re.compile("Hae kauppaa", re.IGNORECASE))
     box.click()
     box.fill(STORE_NAME)
