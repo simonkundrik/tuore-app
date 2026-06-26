@@ -62,11 +62,9 @@ EXPECTED_TOP_CATEGORY = {
     'raw_veg_snack': ['Hedelmät ja vihannekset'],
     'dairy_snack': ['Maito, juusto, munat ja rasvat'],
     'ready_meals': ['Valmisruoka'],
-    'ready_salads': ['Valmisruoka'],
-    'deli': ['Liha ja kasviproteiinit'],
-    'smoked_fish': ['Kala ja merenelävät'],
     'nuts_snacks': ['Makeiset ja naposteltavat'],
     'dips': ['Makeiset ja naposteltavat', 'Valmisruoka', 'Hedelmät ja vihannekset'],
+    'healthy_snacks': ['Makeiset ja naposteltavat'],
 }
 
 # "Makeiset ja naposteltavat" covers candy and chips as well as snack nuts;
@@ -79,8 +77,19 @@ GROUP_NAME_FILTER = {
         'exclude_any': ['suklaa', 'sipsi', 'patukka', 'popcorn', 'lindor', 'lindt'],
     },
     'dips': {
-        'include_any': ['hummus', 'guacamole', 'tahini', 'dippi', 'avokado'],
+        # not 'avokado' -- a plain avocado is a raw ingredient, not a
+        # ready-to-eat dip someone would grab and eat on the go
+        'include_any': ['hummus', 'guacamole', 'tahini', 'dippi'],
         'exclude_any': ['pasta', 'tortelloni', 'fettuccine', 'ravioli', 'lasagne', 'gnocchi'],
+    },
+    'raw_veg_snack': {
+        # whole chili/grilling peppers need prep, not something eaten
+        # raw and whole the way cherry tomatoes or carrot sticks are
+        'exclude_any': ['chilipaprika', 'grillaa', 'mix'],
+    },
+    'healthy_snacks': {
+        'include_any': ['proteiini', 'kasvissipsi', 'linssisipsi', 'riisikakku'],
+        'exclude_any': ['suklaa', 'karkki', 'lakritsi'],
     },
 }
 
@@ -100,14 +109,13 @@ def passes_name_filter(group, name):
 GROUP_LABELS = {
     'fresh_fruit': 'Fresh fruit', 'berries': 'Berries', 'raw_veg_snack': 'Raw veg',
     'dairy_snack': 'Yogurt & dairy snacks', 'ready_meals': 'Ready meals',
-    'ready_salads': 'Ready salads', 'deli': 'Cold cuts & deli',
-    'smoked_fish': 'Smoked & cured fish', 'nuts_snacks': 'Nuts', 'dips': 'Dips',
+    'nuts_snacks': 'Nuts', 'dips': 'Dips', 'healthy_snacks': 'Healthy snacks',
 }
 NEEDS_HEATING_TERMS = {'mikroateria', 'mikrokeitto', 'pizza', 'kebab', 'hampurilainen', 'hotdog'}
 GROUP_ICON = {
     'fresh_fruit': 'ti-apple', 'berries': 'ti-apple', 'raw_veg_snack': 'ti-leaf',
-    'dairy_snack': 'ti-bowl', 'ready_meals': 'ti-meat', 'ready_salads': 'ti-leaf',
-    'deli': 'ti-meat', 'smoked_fish': 'ti-fish', 'nuts_snacks': 'ti-coffee', 'dips': 'ti-bowl',
+    'dairy_snack': 'ti-bowl', 'ready_meals': 'ti-meat',
+    'nuts_snacks': 'ti-coffee', 'dips': 'ti-bowl', 'healthy_snacks': 'ti-coffee',
 }
 
 

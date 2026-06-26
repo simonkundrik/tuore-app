@@ -21,12 +21,10 @@ SEARCH_TERMS = {
     "ready_meals": ["mikroateria", "salaattiateria", "wrap", "kebab",
                      "hampurilainen", "hotdog", "pizza", "kolmioleipä", "paniini",
                      "mikrokeitto"],
-    "ready_salads": ["valmissalaatti", "skagen", "katkarapusalaatti", "kalasalaatti",
-                      "majoneesisalaatti"],
-    "deli": ["kinkkuviipale", "leikkele", "kalkkunaleike", "meetvursti", "salami"],
-    "smoked_fish": ["savulohi", "graavilohi", "savukirjolohi", "maustesilli"],
     "nuts_snacks": ["manteli", "pähkinä", "cashew", "pistaasi", "snackpähkinä"],
     "dips": ["hummus", "guacamole", "tahinidippi"],
+    "healthy_snacks": ["proteiinipatukka", "proteiinisipsit", "kasvissipsit",
+                        "proteiinipallot", "riisikakku"],
 }
 
 
