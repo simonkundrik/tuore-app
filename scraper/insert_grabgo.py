@@ -1,8 +1,13 @@
 # -*- coding: utf-8 -*-
 """Serializes grabgo_recommendations.json into a minified JS array literal
 (same style as the P dict / meals array already in index.html) and
-inserts it right before the `let meals=[` declaration."""
+inserts it right before the `let meals=[` declaration.
+
+Idempotent: removes any existing `var GRABGO=[...]` block first, so a
+scheduled re-run replaces last time's recommendations rather than leaving
+a stale duplicate declaration behind."""
 import json
+import re
 from pathlib import Path
 
 HTML_PATH = Path(r"C:\Users\swath\tuore-app\index.html")
@@ -60,6 +65,10 @@ def main():
     data.sort(key=lambda r: GROUP_ORDER.index(r['group']))
 
     html = HTML_PATH.read_text(encoding="utf-8")
+
+    existing_block = re.compile(r"\nvar GRABGO=\[\n.*?\n\];\n", re.DOTALL)
+    html, n_removed = existing_block.subn("", html, count=1)
+
     marker = "\nlet meals=["
     assert html.count(marker) == 1, f"expected exactly one marker, found {html.count(marker)}"
 
@@ -68,7 +77,8 @@ def main():
     html = html.replace(marker, "\n" + js_array + "\nlet meals=[", 1)
 
     HTML_PATH.write_text(html, encoding="utf-8")
-    print(f"Inserted {len(data)} grab-and-go recommendations into index.html")
+    status = "replaced previous batch" if n_removed else "first insertion"
+    print(f"Inserted {len(data)} grab-and-go recommendations into index.html ({status})")
 
 
 if __name__ == "__main__":
