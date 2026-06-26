@@ -10,7 +10,7 @@ import json
 import re
 from pathlib import Path
 
-HTML_PATH = Path(r"C:\Users\swath\tuore-app\index.html")
+HTML_PATH = Path(__file__).parent.parent / "index.html"
 DATA_PATH = Path(__file__).parent / "grabgo_recommendations.json"
 
 GROUP_ORDER = ['fresh_fruit', 'berries', 'raw_veg_snack', 'dairy_snack', 'ready_meals',

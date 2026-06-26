@@ -3,8 +3,9 @@
 ingredient display names, nutrition/price heuristics, and id allocation.
 Reads index.html (pure) but writes nothing -- safe to import from any script."""
 import re
+from pathlib import Path
 
-HTML_PATH = r"C:\Users\swath\tuore-app\index.html"
+HTML_PATH = str(Path(__file__).parent.parent / "index.html")
 html = open(HTML_PATH, encoding="utf-8").read()
 
 P = {}

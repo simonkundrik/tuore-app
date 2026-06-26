@@ -45,7 +45,7 @@ def parse_time(prep_time_fi):
 
 def main():
     selected = json.load(open(Path(__file__).parent / "selected_recipes.json", encoding="utf-8"))
-    html = open(r"C:\Users\swath\tuore-app\index.html", encoding="utf-8").read()
+    html = open(Path(__file__).parent.parent / "index.html", encoding="utf-8").read()
     existing_ids = set(re.findall(r"\{id:'(\w+)'", html))
     used_ids = set(existing_ids)
 
