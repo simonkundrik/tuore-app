@@ -133,26 +133,21 @@ def dismiss_cookie_banner(page):
     """The OneTrust consent banner blocks pointer events on everything
     beneath it until dismissed. A profile that's already consented once
     (e.g. the long-lived local dev profile) never sees it again, but a
-    fresh profile (a new VM, a clean chrome-profile dir) hits it on the
-    very first page load -- so this can't be a best-effort single
-    attempt, it has to actually confirm the banner is gone."""
-    for _ in range(3):
-        if page.locator("#onetrust-consent-sdk").count() == 0:
-            return
-        for selector in ["#onetrust-reject-all-handler", "#onetrust-accept-btn-handler"]:
-            try:
-                page.locator(selector).click(timeout=2000)
-                page.wait_for_timeout(500)
-                if page.locator("#onetrust-consent-sdk").count() == 0:
-                    return
-            except Exception:
-                pass
-        try:
-            page.get_by_text("Vain välttämättömät", exact=False).click(timeout=2000)
-            page.wait_for_timeout(500)
-        except Exception:
-            pass
-        page.wait_for_timeout(800)
+    fresh profile (a new VM, a clean chrome-profile dir) hits it -- and it
+    mounts asynchronously, sometimes a couple seconds after page load, so
+    a one-shot `.count()` check right after navigation is a race: it can
+    read 0 a moment before the banner actually appears. Use Playwright's
+    own wait_for instead of polling .count() on a guess."""
+    reject_btn = page.locator("#onetrust-reject-all-handler")
+    try:
+        reject_btn.wait_for(state="visible", timeout=6000)
+    except Exception:
+        return  # banner never showed up -- nothing to dismiss
+    try:
+        reject_btn.click(timeout=3000)
+        page.locator("#onetrust-consent-sdk").wait_for(state="hidden", timeout=3000)
+    except Exception:
+        pass
 
 
 def ensure_store_selected(page):
