@@ -187,7 +187,7 @@ input[type=range]{height:18px;}
 <p id="planDateLine" style="font-size:12px;color:var(--color-text-secondary);margin:0 16px 12px;"></p>
 <div id="planTotals" style="margin:0 16px 16px;padding:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:13px;"></div>
 <div style="padding:0 16px;"><button onclick="openScanner()" style="width:100%;color:var(--color-text-info);border-color:var(--color-border-info);"><i class="ti ti-barcode" style="vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>Scan a product</button></div>
-<p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 16px 0;">Recognizes products already in our K-Supermarket Hyvätuuli database — not every barcode in the store yet.</p>
+<p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 16px 0;">Looks up real nutrition data from Open Food Facts for any product — not just K-Supermarket Hyvätuuli's own range.</p>
 <p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:18px 16px 6px;">Logged today</p>
 <div id="planList"></div>
 <p id="planEmptyState" style="display:none;text-align:center;font-size:12px;color:var(--color-text-secondary);padding:20px 16px;">Nothing logged yet today — cook a recipe or scan a product to start.</p>
@@ -1067,6 +1067,27 @@ function lookupByEan(code){
  }
  return null;
 }
+function fetchOpenFoodFacts(code){
+ return fetch('https://world.openfoodfacts.org/api/v2/product/'+code+'.json?fields=product_name,brands,nutriments,serving_size,image_front_small_url')
+  .then(function(r){ return r.json(); })
+  .then(function(data){
+   if(data.status!==1||!data.product) return null;
+   var p=data.product;
+   var n=p.nutriments||{};
+   var hasServing=typeof n['energy-kcal_serving']==='number';
+   var has100g=typeof n['energy-kcal_100g']==='number';
+   if(!hasServing&&!has100g) return {name:p.product_name||null,brand:p.brands||null,imageUrl:p.image_front_small_url||null,noNutrition:true};
+   var suffix=hasServing?'_serving':'_100g';
+   return {
+    name:p.product_name||null,brand:p.brands||null,imageUrl:p.image_front_small_url||null,
+    basis:hasServing?'serving':'100g',
+    basisLabel:hasServing?('1 serving ('+(p.serving_size||'as packaged')+')'):'100 g',
+    kcalPerUnit:n['energy-kcal'+suffix]||0,proteinPerUnit:n['proteins'+suffix]||0,
+    carbsPerUnit:n['carbohydrates'+suffix]||0,fatPerUnit:n['fat'+suffix]||0,
+   };
+  })
+  .catch(function(){ return null; });
+}
 var zxingLoaded=false;
 var zxingReader=null;
 var pendingScan=null;
@@ -1081,15 +1102,15 @@ function ensureZXingLoaded(cb){
 function openScanner(){
  pendingScan=null;
  document.getElementById('scannerOverlay').style.display='block';
- document.getElementById('scannerStatus').textContent='Loading scanner…';
+ document.getElementById('scannerStatus').innerHTML='Loading scanner…';
  ensureZXingLoaded(function(){
-  document.getElementById('scannerStatus').textContent='Point the camera at a barcode…';
+  document.getElementById('scannerStatus').innerHTML='Point the camera at a barcode…';
   var video=document.getElementById('scannerVideo');
   zxingReader=new ZXing.BrowserMultiFormatReader();
   zxingReader.decodeFromVideoDevice(undefined, video, function(result){
    if(result) handleScanResult(result.getText());
   }).catch(function(e){
-   document.getElementById('scannerStatus').textContent='Camera unavailable: '+e.message;
+   document.getElementById('scannerStatus').innerHTML='Camera unavailable: '+e.message;
   });
  });
 }
@@ -1101,17 +1122,60 @@ function closeScanner(){
 function handleScanResult(code){
  if(zxingReader){ try{ zxingReader.reset(); }catch(e){} zxingReader=null; }
  var statusBox=document.getElementById('scannerStatus');
- var found=lookupByEan(code);
- if(found){
-  pendingScan=found;
-  statusBox.innerHTML='<p style="margin:0 0 4px;font-weight:600;">'+found.nm+'</p><p style="margin:0 0 10px;font-size:12px;">'+found.product+' · €'+found.price.toFixed(2)+'</p><button onclick="confirmScanAdd()" style="margin-right:8px;">Add to today</button><button onclick="closeScanner()">Cancel</button>';
- } else {
-  statusBox.innerHTML='<p style="margin:0 0 10px;">Barcode '+code+' isn\'t in our database yet — only K-Supermarket Hyvätuuli products we\'ve already scraped are recognized.</p><button onclick="closeScanner()">Cancel</button>';
+ statusBox.innerHTML='Looking up product…';
+ var local=lookupByEan(code);
+ fetchOpenFoodFacts(code).then(function(off){
+  renderScanConfirm(code, off, local);
+ });
+}
+function renderScanConfirm(code, off, local){
+ var statusBox=document.getElementById('scannerStatus');
+ var name=(off&&off.name)||(local&&local.nm)||null;
+ if(!name){
+  statusBox.innerHTML='<p style="margin:0 0 10px;">Barcode '+code+' isn\'t in Open Food Facts or our K-Supermarket database. Log it manually instead?</p>'
+   +'<input type="text" id="manualScanName" placeholder="What did you eat?" style="width:100%;margin-bottom:8px;color:#000;" />'
+   +'<button onclick="confirmManualScan()" style="margin-right:8px;">Add to today</button><button onclick="closeScanner()">Cancel</button>';
+  return;
  }
+ var hasNutrition=off&&!off.noNutrition&&off.basis;
+ pendingScan={name:name,brand:off&&off.brand,ean:code,
+  kcalPerUnit:hasNutrition?off.kcalPerUnit:0,proteinPerUnit:hasNutrition?off.proteinPerUnit:0,
+  carbsPerUnit:hasNutrition?off.carbsPerUnit:0,fatPerUnit:hasNutrition?off.fatPerUnit:0,
+  localPrice:local?local.price:null};
+ var imgHtml=(off&&off.imageUrl)?('<img src="'+off.imageUrl+'" style="width:48px;height:48px;object-fit:cover;border-radius:6px;float:left;margin-right:10px;" onerror="this.remove()"/>'):'';
+ var brandLine=off&&off.brand?(off.brand+' · '):'';
+ var nutritionLine=hasNutrition
+  ?('Per '+off.basisLabel+': '+Math.round(off.kcalPerUnit)+' kcal · '+off.proteinPerUnit.toFixed(1)+'g protein · '+off.carbsPerUnit.toFixed(1)+'g carbs · '+off.fatPerUnit.toFixed(1)+'g fat')
+  :'No nutrition data available for this product.';
+ var priceLine=local?('<br/>Also at K-Supermarket Hyvätuuli: '+local.product+' · €'+local.price.toFixed(2)):'';
+ statusBox.innerHTML=imgHtml
+  +'<p style="margin:0 0 4px;font-weight:600;">'+brandLine+name+'</p>'
+  +'<p style="margin:0 0 10px;font-size:12px;">'+nutritionLine+priceLine+'</p>'
+  +(hasNutrition?('<div style="margin:0 0 10px;clear:both;">How many? <input type="text" inputmode="decimal" id="scanQty" value="1" oninput="updateScanPreview()" style="width:60px;color:#000;margin-left:6px;" /> <span id="scanPreview" style="margin-left:8px;font-weight:600;"></span></div>'):'<div style="clear:both;"></div>')
+  +'<button onclick="confirmScanAdd()" style="margin-right:8px;">Add to today</button><button onclick="closeScanner()">Cancel</button>';
+ if(hasNutrition) updateScanPreview();
+}
+function updateScanPreview(){
+ if(!pendingScan) return;
+ var qty=parseFloat(document.getElementById('scanQty').value)||0;
+ var kcal=Math.round(pendingScan.kcalPerUnit*qty);
+ document.getElementById('scanPreview').textContent=kcal+' kcal total';
 }
 function confirmScanAdd(){
  if(!pendingScan) return;
- addLogEntry({type:'scanned',name:pendingScan.nm,kcal:0,protein:0,carbs:0,fat:0,price:pendingScan.price});
+ var qtyEl=document.getElementById('scanQty');
+ var qty=qtyEl?(parseFloat(qtyEl.value)||0):1;
+ addLogEntry({type:'scanned',name:pendingScan.name,
+  kcal:Math.round(pendingScan.kcalPerUnit*qty),protein:Math.round(pendingScan.proteinPerUnit*qty*10)/10,
+  carbs:Math.round(pendingScan.carbsPerUnit*qty*10)/10,fat:Math.round(pendingScan.fatPerUnit*qty*10)/10,
+  price:pendingScan.localPrice||0});
+ closeScanner();
+ showScreen('plan');
+}
+function confirmManualScan(){
+ var name=document.getElementById('manualScanName').value.trim();
+ if(!name) return;
+ addLogEntry({type:'manual',name:name,kcal:0,protein:0,carbs:0,fat:0,price:0});
  closeScanner();
  showScreen('plan');
 }
