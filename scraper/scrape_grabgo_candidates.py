@@ -17,7 +17,7 @@ SEARCH_TERMS = {
     "berries": ["mansikka", "mustikka", "vadelma", "karpalo", "marjasekoitus"],
     "raw_veg_snack": ["minikurkku", "cocktailtomaatti", "kirsikkatomaatti",
                        "minipaprika", "porkkanaviipale"],
-    "dairy_snack": ["jogurtti", "skyr", "viili", "rahka", "raejuusto", "kefir"],
+    "dairy_snack": ["jogurtti", "skyr", "raejuusto", "kefir"],
     "ready_meals": ["mikroateria", "salaattiateria", "wrap", "kebab",
                      "hampurilainen", "hotdog", "pizza", "kolmioleipä", "paniini",
                      "mikrokeitto"],

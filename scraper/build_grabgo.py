@@ -82,6 +82,13 @@ GROUP_NAME_FILTER = {
         'include_any': ['hummus', 'guacamole', 'tahini', 'dippi'],
         'exclude_any': ['pasta', 'tortelloni', 'fettuccine', 'ravioli', 'lasagne', 'gnocchi'],
     },
+    'dairy_snack': {
+        # plain quark/viili score well on paper (near-zero sugar) but
+        # almost nobody eats them straight from the tub without stirring
+        # in jam, sugar or berries first -- backstop in case a search
+        # term other than rahka/viili fuzzy-matches one of these anyway
+        'exclude_any': ['rahka', 'viili', 'arkirae'],
+    },
     'raw_veg_snack': {
         # allowlist, not a blocklist: a plain bell pepper or a bag of
         # regular tomatoes needs cutting before anyone eats it, same as
