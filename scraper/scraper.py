@@ -119,7 +119,7 @@ def launch_chrome():
         *extra_flags,
         "about:blank",
     ], env=env)
-    for _ in range(30):
+    for _ in range(90):
         try:
             import urllib.request
             urllib.request.urlopen(f"http://localhost:{DEBUG_PORT}/json/version", timeout=1)
