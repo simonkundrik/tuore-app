@@ -83,9 +83,12 @@ GROUP_NAME_FILTER = {
         'exclude_any': ['pasta', 'tortelloni', 'fettuccine', 'ravioli', 'lasagne', 'gnocchi'],
     },
     'raw_veg_snack': {
-        # whole chili/grilling peppers need prep, not something eaten
-        # raw and whole the way cherry tomatoes or carrot sticks are
-        'exclude_any': ['chilipaprika', 'grillaa', 'mix'],
+        # allowlist, not a blocklist: a plain bell pepper or a bag of
+        # regular tomatoes needs cutting before anyone eats it, same as
+        # a chili pepper does -- only bite-sized/pre-cut formats someone
+        # would actually pop in their mouth or grab a stick of belong here
+        'include_any': ['kirsikkatomaatti', 'cocktailtomaatti', 'minikurkku',
+                         'minipaprika', 'suippopaprika', 'porkkanaviipale', 'tikku'],
     },
     'healthy_snacks': {
         'include_any': ['proteiini', 'kasvissipsi', 'linssisipsi', 'riisikakku'],
