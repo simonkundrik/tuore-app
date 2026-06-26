@@ -1,10 +1,22 @@
 scraper/chrome-profile/
 scraper/keys/
 scraper/probe*.py
+scraper/test_fetch_search.py
 scraper/full_response.json
 scraper/*.png
 !scraper/cf_test_screenshot.png
 __pycache__/
+
+# K-Ruoka recipe catalog (c) Kesko -- raw crawl includes their written
+# instructions; never publish raw/derived extracts, only our own scripts
+# and the freshly-authored kruoka_recipes.json (translated names, our own
+# steps, their factual ingredient/macro data only)
+scraper/recipes_raw.json
+scraper/reseptit_*.json
+scraper/reseptit_*.png
+scraper/recipe_detail_raw.html
+scraper/selected_recipes.json
+scraper/coverage_clean.json
 
 # Food.com Kaggle dataset (c) original authors -- never publish raw/derived
 # extracts, only our own scripts and the freshly-authored foodcom_recipes.json
