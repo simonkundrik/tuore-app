@@ -52,8 +52,8 @@ def main():
                         recipes[rid] = r
 
             page.on("response", on_response)
-            page.goto("https://www.k-ruoka.fi/reseptit", wait_until="networkidle")
-            page.wait_for_timeout(1500)
+            page.goto("https://www.k-ruoka.fi/reseptit", wait_until="domcontentloaded")
+            page.wait_for_timeout(2500)
 
             stall = 0
             last_count = 0
