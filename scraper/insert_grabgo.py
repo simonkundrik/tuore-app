@@ -62,6 +62,9 @@ def serialize(r):
 
 def main():
     data = json.load(open(DATA_PATH, encoding="utf-8"))
+    if not data:
+        print("grabgo_recommendations.json is empty -- leaving existing GRABGO block untouched")
+        return
     data.sort(key=lambda r: GROUP_ORDER.index(r['group']))
 
     html = HTML_PATH.read_text(encoding="utf-8")

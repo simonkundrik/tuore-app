@@ -51,6 +51,9 @@ def serialize(r):
 
 def main():
     recipes = json.load(open(Path(__file__).parent / "kruoka_recipes.json", encoding="utf-8"))
+    if not recipes:
+        print("kruoka_recipes.json is empty -- leaving existing kr* recipes untouched")
+        return
     html = HTML_PATH.read_text(encoding="utf-8")
 
     start_marker = "\nlet meals=[\n"
