@@ -15,7 +15,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).parent.parent / "data"))
 
-from recipe_lib import P, FRAC, is_vegan, is_veg, price_per_serving, make_id
+from recipe_lib import (P, FRAC, is_vegan, is_veg, price_per_serving, make_id,
+                         is_lowfat, is_lowcal, BUDGET_MAX_EUR, VERYBUDGET_MAX_EUR)
 from generate_from_foodcom import classify, gen_steps, icon_for, ARCHETYPE_TYPE
 from map_ingredients import classify as classify_ingredient
 from name_en import NAME_EN
@@ -98,8 +99,14 @@ def main():
             filters.append('lowcarb'); tags.append('Low-carb')
         if time <= 15:
             filters.append('quick'); tags.append('Quick')
-        if pps < 2.5:
+        if is_lowfat(fat):
+            filters.append('lowfat')
+        if is_lowcal(kcal):
+            filters.append('lowcal')
+        if pps < BUDGET_MAX_EUR:
             filters.append('budget')
+        if pps < VERYBUDGET_MAX_EUR:
+            filters.append('verybudget')
         if not tags:
             tags = ['Hearty']
         tags = tags[:2]

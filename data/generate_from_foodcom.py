@@ -7,7 +7,8 @@ import sys, json, re
 sys.path.insert(0, r"C:\Users\swath\tuore-app\scraper")
 from recipe_lib import (P, TITLE, T, Cap, M, FISH, protein_icon, FRAC,
     MEAT_FISH, ANIMAL_NONVEGAN, CARBY, RICHFAT, PROTEIN_G, macro, is_vegan, is_veg,
-    is_lowcarb, price_per_serving, make_id)
+    is_lowcarb, price_per_serving, make_id,
+    is_lowfat, is_lowcal, BUDGET_MAX_EUR, VERYBUDGET_MAX_EUR)
 
 VEGAN_PROTEIN = {'tofu','chickpeas','lentils','blackbeans'}
 PROTEIN_SET = MEAT_FISH | VEGAN_PROTEIN | {'eggs'}
@@ -370,9 +371,15 @@ def build_recipe(buckets, minutes, used_ids):
         filters.append('lowcarb'); tags.append('Low-carb')
     if time<=15:
         filters.append('quick'); tags.append('Quick')
+    if is_lowfat(fat):
+        filters.append('lowfat')
+    if is_lowcal(kcal):
+        filters.append('lowcal')
     pps = price_per_serving([(r['ref'],r['frac']) for r in ing], servings)
-    if pps < 2.0:
+    if pps < BUDGET_MAX_EUR:
         filters.append('budget')
+    if pps < VERYBUDGET_MAX_EUR:
+        filters.append('verybudget')
     if not tags:
         tags = ['Hearty']
     tags = tags[:2]

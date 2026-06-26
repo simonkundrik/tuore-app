@@ -138,6 +138,19 @@ def is_veg(ing_refs):
 def is_lowcarb(ing_refs):
     return not any(r in CARBY for r in ing_refs)
 
+# dieting-oriented thresholds, shared across every recipe-generation
+# pipeline so a recipe gets the same filters regardless of which one
+# produced it
+LOWFAT_MAX_G = 10
+LOWCAL_MAX_KCAL = 400
+BUDGET_MAX_EUR = 2.0
+VERYBUDGET_MAX_EUR = 1.5
+
+def is_lowfat(fat):
+    return fat <= LOWFAT_MAX_G
+def is_lowcal(kcal):
+    return kcal <= LOWCAL_MAX_KCAL
+
 def price_per_serving(ing_refs_fracs, servings):
     total = sum(P[r]['price']*f for r, f in ing_refs_fracs)
     return total/servings

@@ -6,7 +6,8 @@ salad, curry, egg breakfast, grain bowl, smoothie, energy bites, wrap, skillet).
 import json
 from recipe_lib import (P, existing_ids, TITLE, T, Cap, MID, M, FISH, protein_icon,
     FRAC, MEAT_FISH, ANIMAL_NONVEGAN, CARBY, RICHFAT, PROTEIN_G, macro,
-    is_vegan, is_veg, is_lowcarb, price_per_serving, make_id)
+    is_vegan, is_veg, is_lowcarb, price_per_serving, make_id,
+    is_lowfat, is_lowcal, BUDGET_MAX_EUR, VERYBUDGET_MAX_EUR)
 
 used_ids = set(existing_ids)
 recipes = []
@@ -30,9 +31,15 @@ def add_recipe(parts_for_id, name, icon, mtype, time, servings, equip, steps, in
         tags.append('Low-carb')
     if time <= 15:
         filters.append('quick'); tags.append('Quick')
+    if is_lowfat(fat):
+        filters.append('lowfat')
+    if is_lowcal(kcal):
+        filters.append('lowcal')
     pps = price_per_serving(fracs, servings)
-    if pps < 2.0:
+    if pps < BUDGET_MAX_EUR:
         filters.append('budget')
+    if pps < VERYBUDGET_MAX_EUR:
+        filters.append('verybudget')
     if tags_extra:
         tags.extend(tags_extra)
     if not tags:
