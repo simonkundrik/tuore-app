@@ -151,7 +151,7 @@ def dismiss_cookie_banner(page):
 
 
 def ensure_store_selected(page):
-    page.goto("https://www.k-ruoka.fi/kauppa", wait_until="domcontentloaded")
+    page.goto("https://www.k-ruoka.fi/kauppa", wait_until="domcontentloaded", timeout=75000)
     page.wait_for_timeout(1500)
     dismiss_cookie_banner(page)
 
@@ -164,7 +164,7 @@ def ensure_store_selected(page):
     except Exception:
         pass
 
-    page.goto("https://www.k-ruoka.fi/kauppa?kaupat", wait_until="domcontentloaded")
+    page.goto("https://www.k-ruoka.fi/kauppa?kaupat", wait_until="domcontentloaded", timeout=75000)
     page.wait_for_timeout(1000)
     dismiss_cookie_banner(page)
     box = page.get_by_placeholder(re.compile("Hae kauppaa", re.IGNORECASE))
@@ -186,7 +186,7 @@ def raw_search(page, term):
                 pass
 
     page.on("response", on_response)
-    page.goto(f"https://www.k-ruoka.fi/kauppa/tuotehaku?haku={term}", wait_until="domcontentloaded")
+    page.goto(f"https://www.k-ruoka.fi/kauppa/tuotehaku?haku={term}", wait_until="domcontentloaded", timeout=75000)
     page.wait_for_timeout(2500)
     page.remove_listener("response", on_response)
 
