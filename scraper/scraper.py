@@ -26,7 +26,10 @@ Output:
     stock_data.json - one row per app ingredient key with product, price, and
     in-store availability for K-Supermarket Hyvätuuli.
 """
+import atexit
 import json
+import os
+import platform
 import re
 import subprocess
 import time
@@ -35,9 +38,11 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright
 
-CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
+IS_WINDOWS = platform.system() == "Windows"
+CHROME_PATH = r"C:\Program Files\Google\Chrome\Application\chrome.exe" if IS_WINDOWS else "/usr/bin/google-chrome-stable"
 PROFILE_DIR = str(Path(__file__).parent / "chrome-profile")
 DEBUG_PORT = 9333
+XVFB_DISPLAY = ":99"
 STORE_NAME = "Hyvätuuli"
 STORE_ID = "S224"
 
@@ -84,15 +89,36 @@ INGREDIENTS = [
 ]
 
 
+def _ensure_xvfb():
+    """On a headless Linux box (the Oracle VM) Chrome needs a real display to
+    run non-headlessly -- Xvfb fakes one. Windows has a real display already."""
+    lock_file = Path(f"/tmp/.X99-lock")
+    if lock_file.exists():
+        return  # already running from a previous/concurrent launch
+    xvfb_proc = subprocess.Popen(
+        ["Xvfb", XVFB_DISPLAY, "-screen", "0", "1280x800x24"],
+        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+    atexit.register(xvfb_proc.terminate)
+    time.sleep(2)
+
+
 def launch_chrome():
+    env = None
+    extra_flags = []
+    if not IS_WINDOWS:
+        _ensure_xvfb()
+        env = {**os.environ, "DISPLAY": XVFB_DISPLAY}
+        extra_flags = ["--disable-gpu", "--disable-dev-shm-usage"]
     proc = subprocess.Popen([
         CHROME_PATH,
         f"--remote-debugging-port={DEBUG_PORT}",
         f"--user-data-dir={PROFILE_DIR}",
         "--no-first-run",
         "--no-default-browser-check",
+        *extra_flags,
         "about:blank",
-    ])
+    ], env=env)
     for _ in range(30):
         try:
             import urllib.request
