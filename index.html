@@ -182,8 +182,26 @@ input[type=range]{height:18px;}
 <input type="range" min="1" max="10" step="1" value="5" oninput="document.getElementById('budgetOut').textContent='€'+this.value" style="margin:0 16px 16px;width:calc(100% - 32px);" />
 </div>
 
+<div class="screen" id="screen-plan">
+<p style="font-weight:600;font-size:16px;margin:16px 16px 4px;">Today's meal plan</p>
+<p id="planDateLine" style="font-size:12px;color:var(--color-text-secondary);margin:0 16px 12px;"></p>
+<div id="planTotals" style="margin:0 16px 16px;padding:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:13px;"></div>
+<div style="padding:0 16px;"><button onclick="openScanner()" style="width:100%;color:var(--color-text-info);border-color:var(--color-border-info);"><i class="ti ti-barcode" style="vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>Scan a product</button></div>
+<p style="font-size:11px;color:var(--color-text-tertiary);margin:8px 16px 0;">Recognizes products already in our K-Supermarket Hyvätuuli database — not every barcode in the store yet.</p>
+<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:18px 16px 6px;">Logged today</p>
+<div id="planList"></div>
+<p id="planEmptyState" style="display:none;text-align:center;font-size:12px;color:var(--color-text-secondary);padding:20px 16px;">Nothing logged yet today — cook a recipe or scan a product to start.</p>
+</div>
+
+<div id="scannerOverlay" style="display:none;position:fixed;inset:0;background:#000;z-index:50;">
+<video id="scannerVideo" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;"></video>
+<button onclick="closeScanner()" style="position:absolute;top:calc(16px + env(safe-area-inset-top));right:16px;background:rgba(0,0,0,0.55);color:#fff;border:0.5px solid rgba(255,255,255,0.4);">Cancel</button>
+<div id="scannerStatus" style="position:absolute;bottom:24px;left:16px;right:16px;color:#fff;text-align:center;font-size:13px;background:rgba(0,0,0,0.6);padding:14px;border-radius:var(--border-radius-md);"></div>
+</div>
+
 <div class="tabbar">
 <button class="tab-btn active" data-tab="home" onclick="showScreen('home')"><i class="ti ti-home" style="font-size:20px;" aria-hidden="true"></i>Home</button>
+<button class="tab-btn" data-tab="plan" onclick="showScreen('plan')"><i class="ti ti-calendar-event" style="font-size:20px;" aria-hidden="true"></i>Plan</button>
 <button class="tab-btn" data-tab="profile" onclick="showScreen('profile')"><i class="ti ti-user" style="font-size:20px;" aria-hidden="true"></i>Profile</button>
 </div>
 
@@ -989,6 +1007,114 @@ var dislikes=new Set();
 var customMeals=JSON.parse(localStorage.getItem('tuoreCustomMeals')||'[]');
 var newRecipeIng=[];
 function saveCustomMeals(){ localStorage.setItem('tuoreCustomMeals', JSON.stringify(customMeals)); }
+var mealLog=JSON.parse(localStorage.getItem('tuoreMealLog')||'{}');
+function todayKey(){
+ var d=new Date();
+ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function todayEntries(){ return mealLog[todayKey()]||[]; }
+function saveMealLog(){ localStorage.setItem('tuoreMealLog', JSON.stringify(mealLog)); }
+function addLogEntry(entry){
+ var key=todayKey();
+ if(!mealLog[key]) mealLog[key]=[];
+ entry.id='log'+Date.now()+Math.random().toString(36).slice(2,6);
+ mealLog[key].push(entry);
+ saveMealLog();
+ renderPlan();
+}
+function removeLogEntry(id){
+ var key=todayKey();
+ mealLog[key]=(mealLog[key]||[]).filter(function(e){return e.id!==id;});
+ saveMealLog();
+ renderPlan();
+}
+function logMeal(mealId){
+ var m=meals.find(function(x){return x.id===mealId;});
+ if(!m) return;
+ var t=totals(m);
+ addLogEntry({type:'recipe',name:m.name,kcal:m.kcal||0,protein:m.protein||0,carbs:m.carbs||0,fat:m.fat||0,price:t.per});
+ showScreen('plan');
+}
+function renderPlan(){
+ var dateLine=document.getElementById('planDateLine');
+ if(!dateLine) return;
+ dateLine.textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+ var entries=todayEntries();
+ var sum={kcal:0,protein:0,carbs:0,fat:0,price:0};
+ entries.forEach(function(e){
+  sum.kcal+=e.kcal||0; sum.protein+=e.protein||0; sum.carbs+=e.carbs||0; sum.fat+=e.fat||0; sum.price+=e.price||0;
+ });
+ document.getElementById('planTotals').innerHTML='So far today: <strong style="font-weight:600;">'+sum.kcal+' kcal</strong><br/>'+sum.protein+'g protein · '+sum.carbs+'g carbs · '+sum.fat+'g fat<br/>Spent: €'+sum.price.toFixed(2);
+ var list=document.getElementById('planList');
+ list.innerHTML=entries.map(function(e){
+  var hasNutrition=e.kcal||e.protein||e.carbs||e.fat;
+  var sub=hasNutrition?(e.kcal+' kcal · '+(e.protein||0)+'g protein'):'Logged, no nutrition data';
+  if(e.price) sub+=' · €'+e.price.toFixed(2);
+  return '<div class="ing-card" style="display:flex;justify-content:space-between;align-items:center;">'
+   +'<div style="min-width:0;"><p style="font-size:13px;font-weight:600;margin:0;">'+e.name+'</p><p style="font-size:11px;color:var(--color-text-secondary);margin:2px 0 0;">'+sub+'</p></div>'
+   +'<button onclick="removeLogEntry(\''+e.id+'\')" style="color:var(--color-text-danger);font-size:14px;line-height:1;flex-shrink:0;margin-left:8px;" aria-label="Remove entry">×</button>'
+   +'</div>';
+ }).join('');
+ document.getElementById('planEmptyState').style.display=entries.length===0?'':'none';
+}
+function lookupByEan(code){
+ for(var key in P){
+  if(P[key].ean===code) return {nm:P[key].nm,product:P[key].product,price:P[key].price,ean:P[key].ean};
+  var alts=P[key].alts||[];
+  for(var i=0;i<alts.length;i++){
+   if(alts[i].ean===code) return {nm:P[key].nm,product:alts[i].product,price:alts[i].price,ean:alts[i].ean};
+  }
+ }
+ return null;
+}
+var zxingLoaded=false;
+var zxingReader=null;
+var pendingScan=null;
+function ensureZXingLoaded(cb){
+ if(zxingLoaded){ cb(); return; }
+ var s=document.createElement('script');
+ s.src='https://cdn.jsdelivr.net/npm/@zxing/library@0.21.3/umd/index.min.js';
+ s.onload=function(){ zxingLoaded=true; cb(); };
+ s.onerror=function(){ document.getElementById('scannerStatus').textContent='Could not load the barcode scanner. Check your connection and try again.'; };
+ document.head.appendChild(s);
+}
+function openScanner(){
+ pendingScan=null;
+ document.getElementById('scannerOverlay').style.display='block';
+ document.getElementById('scannerStatus').textContent='Loading scanner…';
+ ensureZXingLoaded(function(){
+  document.getElementById('scannerStatus').textContent='Point the camera at a barcode…';
+  var video=document.getElementById('scannerVideo');
+  zxingReader=new ZXing.BrowserMultiFormatReader();
+  zxingReader.decodeFromVideoDevice(undefined, video, function(result){
+   if(result) handleScanResult(result.getText());
+  }).catch(function(e){
+   document.getElementById('scannerStatus').textContent='Camera unavailable: '+e.message;
+  });
+ });
+}
+function closeScanner(){
+ if(zxingReader){ try{ zxingReader.reset(); }catch(e){} zxingReader=null; }
+ pendingScan=null;
+ document.getElementById('scannerOverlay').style.display='none';
+}
+function handleScanResult(code){
+ if(zxingReader){ try{ zxingReader.reset(); }catch(e){} zxingReader=null; }
+ var statusBox=document.getElementById('scannerStatus');
+ var found=lookupByEan(code);
+ if(found){
+  pendingScan=found;
+  statusBox.innerHTML='<p style="margin:0 0 4px;font-weight:600;">'+found.nm+'</p><p style="margin:0 0 10px;font-size:12px;">'+found.product+' · €'+found.price.toFixed(2)+'</p><button onclick="confirmScanAdd()" style="margin-right:8px;">Add to today</button><button onclick="closeScanner()">Cancel</button>';
+ } else {
+  statusBox.innerHTML='<p style="margin:0 0 10px;">Barcode '+code+' isn\'t in our database yet — only K-Supermarket Hyvätuuli products we\'ve already scraped are recognized.</p><button onclick="closeScanner()">Cancel</button>';
+ }
+}
+function confirmScanAdd(){
+ if(!pendingScan) return;
+ addLogEntry({type:'scanned',name:pendingScan.nm,kcal:0,protein:0,carbs:0,fat:0,price:pendingScan.price});
+ closeScanner();
+ showScreen('plan');
+}
 var PROTEIN_G={chicken:30,cookedchicken:22,beef:28,pork:30,turkey:26,lamb:26,sausage:18,bacon:14,chorizo:16,mince:24,salmon:26,tuna:22,whitefish:24,prawns:18,mussels:18,herring:20,tofu:16,chickpeas:13,lentils:15,blackbeans:11,eggs:13,feta:9,halloumi:17,mozzarella:11,parmesan:8,ricotta:10,cheese:7,cream:2,yogurt:9,skyr:15,rahka:11,quinoa:6,barley:4,buckwheat:5,almonds:5,walnuts:4,peanutbutter:6,tahini:5};
 var CARB_G={oats:10,berries:8,milk:5,eggs:1,bread:12,cheese:1,salmon:0,spinach:1,carrot:6,onion:5,oatcream:2,dill:0,lentils:30,tomato:5,stockcube:1,chicken:0,potato:20,paprika:1,yogurt:5,cookedchicken:0,cucumber:2,tortilla:15,hummus:4,salad:1,pepper:4,banana:23,plantmilk:4,rice:45,mince:0,tuna:0,pasta:40,broccoli:4,feta:2,garlic:1,lemon:2,beetroot:8,oliveoil:0,mushroom:2,sweetpotato:18,halloumi:2,prawns:1,coconutmilk:2,currypaste:2,leek:5,soysauce:1,peanutbutter:3,quinoa:20,chorizo:1,pita:20,avocado:4,rahka:4,apple:14,beef:0,pork:0,whitefish:0,sausage:2,bacon:0,tofu:2,cream:3,butter:0,mozzarella:2,freshtomato:4,cabbage:3,cauliflower:3,eggplant:4,zucchini:3,sweetcorn:10,peas:7,orange:12,blueberries:14,strawberries:6,chickpeas:27,couscous:25,blackbeans:22,basil:0,parsley:0,cumin:0,cinnamon:1,chiliflakes:0,honey:8,vinegar:0,turkey:0,lamb:0,herring:8,mussels:4,parmesan:1,ricotta:4,skyr:5,radish:2,fennel:4,asparagus:3,kale:3,rutabaga:6,pumpkin:6,barley:22,buckwheat:15,breadcrumbs:8,pineapple:11,mango:13,raspberries:5,almonds:2,walnuts:1,sesameseeds:1,pesto:1,mayo:0,tahini:1,flour:20,vanilla:1,darkchocolate:8};
 var FAT_G={oats:2,berries:0,milk:2,eggs:10,bread:1,cheese:5,salmon:14,spinach:0,carrot:0,onion:0,oatcream:4,dill:0,lentils:1,tomato:0,stockcube:0,chicken:12,potato:0,paprika:0,yogurt:5,cookedchicken:3,cucumber:0,tortilla:3,hummus:4,salad:0,pepper:0,banana:0,plantmilk:2,rice:0,mince:10,tuna:6,pasta:1,broccoli:0,feta:13,garlic:0,lemon:0,beetroot:0,oliveoil:13,mushroom:0,sweetpotato:0,halloumi:18,prawns:1,coconutmilk:9,currypaste:1,leek:0,soysauce:0,peanutbutter:8,quinoa:2,chorizo:18,pita:1,avocado:15,rahka:1,apple:0,beef:15,pork:6,whitefish:2,sausage:20,bacon:12,tofu:9,cream:15,butter:12,mozzarella:8,freshtomato:0,cabbage:0,cauliflower:0,eggplant:0,zucchini:0,sweetcorn:1,peas:0,orange:0,blueberries:0,strawberries:0,chickpeas:3,couscous:0,blackbeans:1,basil:0,parsley:0,cumin:0,cinnamon:0,chiliflakes:0,honey:0,vinegar:0,turkey:3,lamb:18,herring:14,mussels:3,parmesan:6,ricotta:11,skyr:0,radish:0,fennel:0,asparagus:0,kale:0,rutabaga:0,pumpkin:0,barley:0,buckwheat:1,breadcrumbs:0,pineapple:0,mango:0,raspberries:0,almonds:7,walnuts:8,sesameseeds:5,pesto:8,mayo:10,tahini:8,flour:1,vanilla:0,darkchocolate:6};
@@ -1289,9 +1415,8 @@ function openMeal(id){
  var kcalSpan=m.kcal?('<span><i class="ti ti-flame" style="vertical-align:-2px;" aria-hidden="true"></i> '+m.kcal+' kcal</span>'):'';
  var macroHtml=(m.protein||m.carbs||m.fat)?('<div style="display:flex;gap:14px;margin:0 16px 12px;font-size:12px;color:var(--color-text-secondary);"><span>'+(m.protein||0)+'g protein</span><span>'+(m.carbs||0)+'g carbs</span><span>'+(m.fat||0)+'g fat</span></div>'):'';
  var stepsHtml=m.steps.length?('<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:16px 16px 6px;">How to make it</p><ol style="margin:0 16px 4px;padding-left:18px;font-size:13px;">'+m.steps.map(function(s){return '<li style="margin-bottom:6px;">'+s+'</li>';}).join('')+'</ol>'):'';
- var actionBtn=m.custom
-  ?('<button onclick="deleteCustomMeal(\''+m.id+'\')" style="margin:0 16px 16px;width:calc(100% - 32px);color:var(--color-text-danger);border-color:var(--color-text-danger);">Delete recipe</button>')
-  :('<button style="margin:0 16px 16px;width:calc(100% - 32px);">Add to meal plan</button>');
+ var actionBtn='<button onclick="logMeal(\''+m.id+'\')" style="margin:0 16px 8px;width:calc(100% - 32px);">Add to meal plan</button>'
+  +(m.custom?('<button onclick="deleteCustomMeal(\''+m.id+'\')" style="margin:0 16px 16px;width:calc(100% - 32px);color:var(--color-text-danger);border-color:var(--color-text-danger);">Delete recipe</button>'):'');
  document.getElementById('detail-body').innerHTML=
   '<p style="font-weight:600;font-size:16px;margin:4px 16px;">'+m.name+(m.custom?' <span class="tag">Yours</span>':'')+'</p>'
   +'<div style="display:flex;gap:16px;margin:0 16px 12px;font-size:12px;color:var(--color-text-secondary);"><span><i class="ti ti-clock" style="vertical-align:-2px;" aria-hidden="true"></i> '+m.time+' min</span><span><i class="ti ti-users" style="vertical-align:-2px;" aria-hidden="true"></i> '+m.servings+' servings</span>'+kcalSpan+'</div>'
@@ -1316,6 +1441,7 @@ function showScreen(id){
 customMeals.forEach(function(m){meals.push(m);});
 renderMeals();
 applyFilters();
+renderPlan();
 
 if('serviceWorker' in navigator){
  window.addEventListener('load', function(){
