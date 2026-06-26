@@ -1,4 +1,4 @@
-const CACHE = 'tuore-v2';
+const CACHE = 'tuore-v3';
 const ASSETS = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png'];
 
 self.addEventListener('install', function (e) {
@@ -18,7 +18,7 @@ self.addEventListener('activate', function (e) {
 // cache as an offline fallback only -- never let a stale cached copy win.
 self.addEventListener('fetch', function (e) {
   e.respondWith(
-    fetch(e.request).then(function (response) {
+    fetch(e.request, { cache: 'no-store' }).then(function (response) {
       var copy = response.clone();
       caches.open(CACHE).then(function (c) { c.put(e.request, copy); });
       return response;
