@@ -104,9 +104,16 @@ def main():
             tags = ['Hearty']
         tags = tags[:2]
 
-        name = NAME_EN.get(r['recipeId'])
+        # prefer our hand-translated English name; for a recipe that
+        # wasn't part of that one-time translation batch (e.g. newly
+        # surfaced by a scheduled re-run with no LLM available to
+        # translate it), fall back to the real Finnish title rather than
+        # silently dropping the recipe -- still a real, useful recipe,
+        # just untranslated until a future manual pass adds it to name_en.py
+        name = NAME_EN.get(r['recipeId']) or (r.get('name') or {}).get('fi')
         if not name:
             continue
+        name = name.strip()
 
         pictures = r.get('pictures') or []
         photo_id = pictures[0]['id'] if pictures else None
