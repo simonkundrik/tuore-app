@@ -18,6 +18,11 @@ scraper/recipe_detail_raw.html
 scraper/selected_recipes.json
 scraper/coverage_clean.json
 
+# Grab-and-go: keep only the final curated grabgo_recommendations.json;
+# the raw crawl dumps are regenerable intermediates, not final output.
+scraper/grabgo_candidates_raw.json
+scraper/grabgo_details_raw.json
+
 # Food.com Kaggle dataset (c) original authors -- never publish raw/derived
 # extracts, only our own scripts and the freshly-authored foodcom_recipes.json
 data/RAW_*.csv
