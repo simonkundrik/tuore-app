@@ -173,6 +173,11 @@ def main():
             item['_healthPct'] = percentile_rank(hscore, scores)
             item['_valuePct'] = percentile_rank(item['unitPrice'], prices, lower_is_better=True)
             item['_combined'] = 0.6 * item['_healthPct'] + 0.4 * item['_valuePct']
+            # currently-discounted items get a ranking nudge so a fresh
+            # weekly run naturally surfaces "good deal right now" picks
+            # without needing a separate flaky deals-feed scrape
+            if item.get('onSale'):
+                item['_combined'] += 8
         items.sort(key=lambda i: -i['_combined'])
 
         seen_name_roots = set()
@@ -190,13 +195,15 @@ def main():
         for item in picked:
             n = item['nutrition']
             badges = []
+            if item.get('onSale'):
+                badges.append('On sale now')
             if item['_healthPct'] >= 75:
                 badges.append('Healthy pick')
-            if item['_valuePct'] >= 75:
+            if item['_valuePct'] >= 75 and len(badges) < 2:
                 badges.append('Great value')
-            if n['protein100'] >= 12:
+            if n['protein100'] >= 12 and len(badges) < 2:
                 badges.append('High protein')
-            if (n.get('sugar100') or 0) <= 3 and group != 'fresh_fruit':
+            if (n.get('sugar100') or 0) <= 3 and group != 'fresh_fruit' and len(badges) < 2:
                 badges.append('Low sugar')
             if not badges:
                 badges.append('Worth a look')
