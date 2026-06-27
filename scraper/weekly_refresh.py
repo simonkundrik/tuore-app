@@ -24,6 +24,10 @@ GRABGO_PIPELINE = [
     "scrape_grabgo_candidates.py", "scrape_grabgo_details.py",
     "build_grabgo.py", "insert_grabgo.py",
 ]
+SAUCES_PIPELINE = [
+    "scrape_sauces_candidates.py", "scrape_sauces_details.py",
+    "build_sauces.py", "insert_sauces.py",
+]
 
 
 def run_step(script):
@@ -42,6 +46,8 @@ def main():
     for script in RECIPE_PIPELINE:
         run_step(script)
     for script in GRABGO_PIPELINE:
+        run_step(script)
+    for script in SAUCES_PIPELINE:
         run_step(script)
 
     print("\n=== validating ===")
@@ -65,8 +71,8 @@ def main():
 
     print("\n=== committing and pushing ===")
     run_git(["add", "index.html", "scraper/kruoka_recipes.json",
-             "scraper/grabgo_recommendations.json"], check=True)
-    msg = "Weekly recipe + Grab & Go refresh (automated)\n\nCo-Authored-By: Tuore Scraper <noreply@example.com>"
+             "scraper/grabgo_recommendations.json", "scraper/sauces_recommendations.json"], check=True)
+    msg = "Weekly recipe + Grab & Go + sauces refresh (automated)\n\nCo-Authored-By: Tuore Scraper <noreply@example.com>"
     run_git(["-c", "user.name=Tuore Scraper", "-c", "user.email=you@example.com",
              "commit", "-m", msg], check=True)
     run_git(["push", "origin", "main"], check=True)

@@ -34,6 +34,15 @@ def validate(html=None):
         if grabgo_count < 20:
             errors.append(f"GRABGO array suspiciously small: {grabgo_count} entries (expected 50+)")
 
+    # SAUCES is new and may legitimately not exist yet (e.g. its first
+    # scheduled scrape hasn't found anything to insert) -- only check
+    # it's not suspiciously small once it actually exists
+    sauces_block = re.search(r"\nvar SAUCES=\[(.*?)\n\];\n", html, re.DOTALL)
+    if sauces_block:
+        sauces_count = len(re.findall(r"\{ean:'", sauces_block.group(1)))
+        if sauces_count < 5:
+            errors.append(f"SAUCES array suspiciously small: {sauces_count} entries (expected 10+)")
+
     return (len(errors) == 0, errors)
 
 

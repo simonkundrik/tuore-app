@@ -189,6 +189,11 @@ input[type=range]{height:18px;}
 <p style="font-weight:600;font-size:16px;margin:16px 16px 4px;">Grab & Go</p>
 <p style="font-size:12px;color:var(--color-text-secondary);margin:0 16px 12px;">Real K-Supermarket Hyvätuuli products, picked for being healthy <em>and</em> good value — no cooking required.</p>
 <div id="discoverGroups"></div>
+<div id="saucesSection" style="display:none;">
+<p style="font-weight:600;font-size:16px;margin:24px 16px 4px;">Healthy sauces</p>
+<p style="font-size:12px;color:var(--color-text-secondary);margin:0 16px 12px;">The lightest real option in each sauce category at K-Supermarket Hyvätuuli — for whatever you're putting it on.</p>
+<div id="saucesGroups"></div>
+</div>
 </div>
 
 <div class="screen" id="screen-plan">
@@ -1852,6 +1857,38 @@ function grabgoCardHtml(item){
   +'<button onclick="openGrabgoConfirm(\''+item.ean+'\')" style="font-size:12px;padding:6px 10px;">Add to today\'s plan</button>'
   +'</div></div>';
 }
+function renderSauces(){
+ var section=document.getElementById('saucesSection');
+ var box=document.getElementById('saucesGroups');
+ if(!box||!section) return;
+ if(typeof SAUCES==='undefined'||!SAUCES.length){ section.style.display='none'; return; }
+ section.style.display='block';
+ var groups=[];
+ var seen={};
+ SAUCES.forEach(function(item){
+  if(!seen[item.group]){ seen[item.group]=true; groups.push(item.group); }
+ });
+ box.innerHTML=groups.map(function(g){
+  var items=SAUCES.filter(function(i){return i.group===g;});
+  var label=items[0].groupLabel;
+  var cards=items.map(sauceCardHtml).join('');
+  return '<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:18px 16px 8px;">'+label+'</p>'+cards;
+ }).join('');
+}
+function sauceCardHtml(item){
+ var badgesHtml=item.badges.map(function(b){return '<span class="tag">'+b+'</span>';}).join('');
+ var facts=[];
+ if(item.kcal100!=null) facts.push(Math.round(item.kcal100)+' kcal/100g');
+ if(item.sugar100!=null) facts.push(item.sugar100+'g sugar/100g');
+ if(item.salt100!=null) facts.push(item.salt100+'g salt/100g');
+ return '<div class="ing-card" style="display:flex;gap:10px;">'
+  +'<div style="width:48px;height:48px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">'+grabgoImgOrIconHtml(item,48,'20px')+'</div>'
+  +'<div style="flex:1;min-width:0;">'
+  +'<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;"><p style="font-weight:600;font-size:13px;margin:0;">'+item.name+'</p><span style="font-size:13px;font-weight:600;flex-shrink:0;">€'+item.price.toFixed(2)+'</span></div>'
+  +'<div style="display:flex;gap:6px;margin:6px 0;flex-wrap:wrap;">'+badgesHtml+'</div>'
+  +'<p style="font-size:11px;color:var(--color-text-secondary);margin:0;">'+facts.join(' · ')+'</p>'
+  +'</div></div>';
+}
 var pendingGrabgo=null;
 function openGrabgoConfirm(ean){
  var item=GRABGO.find(function(g){return g.ean===ean;});
@@ -2069,6 +2106,7 @@ renderMeals();
 applyFilters();
 renderPlan();
 renderDiscover();
+renderSauces();
 
 if('serviceWorker' in navigator){
  window.addEventListener('load', function(){
