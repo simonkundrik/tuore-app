@@ -2277,7 +2277,9 @@ function sortMeals(key){
 }
 function offRow(pr,frac){
  var need=pr.price*frac;
- var price=!pr.inStock?'<span style="color:var(--color-text-danger);">Out of stock</span>':'€'+need.toFixed(2);
+ var price=!pr.inStock
+  ?'<span style="color:var(--color-text-danger);">Out of stock</span>'
+  :'<span><i class="ti ti-check" style="color:var(--color-text-success);font-size:12px;vertical-align:-1px;margin-right:2px;" aria-hidden="true"></i>€'+need.toFixed(2)+'</span>';
  var subMsg=!pr.comparable
   ?('Usual pick ('+pr.originalProduct+') is out of stock — showing the closest available alternative instead')
   :pr.cheaper
@@ -2301,6 +2303,8 @@ function openMeal(id){
   return '<div class="ing-card"><p style="font-size:13px;font-weight:600;margin:0 0 4px;">'+pr.nm+'</p>'+offRow(pr,ing.frac)+'</div>';
  }).join('');
  var t=totals(m);
+ var inStockCount=m.ing.filter(function(ing){return resolveProduct(ing.ref).inStock;}).length;
+ var stockSpan='<span><span style="width:6px;height:6px;border-radius:50%;background:'+stockColor(inStockCount,m.ing.length)+';display:inline-block;margin-right:4px;"></span>'+inStockCount+'/'+m.ing.length+' in stock</span>';
  var kcalSpan=m.kcal?('<span><i class="ti ti-flame" style="vertical-align:-2px;" aria-hidden="true"></i> '+m.kcal+' kcal</span>'):'';
  var macroHtml=(m.protein||m.carbs||m.fat)?('<div style="display:flex;gap:14px;margin:0 16px 12px;font-size:12px;color:var(--color-text-secondary);"><span>'+(m.protein||0)+'g protein</span><span>'+(m.carbs||0)+'g carbs</span><span>'+(m.fat||0)+'g fat</span></div>'):'';
  var stepsHtml=m.steps.length?('<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:16px 16px 6px;">How to make it</p><ol style="margin:0 16px 4px;padding-left:18px;font-size:13px;">'+m.steps.map(function(s){return '<li style="margin-bottom:6px;">'+s+'</li>';}).join('')+'</ol>'):'';
@@ -2316,7 +2320,8 @@ function openMeal(id){
  document.getElementById('detail-body').innerHTML=
   bannerHtml
   +'<p style="font-weight:600;font-size:16px;margin:'+(hasBanner?'12px':'4px')+' 16px 4px;">'+m.name+(m.custom?' <span class="tag">Yours</span>':'')+'</p>'
-  +'<div style="display:flex;gap:16px;margin:0 16px 12px;font-size:12px;color:var(--color-text-secondary);"><span><i class="ti ti-clock" style="vertical-align:-2px;" aria-hidden="true"></i> '+m.time+' min</span><span><i class="ti ti-users" style="vertical-align:-2px;" aria-hidden="true"></i> '+m.servings+' servings</span>'+kcalSpan+'</div>'
+  +'<div style="display:flex;gap:16px;margin:0 16px 8px;font-size:12px;color:var(--color-text-secondary);"><span><i class="ti ti-clock" style="vertical-align:-2px;" aria-hidden="true"></i> '+m.time+' min</span><span><i class="ti ti-users" style="vertical-align:-2px;" aria-hidden="true"></i> '+m.servings+' servings</span>'+kcalSpan+'</div>'
+  +'<div style="display:flex;gap:16px;margin:0 16px 12px;font-size:12px;color:var(--color-text-secondary);">'+stockSpan+'</div>'
   +macroHtml
   +equipDetailHtml(m)
   +'<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:12px 16px 6px;">Ingredients &amp; the exact product to grab</p>'
