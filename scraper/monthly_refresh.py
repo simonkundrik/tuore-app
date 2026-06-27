@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-"""Scheduled weekly job: re-run the Grab & Go pipeline only (re-search
-candidates, revisit each for nutrition/price, rescore), idempotently
-replace its section of index.html, validate, and auto-commit+push only if
-validation passes and something actually changed.
+"""Scheduled monthly job: re-run the K-Ruoka recipe-catalog pipeline
+(re-crawl their recipes, remap ingredients, rebuild recipe objects) and the
+Sauces pipeline (re-search candidates, revisit each for nutrition/price,
+rescore), idempotently replace both sections of index.html, validate, and
+auto-commit+push only if validation passes and something actually changed.
 
-Grab & Go is perishable/fresh-leaning and genuinely sensitive to K-Ruoka's
-weekly campaign-price rotation (confirmed live: general "Etuhinta" offers
-roll over the Sun-night/Mon-morning boundary), which is why this runs
-Monday morning -- see cron schedule. K-Ruoka's own recipe catalog and
-Sauces (shelf-stable condiments) change far less often and were split out
-to monthly_refresh.py instead, partly to keep this run shorter (less time
-spent hitting k-ruoka.fi per week == lower Cloudflare/rate-limit exposure).
+Split out from weekly_refresh.py: neither of these is genuinely
+time-sensitive week to week (a new K-Ruoka recipe appearing, or a
+shelf-stable condiment's price/stock shifting, is rare), so checking them
+every single week was extra load on k-ruoka.fi for no real freshness gain
+-- and a shorter weekly run means less weekly Cloudflare/rate-limit
+exposure for the genuinely volatile stuff (Grab & Go).
 
 Runs each pipeline stage as its own subprocess (rather than importing,
 since a couple of these started life as one-off analysis scripts without
@@ -23,9 +23,13 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).parent.parent
 SCRAPER_DIR = Path(__file__).parent
 
-GRABGO_PIPELINE = [
-    "scrape_grabgo_candidates.py", "scrape_grabgo_details.py",
-    "build_grabgo.py", "insert_grabgo.py",
+RECIPE_PIPELINE = [
+    "scrape_recipes.py", "analyze_coverage.py", "select_batch.py",
+    "build_kruoka_recipes.py", "insert_kruoka_recipes.py",
+]
+SAUCES_PIPELINE = [
+    "scrape_sauces_candidates.py", "scrape_sauces_details.py",
+    "build_sauces.py", "insert_sauces.py",
 ]
 
 
@@ -46,7 +50,15 @@ def main():
     from scraper import startup_jitter
     startup_jitter()
 
-    for script in GRABGO_PIPELINE:
+    for script in RECIPE_PIPELINE:
+        run_step(script)
+    # a deliberate cooldown between pipelines rather than running both
+    # back-to-back -- spreads this month's load over a longer window
+    # instead of one continuous multi-hour session against k-ruoka.fi
+    import time
+    print("\nCooldown between pipelines...")
+    time.sleep(600)
+    for script in SAUCES_PIPELINE:
         run_step(script)
 
     print("\n=== validating ===")
@@ -68,8 +80,9 @@ def main():
         return
 
     print("\n=== committing and pushing ===")
-    run_git(["add", "index.html", "scraper/grabgo_recommendations.json"], check=True)
-    msg = "Weekly Grab & Go refresh (automated)\n\nCo-Authored-By: Tuore Scraper <noreply@example.com>"
+    run_git(["add", "index.html", "scraper/kruoka_recipes.json",
+             "scraper/sauces_recommendations.json"], check=True)
+    msg = "Monthly recipe + sauces refresh (automated)\n\nCo-Authored-By: Tuore Scraper <noreply@example.com>"
     run_git(["-c", "user.name=Tuore Scraper", "-c", "user.email=you@example.com",
              "commit", "-m", msg], check=True)
     run_git(["push", "origin", "main"], check=True)

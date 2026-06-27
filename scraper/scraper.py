@@ -30,6 +30,7 @@ import atexit
 import json
 import os
 import platform
+import random
 import re
 import subprocess
 import time
@@ -218,6 +219,50 @@ def pick_best_match(candidates, include, exclude):
         if any(kw.lower() in name for kw in include) and not any(kw.lower() in name for kw in exclude):
             return c, True
     return (candidates[0], False) if candidates else (None, False)
+
+
+def startup_jitter(max_minutes=8):
+    """Sleep a random amount before a scheduled job starts hitting the site,
+    so cron-triggered traffic doesn't always begin at the exact same second
+    every day/week -- cheap, separate from the browser-fingerprint issue
+    (already solved by driving real Chrome, see module docstring), but
+    perfectly regular timing is itself a pattern worth not having."""
+    delay = random.uniform(0, max_minutes * 60)
+    print(f"Startup jitter: sleeping {delay:.0f}s before starting")
+    time.sleep(delay)
+
+
+def jittered_wait(page, base_ms, spread_ms=400):
+    """page.wait_for_timeout with randomized jitter instead of a perfectly
+    uniform delay -- a fixed N-millisecond gap between every request is a
+    detectable pattern even from a real, non-headless browser."""
+    page.wait_for_timeout(base_ms + random.uniform(0, spread_ms))
+
+
+class FailureRateGuard:
+    """Aborts a scrape run early once too many requests come back empty or
+    unmatched -- that pattern usually means we're starting to get rate-
+    limited or blocked, and grinding through the rest of the list would
+    just produce a half-broken dataset while digging the hole deeper.
+    Call .record(ok) after each item; .record() raises once the failure
+    rate crosses the threshold (only evaluated past a minimum sample size,
+    so a handful of genuinely-obscure-ingredient misses early on doesn't
+    trip it)."""
+    def __init__(self, max_failure_rate=0.5, min_samples=15):
+        self.max_failure_rate = max_failure_rate
+        self.min_samples = min_samples
+        self.total = 0
+        self.failures = 0
+
+    def record(self, ok):
+        self.total += 1
+        if not ok:
+            self.failures += 1
+        if self.total >= self.min_samples and self.failures / self.total > self.max_failure_rate:
+            raise RuntimeError(
+                f"Aborting: {self.failures}/{self.total} requests failed/unmatched "
+                f"(>{self.max_failure_rate:.0%}) -- looks like blocking/rate-limiting, not bad luck"
+            )
 
 
 def main():

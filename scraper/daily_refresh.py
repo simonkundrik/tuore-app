@@ -21,10 +21,13 @@ def run(cmd, **kwargs):
 
 def main():
     print("=== daily_refresh: scraping fresh stock data ===")
-    from scraper import launch_chrome, ensure_store_selected, raw_search, pick_best_match
+    from scraper import (launch_chrome, ensure_store_selected, raw_search, pick_best_match,
+                          startup_jitter, jittered_wait, FailureRateGuard)
     from playwright.sync_api import sync_playwright
     import json
     from datetime import datetime, timezone
+
+    startup_jitter()
 
     all_defs = json.load(open(SCRAPER_DIR / "all_search_defs.json", encoding="utf-8"))
     chrome_proc = launch_chrome()
@@ -35,10 +38,12 @@ def main():
             page = ctx.pages[0] if ctx.pages else ctx.new_page()
             ensure_store_selected(page)
 
+            guard = FailureRateGuard(max_failure_rate=0.4, min_samples=15)
             products = {}
             for i, (key, ing) in enumerate(all_defs.items(), 1):
                 candidates = raw_search(page, ing["search"])
                 match, confident = pick_best_match(candidates, ing["include"], ing["exclude"])
+                guard.record(match is not None)
                 passing = [c for c in candidates
                            if any(kw.lower() in c["name"].lower() for kw in ing["include"])
                            and not any(kw.lower() in c["name"].lower() for kw in ing["exclude"])]
@@ -47,6 +52,7 @@ def main():
                                   "searchTerm": ing["search"], "alternates": alts}
                 if i % 25 == 0:
                     print(f"  {i}/{len(all_defs)}")
+                jittered_wait(page, 300, 700)
 
             stock_path = SCRAPER_DIR / "stock_data.json"
             existing = json.load(open(stock_path, encoding="utf-8"))

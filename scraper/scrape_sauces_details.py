@@ -8,7 +8,7 @@ import re
 import time
 import urllib.request
 from pathlib import Path
-from scraper import launch_chrome, ensure_store_selected
+from scraper import launch_chrome, ensure_store_selected, startup_jitter, jittered_wait, FailureRateGuard
 from map_ingredients import find_refs_in_text
 from playwright.sync_api import sync_playwright
 
@@ -148,12 +148,14 @@ def parse_category(text):
 
 
 def main():
+    startup_jitter()
     candidates = json.load(open(IN_PATH, encoding="utf-8"))
     print(f"Loaded {len(candidates)} candidates")
 
     chrome_proc = launch_chrome()
     results = []
     failed = []
+    guard = FailureRateGuard(max_failure_rate=0.4, min_samples=20)
     try:
         with sync_playwright() as p:
             browser = p.chromium.connect_over_cdp(f"http://localhost:{DEBUG_PORT}")
@@ -166,7 +168,7 @@ def main():
                 try:
                     page.goto(f"https://www.k-ruoka.fi/kauppa/tuote/x-{ean}",
                               wait_until="domcontentloaded", timeout=15000)
-                    page.wait_for_timeout(700)
+                    jittered_wait(page, 500, 600)
                     try:
                         page.get_by_text("Ravintosisältö", exact=True).first.click(timeout=4000)
                         page.wait_for_timeout(500)
@@ -183,6 +185,7 @@ def main():
                     continue
 
                 price, unit, unit_price, unit_price_unit, on_sale = parse_price(text)
+                guard.record(price is not None)
                 nutrition = parse_nutrition(text)
                 ingredients_text = parse_ingredients_text(text)
                 off_fallback_used = False
