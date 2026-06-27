@@ -102,6 +102,9 @@ input[type=range]{height:18px;}
 <p id="syncLine" style="padding:10px 16px 0;font-size:12px;color:var(--color-text-secondary);margin:0;"></p>
 <div style="padding:10px 16px 0;"><input type="text" id="mealSearch" placeholder="Search meals" oninput="applyFilters()" style="width:100%;" /></div>
 <div style="padding:8px 16px 0;"><button onclick="openAddRecipe()" style="width:100%;color:var(--color-text-info);border-color:var(--color-border-info);"><i class="ti ti-plus" style="vertical-align:-2px;margin-right:4px;" aria-hidden="true"></i>Add your own recipe</button></div>
+<p style="font-weight:600;font-size:14px;margin:18px 16px 2px;">Browse by meal</p>
+<p style="font-size:11px;color:var(--color-text-tertiary);margin:0 16px 8px;">A quick pick from each category — search and filter the full list below to see everything.</p>
+<div id="homeSections"></div>
 <div style="display:flex;gap:6px;padding:10px 16px 0;flex-wrap:wrap;">
 <button class="type-btn active" data-type="all" onclick="setType(this)">All</button>
 <button class="type-btn" data-type="breakfast" onclick="setType(this)">Breakfast</button>
@@ -1883,6 +1886,7 @@ function saveNewRecipe(){
  saveCustomMeals();
  renderMeals();
  applyFilters();
+ renderHomeSections();
  showScreen('home');
 }
 function deleteCustomMeal(id){
@@ -1891,6 +1895,7 @@ function deleteCustomMeal(id){
  saveCustomMeals();
  renderMeals();
  applyFilters();
+ renderHomeSections();
  showScreen('home');
 }
 
@@ -2105,6 +2110,39 @@ function equipCardHtml(m){
  var names=missing.map(function(e){return EQNAMES[e];}).join(', ');
  return '<div style="margin-top:4px;font-size:11px;color:var(--color-text-danger);"><i class="ti ti-alert-triangle" style="font-size:11px;vertical-align:-1px;margin-right:3px;" aria-hidden="true"></i>Needs: '+names+'</div>';
 }
+var HOME_SECTIONS=[
+ {title:'Breakfast', type:'breakfast'},
+ {title:'Lunch', type:'lunch'},
+ {title:'Dinner', type:'dinner'},
+ {title:'Snack', type:'snack'},
+];
+function homeTileHtml(m){
+ var t=totals(m);
+ var badge=m.tags&&m.tags[0];
+ return '<div class="discover-tile" onclick="openMeal(\''+m.id+'\')">'
+  +(badge?'<span class="discover-tile-badge">'+badge+'</span>':'')
+  +'<div class="discover-tile-img">'+mealImgOrIconHtml(m,124,'26px')+'</div>'
+  +'<div class="discover-tile-body">'
+  +'<p class="discover-tile-name">'+m.name+'</p>'
+  +'<p class="discover-tile-price">€'+t.per.toFixed(2)+'</p>'
+  +'</div>'
+  +'</div>';
+}
+function renderHomeSections(){
+ var box=document.getElementById('homeSections');
+ if(!box) return;
+ box.innerHTML=HOME_SECTIONS.map(function(sec){
+  var items=meals.filter(function(m){return m.type.indexOf(sec.type)>-1;});
+  if(!items.length) return '';
+  var count=items.length;
+  var picked=items.slice().sort(function(a,b){return totals(a).per-totals(b).per;}).slice(0,14);
+  var tiles=picked.map(homeTileHtml).join('');
+  return '<div class="discover-section">'
+   +'<div class="discover-section-head"><p class="discover-section-title">'+sec.title+'</p><span class="discover-section-count">'+count+'</span></div>'
+   +'<div class="discover-row">'+tiles+'</div>'
+   +'</div>';
+ }).join('');
+}
 function renderMeals(){
  var list=document.getElementById('meal-list');
  var vis=visibleMealList();
@@ -2247,6 +2285,7 @@ function showScreen(id){
 customMeals.forEach(function(m){meals.push(m);});
 renderMeals();
 applyFilters();
+renderHomeSections();
 renderPlan();
 renderDiscover();
 renderSauces();
