@@ -1978,6 +1978,39 @@ function parsePackGrams(name){
  var unit=m[2].toLowerCase();
  return (unit==='kg'||unit==='l')?n*1000:n;
 }
+function parsePackAmount(name){
+ var m=name.match(/(\d+(?:[.,]\d+)?)\s*(kg|g|l|ml)\b/i);
+ if(!m) return null;
+ var n=parseFloat(m[1].replace(',','.'));
+ var unit=m[2].toLowerCase();
+ if(unit==='kg') return {amount:n*1000, unit:'g'};
+ if(unit==='l') return {amount:n*1000, unit:'ml'};
+ return {amount:n, unit:unit};
+}
+// frac already means "fraction of this real product" -- the same number
+// the price calc uses (offRow's pr.price*frac) -- so multiplying it by
+// the product's real pack size (parsed from its own name, e.g. "25g",
+// "1kg", "500ml") gives a genuine amount-to-use in metric units.
+// Deliberately returns null (no guess) when the product's name has no
+// parseable size: loose by-weight/by-piece items (onion, garlic, fresh
+// herb pots, ...) don't reliably mean the same thing for frac -- testing
+// found it's sometimes "fraction of 1kg", sometimes "fraction of one
+// piece", sometimes just a pricing nudge with no real weight behind it
+// (e.g. frac=0.33 for garlic would imply 330g, wildly more than any
+// recipe actually uses) -- showing a number there would be confident-
+// looking but wrong more often than not.
+function ingredientAmount(pr,frac){
+ var parsed=parsePackAmount(pr.product);
+ if(!parsed) return null;
+ return {amount:Math.round(parsed.amount*frac), unit:parsed.unit};
+}
+function formatAmount(a){
+ if(a.amount>=1000){
+  var big=a.amount/1000;
+  return (big%1===0?big:big.toFixed(1))+(a.unit==='ml'?'l':'kg');
+ }
+ return a.amount+a.unit;
+}
 // Broader presentation groupings -- the underlying `group` field on each
 // item stays narrow (it drives search terms + per-category scoring), but
 // browsing nine-plus tiny categories one full-width card at a time felt
@@ -2339,7 +2372,9 @@ function openMeal(id){
  var m=meals.filter(function(x){return x.id===id;})[0];
  var rows=m.ing.map(function(ing){
   var pr=resolveProduct(ing.ref);
-  return '<div class="ing-card"><p style="font-size:13px;font-weight:600;margin:0 0 4px;">'+pr.nm+'</p>'+offRow(pr,ing.frac)+'</div>';
+  var amt=ingredientAmount(pr,ing.frac);
+  var amtLabel=amt?(' <span style="color:var(--color-text-secondary);font-weight:400;">— '+formatAmount(amt)+'</span>'):'';
+  return '<div class="ing-card"><p style="font-size:13px;font-weight:600;margin:0 0 4px;">'+pr.nm+amtLabel+'</p>'+offRow(pr,ing.frac)+'</div>';
  }).join('');
  var t=totals(m);
  var inStockCount=m.ing.filter(function(ing){return resolveProduct(ing.ref).inStock;}).length;
