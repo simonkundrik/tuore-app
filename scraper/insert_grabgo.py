@@ -20,7 +20,9 @@ GROUP_ORDER = ['fresh_fruit', 'berries', 'raw_veg_snack', 'dairy_snack', 'ready_
 def js_str(s, quote="'"):
     if s is None:
         return 'null'
-    return quote + str(s).replace('\\', '\\\\').replace(quote, '\\' + quote) + quote
+    escaped = str(s).replace('\\', '\\\\').replace(quote, '\\' + quote)
+    escaped = escaped.replace('\n', '\\n').replace('\r', '\\r')
+    return quote + escaped + quote
 
 
 def js_num(n):
@@ -57,6 +59,7 @@ def serialize(r):
         f"needsHeating:{'true' if r.get('needsHeating') else 'false'}",
         f"isWholeProduce:{'true' if r.get('isWholeProduce') else 'false'}",
         f"containsRefs:{js_arr_str(r.get('containsRefs', []))}",
+        f"ingredientsText:{js_str(r.get('ingredientsText'), chr(34))}",
     ]
     return '{' + ','.join(parts) + '}'
 

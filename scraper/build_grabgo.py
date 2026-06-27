@@ -257,6 +257,7 @@ def main():
                 'healthPct': round(item['_healthPct']),
                 'valuePct': round(item['_valuePct']),
                 'containsRefs': sorted(all_refs),
+                'ingredientsText': item.get('ingredientsText'),
             })
 
     print(f"\nFinal recommendation count: {len(recommendations)}")
