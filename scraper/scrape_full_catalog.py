@@ -34,8 +34,14 @@ from playwright.sync_api import sync_playwright
 
 DEBUG_PORT = 9333
 OUT_PATH = Path(__file__).parent / "full_catalog_raw.json"
-MAX_SCROLLS = 150
-STALL_LIMIT = 6
+MAX_SCROLLS = 400
+# the site's lazy-load can need a surprising number of consecutive
+# "nothing happened" scrolls before the next page actually fires --
+# confirmed live: one category needed ~15 stalled scrolls between
+# pages, far more than a quick stall-limit would tolerate. Generous on
+# purpose since this runs on its own slow (monthly) cadence, not the
+# weekly refresh -- patience costs time, not reliability.
+STALL_LIMIT = 25
 
 # confirmed via live survey on 2026-06-27 -- excludes 'Juomat' (drinks)
 # and non-food departments (pets, cosmetics, electronics, etc.). Finnish
