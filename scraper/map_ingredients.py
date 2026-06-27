@@ -231,3 +231,25 @@ def classify(phrase_fi):
         if stem in p:
             return ('ignored', None)
     return ('unknown', p)
+
+
+def find_refs_in_text(text):
+    """Scans a full ingredients-list string (e.g. a product's "Ainesosat"
+    text, not a single recipe-ingredient phrase) for every P-dict key it
+    actually contains -- used for the dislikes filter, since a product's
+    ingredient list names many ingredients at once rather than just one.
+
+    Classifies each comma-separated segment independently with the same
+    classify() used for recipes, rather than checking every stem against
+    the raw blob directly -- FI_STEM_TO_KEY relies on checking more
+    specific stems before generic ones within a single phrase (e.g. the
+    bare 'kana' chicken stem is deliberately last since it's a substring
+    of 'porkkana'/carrot); checking stems independently against the whole
+    text would defeat that ordering and misfire on substrings split across
+    unrelated segments."""
+    found = set()
+    for segment in text.split(','):
+        kind, key = classify(segment)
+        if kind == 'mapped':
+            found.add(key)
+    return sorted(found)

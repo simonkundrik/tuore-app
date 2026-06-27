@@ -10,6 +10,7 @@ import json
 import re
 from pathlib import Path
 from statistics import median
+from map_ingredients import find_refs_in_text
 
 IN_PATH = Path(__file__).parent / "sauces_details_raw.json"
 OUT_PATH = Path(__file__).parent / "sauces_recommendations.json"
@@ -105,6 +106,7 @@ def main():
 
         for item in picked:
             n = item['nutrition']
+            all_refs = set(item.get('containsRefs') or []) | set(find_refs_in_text(item['name']))
             badges = []
             if item['_healthPct'] >= 90:
                 badges.append('Healthiest pick')
@@ -138,6 +140,7 @@ def main():
                 'dietTags': item.get('dietTags', []),
                 'badges': badges[:2],
                 'healthPct': round(item['_healthPct']),
+                'containsRefs': sorted(all_refs),
             })
 
     print(f"\nFinal recommendation count: {len(recommendations)}")

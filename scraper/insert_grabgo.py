@@ -56,6 +56,7 @@ def serialize(r):
         f"badges:{js_arr_str(r.get('badges', []))}",
         f"needsHeating:{'true' if r.get('needsHeating') else 'false'}",
         f"isWholeProduce:{'true' if r.get('isWholeProduce') else 'false'}",
+        f"containsRefs:{js_arr_str(r.get('containsRefs', []))}",
     ]
     return '{' + ','.join(parts) + '}'
 

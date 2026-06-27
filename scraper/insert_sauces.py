@@ -52,6 +52,7 @@ def serialize(r):
         f"salt100:{js_num(r.get('salt100'))}",
         f"dietTags:{js_arr_str(r.get('dietTags', []))}",
         f"badges:{js_arr_str(r.get('badges', []))}",
+        f"containsRefs:{js_arr_str(r.get('containsRefs', []))}",
     ]
     return '{' + ','.join(parts) + '}'
 

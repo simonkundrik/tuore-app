@@ -11,6 +11,7 @@ import json
 import re
 from pathlib import Path
 from statistics import median
+from map_ingredients import find_refs_in_text
 
 IN_PATH = Path(__file__).parent / "grabgo_details_raw.json"
 OUT_PATH = Path(__file__).parent / "grabgo_recommendations.json"
@@ -212,6 +213,11 @@ def main():
 
         for item in picked:
             n = item['nutrition']
+            # whole produce (banana, apple, ...) never has an "Ainesosat"
+            # ingredients panel since it's a single-ingredient raw food --
+            # the product's own name *is* the ingredient, so also check
+            # that directly rather than relying only on a scraped list
+            all_refs = set(item.get('containsRefs') or []) | set(find_refs_in_text(item['name']))
             badges = []
             if item.get('onSale'):
                 badges.append('On sale now')
@@ -250,6 +256,7 @@ def main():
                 'isWholeProduce': bool(item.get('isWholeProduce')),
                 'healthPct': round(item['_healthPct']),
                 'valuePct': round(item['_valuePct']),
+                'containsRefs': sorted(all_refs),
             })
 
     print(f"\nFinal recommendation count: {len(recommendations)}")

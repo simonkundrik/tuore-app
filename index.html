@@ -1529,7 +1529,8 @@ let meals=[
 const EQNAMES={pot:'Pot',pan:'Frying pan',oven:'Oven',blender:'Blender'};
 var liked=new Set();
 var myEquip=new Set(['pot','pan']);
-var dislikes=new Set();
+var dislikes=new Set(JSON.parse(localStorage.getItem('tuoreDislikes')||'[]'));
+function saveDislikes(){ localStorage.setItem('tuoreDislikes', JSON.stringify(Array.from(dislikes))); }
 var customMeals=JSON.parse(localStorage.getItem('tuoreCustomMeals')||'[]');
 var newRecipeIng=[];
 function saveCustomMeals(){ localStorage.setItem('tuoreCustomMeals', JSON.stringify(customMeals)); }
@@ -1775,17 +1776,23 @@ function renderDislikeChips(){
 }
 function addDislike(key){
  dislikes.add(key);
+ saveDislikes();
  document.getElementById('dislikeSearch').value='';
  document.getElementById('dislikeSuggestions').innerHTML='';
  renderDislikeChips();
  renderMeals();
  applyFilters();
+ renderDiscover();
+ renderSauces();
 }
 function removeDislike(key){
  dislikes.delete(key);
+ saveDislikes();
  renderDislikeChips();
  renderMeals();
  applyFilters();
+ renderDiscover();
+ renderSauces();
 }
 function visibleMealList(){ return meals.filter(function(m){return !m.ing.some(function(ing){return dislikes.has(ing.ref);});}); }
 function toggleNewType(btn){ btn.classList.toggle('active'); }
@@ -1932,9 +1939,12 @@ var SAUCE_SECTIONS=[
  {title:'Spicy & smoky', groups:['bbq','hot_sauce']},
  {title:'Dressings & soy', groups:['soy_sauce','dressing']},
 ];
+function isDislikedItem(item){
+ return (item.containsRefs||[]).some(function(ref){return dislikes.has(ref);});
+}
 function renderSectionedRows(box, allItems, sections, addable){
  box.innerHTML=sections.map(function(sec){
-  var items=allItems.filter(function(i){return sec.groups.indexOf(i.group)>-1;});
+  var items=allItems.filter(function(i){return sec.groups.indexOf(i.group)>-1 && !isDislikedItem(i);});
   if(!items.length) return '';
   var tiles=items.map(function(item){return discoverTileHtml(item, addable);}).join('');
   return '<div class="discover-section">'
