@@ -1979,37 +1979,57 @@ function parsePackGrams(name){
  return (unit==='kg'||unit==='l')?n*1000:n;
 }
 function parsePackAmount(name){
- var m=name.match(/(\d+(?:[.,]\d+)?)\s*(kg|g|l|ml)\b/i);
+ var m=name.match(/(\d+(?:[.,]\d+)?)\s*(kg|g|dl|l|ml)\b/i);
  if(!m) return null;
  var n=parseFloat(m[1].replace(',','.'));
  var unit=m[2].toLowerCase();
  if(unit==='kg') return {amount:n*1000, unit:'g'};
  if(unit==='l') return {amount:n*1000, unit:'ml'};
+ if(unit==='dl') return {amount:n*100, unit:'ml'};
  return {amount:n, unit:unit};
 }
+// Hand-curated grams-if-frac-were-1.0, for ingredients whose matched
+// product has no labeled size at all (loose produce, potted herbs) --
+// calibrated against each ingredient's typical real-world recipe
+// quantity, not derived from frac (which doesn't reliably mean a real
+// weight for these -- see ingredientAmount). Marked as an estimate (~)
+// wherever shown, since it's a culinary judgment call, not a scraped fact.
+var BULK_GRAMS_PER_FULL_FRAC={
+ salmon:400, onion:110, cucumber:300, banana:120, garlic:30, lemon:60,
+ sweetpotato:150, leek:150, avocado:140, apple:180, cabbage:1000,
+ cauliflower:600, zucchini:200, orange:150, basil:20, parsley:20,
+ dill:20, fennel:300, rutabaga:400, pumpkin:350, mango:200,
+};
 // frac already means "fraction of this real product" -- the same number
 // the price calc uses (offRow's pr.price*frac) -- so multiplying it by
 // the product's real pack size (parsed from its own name, e.g. "25g",
 // "1kg", "500ml") gives a genuine amount-to-use in metric units.
-// Deliberately returns null (no guess) when the product's name has no
-// parseable size: loose by-weight/by-piece items (onion, garlic, fresh
-// herb pots, ...) don't reliably mean the same thing for frac -- testing
-// found it's sometimes "fraction of 1kg", sometimes "fraction of one
-// piece", sometimes just a pricing nudge with no real weight behind it
-// (e.g. frac=0.33 for garlic would imply 330g, wildly more than any
-// recipe actually uses) -- showing a number there would be confident-
-// looking but wrong more often than not.
-function ingredientAmount(pr,frac){
+// Falls back to the hand-curated BULK_GRAMS_PER_FULL_FRAC table when the
+// product's name has no labeled size at all (loose produce, herb pots);
+// that path is flagged as an estimate. If neither applies, returns null
+// rather than guessing.
+function ingredientAmount(pr,frac,ref){
  var parsed=parsePackAmount(pr.product);
- if(!parsed) return null;
- return {amount:Math.round(parsed.amount*frac), unit:parsed.unit};
+ if(parsed){
+  var amt=Math.round(parsed.amount*frac);
+  return amt>0?{amount:amt, unit:parsed.unit, estimated:false}:null;
+ }
+ var bulk=BULK_GRAMS_PER_FULL_FRAC[ref];
+ if(bulk){
+  var est=Math.round(bulk*frac);
+  return est>0?{amount:est, unit:'g', estimated:true}:null;
+ }
+ return null;
 }
 function formatAmount(a){
+ var s;
  if(a.amount>=1000){
   var big=a.amount/1000;
-  return (big%1===0?big:big.toFixed(1))+(a.unit==='ml'?'l':'kg');
+  s=(big%1===0?big:big.toFixed(1))+(a.unit==='ml'?'l':'kg');
+ } else {
+  s=a.amount+a.unit;
  }
- return a.amount+a.unit;
+ return a.estimated?('~'+s):s;
 }
 // Broader presentation groupings -- the underlying `group` field on each
 // item stays narrow (it drives search terms + per-category scoring), but
@@ -2372,7 +2392,7 @@ function openMeal(id){
  var m=meals.filter(function(x){return x.id===id;})[0];
  var rows=m.ing.map(function(ing){
   var pr=resolveProduct(ing.ref);
-  var amt=ingredientAmount(pr,ing.frac);
+  var amt=ingredientAmount(pr,ing.frac,ing.ref);
   var amtLabel=amt?(' <span style="color:var(--color-text-secondary);font-weight:400;">— '+formatAmount(amt)+'</span>'):'';
   return '<div class="ing-card"><p style="font-size:13px;font-weight:600;margin:0 0 4px;">'+pr.nm+amtLabel+'</p>'+offRow(pr,ing.frac)+'</div>';
  }).join('');
