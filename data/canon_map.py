@@ -67,6 +67,9 @@ TO_EXISTING = {
  'salmon fillets':'salmon','salmon':'salmon','atlantic salmon':'salmon','salmon fillet':'salmon',
  'tofu':'tofu','firm tofu':'tofu','extra firm tofu':'tofu','silken tofu':'tofu',
  'sweet potato':'sweetpotato','sweet potatoes':'sweetpotato','sweet potatoe':'sweetpotato',
+ 'vegetable oil':'vegetableoil','oil':'vegetableoil','canola oil':'vegetableoil','cooking oil':'vegetableoil',
+ 'peanut oil':'vegetableoil','shortening':'vegetableoil',
+ 'corn tortillas':'tortilla','corn tortilla':'tortilla',
  'spaghetti':'pasta','pasta':'pasta','elbow macaroni':'pasta',
  'cottage cheese':'ricotta','ricotta cheese':'ricotta',
  'turkey':'turkey',
@@ -97,8 +100,6 @@ TO_EXISTING = {
 TO_NEW = {
  'sour cream':'sourcream',
  'baking powder':'bakingpowder','baking soda':'bakingsoda',
- 'vegetable oil':'vegetableoil','oil':'vegetableoil','canola oil':'vegetableoil','cooking oil':'vegetableoil',
- 'peanut oil':'vegetableoil','shortening':'vegetableoil',
  'oregano':'oregano','dried oregano':'oregano','italian seasoning':'oregano',
  'ginger':'ginger',
  'cream cheese':'creamcheese',

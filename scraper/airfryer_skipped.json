@@ -1,18 +1,5 @@
 [
  {
-  "name": "Air Fryer Chickpeas",
-  "reason": "only 1 real ingredient(s) in stock",
-  "mapped": [
-   "chickpeas"
-  ],
-  "missing_new_ingredients": [
-   "vegetableoil"
-  ],
-  "unmatched": [
-   "seasoning choice*"
-  ]
- },
- {
   "name": "Air Fryer Brussels Sprouts",
   "reason": "no real protein/veg/carb body -- only oil/aromatics/seasoning mapped",
   "mapped": [
@@ -39,7 +26,7 @@
   "name": "Air Fryer Tortilla Chips Recipe",
   "reason": "only 1 real ingredient(s) in stock",
   "mapped": [
-   "sweetcorn"
+   "tortilla"
   ],
   "missing_new_ingredients": [],
   "unmatched": [

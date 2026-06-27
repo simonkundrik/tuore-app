@@ -44,6 +44,7 @@ TITLE = {
  'pesto':'pesto','mayo':'mayo','peanutbutter':'peanut butter','vanilla':'vanilla',
  'oats':'oats','milk':'milk','plantmilk':'plant milk','stockcube':'stock cube',
  'freshtomato':'tomato','tomato':'canned tomato','hummus':'hummus','salad':'salad leaves',
+ 'vegetableoil':'vegetable oil',
 }
 def T(key): return TITLE.get(key, P[key]['nm'].lower())
 def Cap(s): return s[0].upper()+s[1:]
@@ -72,6 +73,7 @@ FRAC = {
  'blueberries':.25,'strawberries':.5,'raspberries':.5,'oats':.08,'milk':.2,'plantmilk':.2,
  'tomato':1,'freshtomato':1,'stockcube':.13,'hummus':.5,'salad':.33,'tortilla':.125,
  'pita':.4,'bread':.14,'peanutbutter':.1,'vanilla':.05,'halloumi':.4,'ricotta':1,
+ 'vegetableoil':.1,
 }
 
 MEAT_FISH = {'chicken','cookedchicken','beef','pork','turkey','lamb','sausage','bacon','chorizo',
@@ -121,6 +123,7 @@ FAT_G = {
  'ricotta':11,'skyr':0,'radish':0,'fennel':0,'asparagus':0,'kale':0,'rutabaga':0,'pumpkin':0,
  'barley':0,'buckwheat':1,'breadcrumbs':0,'pineapple':0,'mango':0,'raspberries':0,'almonds':7,
  'walnuts':8,'sesameseeds':5,'pesto':8,'mayo':10,'tahini':8,'flour':1,'vanilla':0,'darkchocolate':6,
+ 'vegetableoil':14,
 }
 
 def macro(ing_refs, servings):

@@ -30,7 +30,7 @@
   "steps": [
    "Preheat the air fryer to 205°C.",
    "Toss the chicken with garlic, onion, paprika and chili flakes, season with salt and pepper.",
-   "Air-fry at 205°C for 17-20 min, shaking the basket halfway, until cooked through and crisp."
+   "Air-fry at 205°C for 17-20 min, shaking the basket halfway, until cooked through and crisp. Finish with vegetable oil."
   ],
   "ing": [
    {
@@ -52,6 +52,10 @@
    {
     "ref": "chicken",
     "frac": 1
+   },
+   {
+    "ref": "vegetableoil",
+    "frac": 0.1
    }
   ],
   "sourceRating": 4.8,
@@ -155,7 +159,7 @@
   "steps": [
    "Preheat the air fryer to 200°C.",
    "Toss the chicken with garlic, onion and paprika, season with salt and pepper.",
-   "Air-fry at 200°C for 22-25 min, shaking the basket halfway, until cooked through and crisp."
+   "Air-fry at 200°C for 22-25 min, shaking the basket halfway, until cooked through and crisp. Finish with vegetable oil."
   ],
   "ing": [
    {
@@ -173,6 +177,10 @@
    {
     "ref": "onion",
     "frac": 1
+   },
+   {
+    "ref": "vegetableoil",
+    "frac": 0.1
    }
   ],
   "sourceRating": 4.75,
@@ -208,7 +216,7 @@
   "steps": [
    "Preheat the air fryer to 200°C.",
    "Toss the chicken with garlic and paprika, season with salt and pepper.",
-   "Air-fry at 200°C for 5-8 min, shaking the basket halfway, until cooked through and crisp. Finish with milk."
+   "Air-fry at 200°C for 5-8 min, shaking the basket halfway, until cooked through and crisp. Finish with vegetable oil and milk."
   ],
   "ing": [
    {
@@ -234,6 +242,10 @@
    {
     "ref": "paprika",
     "frac": 0.15
+   },
+   {
+    "ref": "vegetableoil",
+    "frac": 0.1
    }
   ],
   "sourceRating": 4.91,
@@ -536,6 +548,52 @@
   "sourceUrl": "https://www.budgetbytes.com/air-fryer-carrots/"
  },
  {
+  "id": "bbairfryerchickpeas",
+  "name": "Air Fryer Chickpeas",
+  "icon": "ti-bowl",
+  "type": [
+   "snack"
+  ],
+  "filters": [
+   "vegan",
+   "lowcarb",
+   "lowfat",
+   "lowcal",
+   "budget",
+   "verybudget"
+  ],
+  "tags": [
+   "Vegan",
+   "Low-carb"
+  ],
+  "time": 20,
+  "protein": 5,
+  "carbs": 14,
+  "fat": 6,
+  "kcal": 124,
+  "servings": 4,
+  "equip": [
+   "airfryer"
+  ],
+  "steps": [
+   "Preheat the air fryer to 205°C.",
+   "Toss the chickpea, season with salt and pepper.",
+   "Air-fry at 205°C for 12-15 min, shaking the basket halfway, until cooked through and crisp. Finish with vegetable oil."
+  ],
+  "ing": [
+   {
+    "ref": "chickpeas",
+    "frac": 1
+   },
+   {
+    "ref": "vegetableoil",
+    "frac": 0.1
+   }
+  ],
+  "sourceRating": 5.0,
+  "sourceUrl": "https://www.budgetbytes.com/air-fryer-chickpeas/"
+ },
+ {
   "id": "bbairfryerpotatoes",
   "name": "Air Fryer Potatoes",
   "icon": "ti-bowl",
@@ -831,7 +889,7 @@
   "steps": [
    "Preheat the air fryer to 215°C.",
    "Toss the pork with garlic, onion and paprika, season with salt and pepper.",
-   "Air-fry at 215°C for 12-15 min, shaking the basket halfway, until cooked through and crisp."
+   "Air-fry at 215°C for 12-15 min, shaking the basket halfway, until cooked through and crisp. Finish with vegetable oil."
   ],
   "ing": [
    {
@@ -849,6 +907,10 @@
    {
     "ref": "onion",
     "frac": 1
+   },
+   {
+    "ref": "vegetableoil",
+    "frac": 0.1
    }
   ],
   "sourceRating": 5.0,

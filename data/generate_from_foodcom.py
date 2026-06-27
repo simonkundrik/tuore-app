@@ -23,7 +23,7 @@ NUTS = {'almonds','walnuts','sesameseeds','peanutbutter','darkchocolate'}
 WRAP_BASE = {'tortilla','pita','bread'}
 MILKY = {'milk','plantmilk','yogurt','skyr'}
 # finishing touches: dressings/drizzles, never the "body" of a dish
-FINISHING = {'oliveoil','lemon','honey','vinegar'}
+FINISHING = {'oliveoil','vegetableoil','lemon','honey','vinegar'}
 BATTER_LIKE = {'flour','oats','breadcrumbs'}
 SALAD_VEG = {'salad','cucumber','radish','avocado','beetroot','fennel'}
 STURDY_VEG = {'broccoli','cauliflower','kale','asparagus','zucchini','eggplant','mushroom',

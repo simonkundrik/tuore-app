@@ -33,8 +33,13 @@ def main():
     html = HTML_PATH.read_text(encoding="utf-8")
     marker_start = html.index("\nlet meals=[")
     close_idx = html.index("\n];\n", marker_start)
+    # strip any trailing comma/whitespace before the closing bracket first --
+    # without this, re-running after a previous insert (or a debugging
+    # remove-and-reinsert cycle) stacks up extra commas every time
+    head = html[:close_idx].rstrip()
+    head = head.rstrip(',')
     insertion = ",\n" + ",\n".join(js_str(r) for r in new_ones)
-    html = html[:close_idx] + insertion + html[close_idx:]
+    html = head + insertion + html[close_idx:]
     HTML_PATH.write_text(html, encoding="utf-8")
     print(f"Inserted {len(new_ones)} new air-fryer recipes ({skipped} already present, skipped)")
 

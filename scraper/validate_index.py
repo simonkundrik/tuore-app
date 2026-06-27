@@ -20,8 +20,8 @@ def validate(html=None):
             errors.append(f"{name} unbalanced: {o} open vs {c} close")
 
     p_dict_count = len(re.findall(r'\n\w+:\{"nm":', html))
-    if p_dict_count != 109:
-        errors.append(f"P dict has {p_dict_count} entries, expected 109")
+    if p_dict_count != 110:
+        errors.append(f"P dict has {p_dict_count} entries, expected 110")
 
     meals_count = len(re.findall(r"\{id:'", html))
     if meals_count < 600:

@@ -1,0 +1,65 @@
+{
+ "added": [
+  {
+   "key": "vegetableoil",
+   "nm": "Vegetable oil",
+   "icon": "ti-glass",
+   "role": "finishing",
+   "search": "rypsiöljy",
+   "include": [
+    "rypsiöljy"
+   ],
+   "exclude": [
+    "oliivi"
+   ],
+   "phrases": [
+    "vegetable oil",
+    "oil",
+    "canola oil",
+    "cooking oil",
+    "peanut oil",
+    "shortening"
+   ],
+   "match": {
+    "ean": "6438207011453",
+    "name": "Keiju rypsiöljy 0,5l",
+    "brand": "Keiju",
+    "price": 2.48,
+    "unit": "kpl",
+    "unitPrice": 4.96,
+    "unitPriceUnit": "l",
+    "inStockAtStore": true,
+    "storeId": "S224"
+   },
+   "frac": 0.1,
+   "protein_g": 0.0,
+   "carbs_g": 0.0,
+   "fat_g": 50.0,
+   "nutrition100": {
+    "kcal100": 900.0,
+    "protein100": 0.0,
+    "carbs100": 0,
+    "fat100": 100.0
+   }
+  }
+ ],
+ "skipped": [
+  {
+   "key": "brusselssprouts",
+   "nm": "Brussels sprouts",
+   "icon": "ti-leaf",
+   "role": "vegetable",
+   "search": "rosenkaali",
+   "include": [
+    "rosenkaali"
+   ],
+   "exclude": [],
+   "phrases": [
+    "brussels sprouts",
+    "brussel sprouts"
+   ],
+   "reason": "no confident match",
+   "bestGuess": "Myrttisen fermentoitu hapankaali 650g"
+  }
+ ]
+}
