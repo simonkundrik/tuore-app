@@ -1,0 +1,76 @@
+[
+ {
+  "name": "Air Fryer Chickpeas",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "chickpeas"
+  ],
+  "missing_new_ingredients": [
+   "vegetableoil"
+  ],
+  "unmatched": [
+   "seasoning choice*"
+  ]
+ },
+ {
+  "name": "Air Fryer Brussels Sprouts",
+  "reason": "no real protein/veg/carb body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "oliveoil",
+   "garlic",
+   "onion"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "brussels sprouts",
+   "salt",
+   "black pepper"
+  ]
+ },
+ {
+  "name": "Air Fryer Fried Shrimp",
+  "reason": "low rating (1.0)"
+ },
+ {
+  "name": "Apple Flautas",
+  "reason": "manual exclude (dessert-coded, not \"still healthy\")"
+ },
+ {
+  "name": "Air Fryer Tortilla Chips Recipe",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "sweetcorn"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "cooking spray",
+   "salt"
+  ]
+ },
+ {
+  "name": "Air Fryer Hard Boiled Eggs",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "eggs"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": []
+ },
+ {
+  "name": "Air Fryer Bacon",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "bacon"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": []
+ },
+ {
+  "name": "Air Fryer Cinnamon Toast",
+  "reason": "treat-like (no protein/veg, high carb+fat)"
+ },
+ {
+  "name": "Air Fryer Grilled Cheese",
+  "reason": "too calorie-dense (639.0 kcal/serving)"
+ }
+]
