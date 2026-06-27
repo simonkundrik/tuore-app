@@ -81,19 +81,24 @@ def crawl_category(page, label):
     to its full listing, then scrolls until no new products appear or
     the site's own reported totalHits is reached. Returns a dict keyed
     by EAN (de-duplicating any product the API repeats across pages)."""
-    page.goto("https://www.k-ruoka.fi/kauppa/tuotehaku", wait_until="domcontentloaded", timeout=75000)
-    page.wait_for_timeout(2000)
-    page.eval_on_selector(".product-categories-label-desktop",
-                           "el => el.closest('button, [role=button], a')?.click() || el.click()")
-    page.wait_for_timeout(1500)
-    tab_clicked = page.evaluate(f"""() => {{
-        const tabs = Array.from(document.querySelectorAll('button[role=tab]'));
-        const t = tabs.find(e => e.textContent.includes({label!r}));
-        if (t) {{ t.click(); return true; }}
-        return false;
-    }}""")
+    tab_clicked = False
+    for attempt in range(2):
+        page.goto("https://www.k-ruoka.fi/kauppa/tuotehaku", wait_until="domcontentloaded", timeout=75000)
+        page.wait_for_timeout(2000 + attempt * 1000)
+        page.eval_on_selector(".product-categories-label-desktop",
+                               "el => el.closest('button, [role=button], a')?.click() || el.click()")
+        page.wait_for_timeout(1500 + attempt * 1000)
+        tab_clicked = page.evaluate(f"""() => {{
+            const tabs = Array.from(document.querySelectorAll('button[role=tab]'));
+            const t = tabs.find(e => e.textContent.includes({label!r}));
+            if (t) {{ t.click(); return true; }}
+            return false;
+        }}""")
+        if tab_clicked:
+            break
+        print(f"  tab not found for {label!r} on attempt {attempt + 1}, retrying...")
     if not tab_clicked:
-        print(f"  WARNING: could not find tab for {label!r}, skipping")
+        print(f"  WARNING: could not find tab for {label!r} after retries, skipping")
         return {}, 0
     page.wait_for_timeout(1200)
 
@@ -129,7 +134,7 @@ def crawl_category(page, label):
     last_count = 0
     for i in range(MAX_SCROLLS):
         page.mouse.wheel(0, 4000)
-        page.wait_for_timeout(700)
+        page.wait_for_timeout(1100)
         if len(products) == last_count:
             stall += 1
             if stall >= STALL_LIMIT:
@@ -145,8 +150,20 @@ def crawl_category(page, label):
 
 
 def main():
-    chrome_proc = launch_chrome()
+    import sys
+    only_labels = sys.argv[1:] or CATEGORIES
+
     all_products = {}
+    if OUT_PATH.exists():
+        for row in json.load(open(OUT_PATH, encoding="utf-8")):
+            all_products[row["ean"]] = row
+        print(f"Loaded {len(all_products)} existing products from {OUT_PATH}")
+        # drop stale entries for categories we're about to re-crawl, so a
+        # partial previous run doesn't leave orphaned old rows behind
+        all_products = {ean: row for ean, row in all_products.items()
+                         if row.get("categoryLabel") not in only_labels}
+
+    chrome_proc = launch_chrome()
     try:
         with sync_playwright() as p:
             browser = p.chromium.connect_over_cdp(f"http://localhost:{DEBUG_PORT}")
@@ -154,7 +171,7 @@ def main():
             page = ctx.pages[0] if ctx.pages else ctx.new_page()
             ensure_store_selected(page)
 
-            for label in CATEGORIES:
+            for label in only_labels:
                 products, total_hits = crawl_category(page, label)
                 all_products.update(products)
                 print(f"{label}: collected {len(products)} (site reports totalHits={total_hits})")
