@@ -7,6 +7,7 @@ and the nutrition-facts panel, which is server-rendered into the page
 import json
 import re
 import time
+import urllib.request
 from pathlib import Path
 from scraper import launch_chrome, ensure_store_selected
 from playwright.sync_api import sync_playwright
@@ -14,6 +15,39 @@ from playwright.sync_api import sync_playwright
 DEBUG_PORT = 9333
 IN_PATH = Path(__file__).parent / "grabgo_candidates_raw.json"
 OUT_PATH = Path(__file__).parent / "grabgo_details_raw.json"
+
+
+def fetch_off_nutrition(ean):
+    """Fallback for products whose K-Ruoka page didn't yield a parseable
+    nutrition panel (missing entirely, or a transient render/click timing
+    miss during a long bulk run) -- Open Food Facts is a free, open,
+    barcode-keyed product database with strong coverage of products sold
+    in Finland, so it catches real products that would otherwise be
+    silently excluded from consideration for reasons that have nothing to
+    do with whether they're actually a good choice."""
+    try:
+        url = f"https://world.openfoodfacts.org/api/v2/product/{ean}.json?fields=nutriments"
+        req = urllib.request.Request(url, headers={"User-Agent": "TuoreApp/1.0 (personal recipe app)"})
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            data = json.loads(resp.read())
+        if data.get("status") != 1:
+            return None
+        n = data.get("product", {}).get("nutriments", {})
+        kcal = n.get("energy-kcal_100g")
+        if kcal is None:
+            return None
+        return {
+            'kcal100': kcal,
+            'fat100': n.get('fat_100g'),
+            'fatSat100': n.get('saturated-fat_100g'),
+            'carbs100': n.get('carbohydrates_100g'),
+            'sugar100': n.get('sugars_100g'),
+            'fiber100': n.get('fiber_100g'),
+            'protein100': n.get('proteins_100g'),
+            'salt100': n.get('salt_100g'),
+        }
+    except Exception:
+        return None
 
 
 def fi_num(s):
@@ -108,8 +142,8 @@ def main():
                               wait_until="domcontentloaded", timeout=15000)
                     page.wait_for_timeout(700)
                     try:
-                        page.get_by_text("Ravintosisältö", exact=True).first.click(timeout=2000)
-                        page.wait_for_timeout(300)
+                        page.get_by_text("Ravintosisältö", exact=True).first.click(timeout=4000)
+                        page.wait_for_timeout(500)
                     except Exception:
                         pass  # heading not present -- likely no nutrition panel (e.g. raw produce)
                     text = page.inner_text("body")
@@ -119,6 +153,12 @@ def main():
 
                 price, unit, unit_price, unit_price_unit, on_sale = parse_price(text)
                 nutrition = parse_nutrition(text)
+                off_fallback_used = False
+                if not nutrition:
+                    nutrition = fetch_off_nutrition(ean)
+                    if nutrition:
+                        off_fallback_used = True
+                    time.sleep(0.3)
                 diet_tags = parse_diet_tags(text)
                 top_cat, sub_cat = parse_category(text)
 
@@ -131,14 +171,18 @@ def main():
                 row['unitPriceUnit'] = unit_price_unit
                 row['onSale'] = on_sale
                 row['nutrition'] = nutrition
+                row['nutritionSource'] = 'openfoodfacts' if off_fallback_used else ('kruoka' if nutrition else None)
                 row['dietTags'] = diet_tags
                 results.append(row)
 
                 if i % 25 == 0:
-                    print(f"  {i}/{len(candidates)} done ({sum(1 for r in results if r['nutrition'])} with nutrition)")
+                    off_count = sum(1 for r in results if r.get('nutritionSource') == 'openfoodfacts')
+                    print(f"  {i}/{len(candidates)} done ({sum(1 for r in results if r['nutrition'])} with nutrition, {off_count} via OFF fallback)")
 
+            off_total = sum(1 for r in results if r.get('nutritionSource') == 'openfoodfacts')
             print(f"\nDone. {len(results)} processed, {len(failed)} failed, "
-                  f"{sum(1 for r in results if r['nutrition'])} with nutrition data")
+                  f"{sum(1 for r in results if r['nutrition'])} with nutrition data "
+                  f"({off_total} via Open Food Facts fallback)")
             json.dump(results, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False)
             json.dump(failed, open(Path(__file__).parent / "grabgo_failed.json", "w", encoding="utf-8"), ensure_ascii=False)
             print(f"Saved {OUT_PATH}")
