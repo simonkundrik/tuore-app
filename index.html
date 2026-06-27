@@ -1986,6 +1986,12 @@ function openGrabgoDetail(ean){
  if(!item) return;
  var bannerHtml='<img src="'+prodImgUrl(item.ean,800)+'" loading="lazy" alt="" style="width:100%;height:200px;object-fit:cover;display:block;" data-fallback-icon="'+item.icon+'" data-icon-size="40px" onerror="tuoreImgFallback(this)"/>';
  var tagsHtml=(item.badges||[]).concat(item.dietTags||[]).map(function(t){return '<span class="tag" style="margin-right:6px;">'+t+'</span>';}).join('');
+ // K-Ruoka only sometimes attaches a real nutrition panel to raw produce, so
+ // isWholeProduce (set only when we fell back to the hardcoded reference
+ // table) misses items like a kiwi or strawberry that got real scraped
+ // nutrition -- group membership catches those too, without misclassifying
+ // genuinely multi-ingredient nuts/dips/ready-meals as "single ingredient"
+ var isSingleIngredient=item.isWholeProduce || ['fresh_fruit','berries','raw_veg_snack'].indexOf(item.group)>-1;
  var unitLabel=item.unitPriceUnit==='kilogramma'?'kg':item.unitPriceUnit==='litra'?'l':item.unitPriceUnit;
  var priceLine='€'+item.price.toFixed(2)+(item.unit?(' / '+item.unit):'')+(item.unitPrice?(' · €'+item.unitPrice.toFixed(2)+' per '+unitLabel):'');
  var macrosHtml='<div class="ing-card" style="margin-top:12px;">'
@@ -2002,6 +2008,8 @@ function openGrabgoDetail(ean){
  var ingredientsHtml='<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:16px 16px 6px;">Ingredients</p>'
   +(item.ingredientsText
     ?'<p style="font-size:13px;margin:0 16px 4px;line-height:1.5;">'+item.ingredientsText+'</p>'
+    :isSingleIngredient
+    ?'<p style="font-size:13px;margin:0 16px 4px;line-height:1.5;">Single ingredient: '+item.name+'.</p>'
     :'<p style="font-size:12px;color:var(--color-text-tertiary);margin:0 16px 4px;">Full ingredients list not available for this product.</p>');
  document.getElementById('grabgodetail-body').innerHTML=
   bannerHtml
