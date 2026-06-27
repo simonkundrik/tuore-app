@@ -67,6 +67,23 @@ input[type=range]{height:18px;}
 .like-btn{background:none;border:none;padding:0;cursor:pointer;color:var(--color-text-secondary);display:inline-flex;align-items:center;}
 .like-btn.liked{color:#D4537E;}
 .refresh-btn{background:none;border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:4px 8px;cursor:pointer;color:var(--color-text-secondary);display:inline-flex;align-items:center;}
+.discover-section{margin:18px 0 4px;}
+.discover-section-head{display:flex;justify-content:space-between;align-items:baseline;margin:0 16px 10px;}
+.discover-section-title{font-size:14px;font-weight:600;margin:0;}
+.discover-section-count{font-size:11px;color:var(--color-text-secondary);}
+.discover-row{display:flex;gap:10px;overflow-x:auto;padding:0 16px 6px;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.discover-row::-webkit-scrollbar{display:none;}
+.discover-tile{flex:0 0 124px;width:124px;scroll-snap-align:start;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);overflow:hidden;position:relative;cursor:pointer;}
+.discover-tile-img{width:124px;height:88px;background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.discover-tile-body{padding:8px;}
+.discover-tile-name{font-size:11.5px;font-weight:600;margin:0 0 3px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:28px;}
+.discover-tile-price{font-size:12px;font-weight:600;margin:0;}
+.discover-tile-badge{position:absolute;top:6px;left:6px;font-size:9.5px;padding:2px 6px;border-radius:999px;background:#E1F5EE;color:#085041;font-weight:600;}
+.discover-tile-add{position:absolute;bottom:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--color-text-primary);color:var(--color-background-primary);display:flex;align-items:center;justify-content:center;font-size:14px;border:none;cursor:pointer;padding:0;}
+.discover-tabs{display:flex;gap:6px;overflow-x:auto;padding:0 16px 10px;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+.discover-tabs::-webkit-scrollbar{display:none;}
+.discover-tab{flex:0 0 auto;font-size:12px;padding:6px 14px;border-radius:999px;background:none;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary);cursor:pointer;white-space:nowrap;}
+.discover-tab.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary);}
 #app{max-width:480px;margin:0 auto;background:var(--color-background-primary);min-height:100vh;padding-bottom:64px;position:relative;}
 .tabbar{position:fixed;bottom:0;left:0;right:0;max-width:480px;margin:0 auto;display:flex;border-top:0.5px solid var(--color-border-tertiary);background:var(--color-background-primary);padding-bottom:env(safe-area-inset-bottom);}
 .app-header{padding:16px 16px 10px;padding-top:calc(16px + env(safe-area-inset-top));border-bottom:0.5px solid var(--color-border-tertiary);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--color-background-primary);z-index:5;}
@@ -1849,34 +1866,52 @@ function parsePackGrams(name){
  var unit=m[2].toLowerCase();
  return (unit==='kg'||unit==='l')?n*1000:n;
 }
+// Broader presentation groupings -- the underlying `group` field on each
+// item stays narrow (it drives search terms + per-category scoring), but
+// browsing nine-plus tiny categories one full-width card at a time felt
+// cluttered, so related groups are combined into a few clearer sections
+// here, each rendered as a horizontally-scrollable row instead of a long
+// vertical stack.
+var GRABGO_SECTIONS=[
+ {title:'Fresh produce', groups:['fresh_fruit','berries','raw_veg_snack']},
+ {title:'Dairy & protein', groups:['dairy_snack','nuts_snacks']},
+ {title:'Ready to eat', groups:['ready_meals']},
+ {title:'Snacks & dips', groups:['dips','healthy_snacks']},
+];
+var SAUCE_SECTIONS=[
+ {title:'Mayo & creamy', groups:['mayo','aioli','remoulade']},
+ {title:'Classic condiments', groups:['ketchup','mustard']},
+ {title:'Spicy & smoky', groups:['bbq','hot_sauce']},
+ {title:'Dressings & soy', groups:['soy_sauce','dressing']},
+];
+function renderSectionedRows(box, allItems, sections, addable){
+ box.innerHTML=sections.map(function(sec){
+  var items=allItems.filter(function(i){return sec.groups.indexOf(i.group)>-1;});
+  if(!items.length) return '';
+  var tiles=items.map(function(item){return discoverTileHtml(item, addable);}).join('');
+  return '<div class="discover-section">'
+   +'<div class="discover-section-head"><p class="discover-section-title">'+sec.title+'</p><span class="discover-section-count">'+items.length+'</span></div>'
+   +'<div class="discover-row">'+tiles+'</div>'
+   +'</div>';
+ }).join('');
+}
 function renderDiscover(){
  var box=document.getElementById('discoverGroups');
  if(!box) return;
- var groups=[];
- var seen={};
- GRABGO.forEach(function(item){
-  if(!seen[item.group]){ seen[item.group]=true; groups.push(item.group); }
- });
- box.innerHTML=groups.map(function(g){
-  var items=GRABGO.filter(function(i){return i.group===g;});
-  var label=items[0].groupLabel;
-  var cards=items.map(grabgoCardHtml).join('');
-  return '<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:18px 16px 8px;">'+label+'</p>'+cards;
- }).join('');
+ renderSectionedRows(box, GRABGO, GRABGO_SECTIONS, true);
 }
-function grabgoCardHtml(item){
- var badgesHtml=item.badges.map(function(b){return '<span class="tag">'+b+'</span>';}).join('');
- var grams=parsePackGrams(item.name);
- var sizeNote=grams?(Math.round(item.kcal100*grams/100)+' kcal/pack · '):'';
- var readyNote=item.needsHeating?'Heat & eat':'Ready to eat';
- return '<div class="ing-card" style="display:flex;gap:10px;">'
-  +'<div style="width:48px;height:48px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">'+grabgoImgOrIconHtml(item,48,'20px')+'</div>'
-  +'<div style="flex:1;min-width:0;">'
-  +'<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;"><p style="font-weight:600;font-size:13px;margin:0;">'+item.name+'</p><span style="font-size:13px;font-weight:600;flex-shrink:0;">€'+item.price.toFixed(2)+'</span></div>'
-  +'<div style="display:flex;gap:6px;margin:6px 0;flex-wrap:wrap;">'+badgesHtml+'</div>'
-  +'<p style="font-size:11px;color:var(--color-text-secondary);margin:0 0 8px;">'+sizeNote+Math.round(item.protein100)+'g protein/100g · '+readyNote+'</p>'
-  +'<button onclick="openGrabgoConfirm(\''+item.ean+'\')" style="font-size:12px;padding:6px 10px;">Add to today\'s plan</button>'
-  +'</div></div>';
+function discoverTileHtml(item, addable){
+ var badge=item.badges&&item.badges[0];
+ var addBtn=addable?'<button class="discover-tile-add" onclick="event.stopPropagation();openGrabgoConfirm(\''+item.ean+'\')" aria-label="Add"><i class="ti ti-plus" aria-hidden="true"></i></button>':'';
+ var onclick=addable?' onclick="openGrabgoConfirm(\''+item.ean+'\')"':'';
+ return '<div class="discover-tile"'+onclick+'>'
+  +(badge?'<span class="discover-tile-badge">'+badge+'</span>':'')
+  +'<div class="discover-tile-img">'+grabgoImgOrIconHtml(item,124,'26px')+'</div>'
+  +'<div class="discover-tile-body">'
+  +'<p class="discover-tile-name">'+item.name+'</p>'
+  +'<p class="discover-tile-price">€'+item.price.toFixed(2)+'</p>'
+  +'</div>'+addBtn
+  +'</div>';
 }
 function renderSauces(){
  var section=document.getElementById('saucesSection');
@@ -1884,31 +1919,7 @@ function renderSauces(){
  if(!box||!section) return;
  if(typeof SAUCES==='undefined'||!SAUCES.length){ section.style.display='none'; return; }
  section.style.display='block';
- var groups=[];
- var seen={};
- SAUCES.forEach(function(item){
-  if(!seen[item.group]){ seen[item.group]=true; groups.push(item.group); }
- });
- box.innerHTML=groups.map(function(g){
-  var items=SAUCES.filter(function(i){return i.group===g;});
-  var label=items[0].groupLabel;
-  var cards=items.map(sauceCardHtml).join('');
-  return '<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:18px 16px 8px;">'+label+'</p>'+cards;
- }).join('');
-}
-function sauceCardHtml(item){
- var badgesHtml=item.badges.map(function(b){return '<span class="tag">'+b+'</span>';}).join('');
- var facts=[];
- if(item.kcal100!=null) facts.push(Math.round(item.kcal100)+' kcal/100g');
- if(item.sugar100!=null) facts.push(item.sugar100+'g sugar/100g');
- if(item.salt100!=null) facts.push(item.salt100+'g salt/100g');
- return '<div class="ing-card" style="display:flex;gap:10px;">'
-  +'<div style="width:48px;height:48px;border-radius:var(--border-radius-md);background:var(--color-background-secondary);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;">'+grabgoImgOrIconHtml(item,48,'20px')+'</div>'
-  +'<div style="flex:1;min-width:0;">'
-  +'<div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;"><p style="font-weight:600;font-size:13px;margin:0;">'+item.name+'</p><span style="font-size:13px;font-weight:600;flex-shrink:0;">€'+item.price.toFixed(2)+'</span></div>'
-  +'<div style="display:flex;gap:6px;margin:6px 0;flex-wrap:wrap;">'+badgesHtml+'</div>'
-  +'<p style="font-size:11px;color:var(--color-text-secondary);margin:0;">'+facts.join(' · ')+'</p>'
-  +'</div></div>';
+ renderSectionedRows(box, SAUCES, SAUCE_SECTIONS, false);
 }
 var pendingGrabgo=null;
 function openGrabgoConfirm(ean){

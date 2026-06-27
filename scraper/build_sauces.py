@@ -100,7 +100,7 @@ def main():
                 continue
             seen_name_roots.add(root)
             picked.append(item)
-            if len(picked) >= 2:
+            if len(picked) >= 5:
                 break
 
         for item in picked:
