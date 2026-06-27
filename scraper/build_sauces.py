@@ -141,6 +141,7 @@ def main():
                 'badges': badges[:2],
                 'healthPct': round(item['_healthPct']),
                 'containsRefs': sorted(all_refs),
+                'ingredientsText': item.get('ingredientsText'),
             })
 
     print(f"\nFinal recommendation count: {len(recommendations)}")

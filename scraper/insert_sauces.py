@@ -20,7 +20,9 @@ GROUP_ORDER = ['mayo', 'ketchup', 'mustard', 'bbq', 'hot_sauce', 'soy_sauce',
 def js_str(s, quote="'"):
     if s is None:
         return 'null'
-    return quote + str(s).replace('\\', '\\\\').replace(quote, '\\' + quote) + quote
+    escaped = str(s).replace('\\', '\\\\').replace(quote, '\\' + quote)
+    escaped = escaped.replace('\n', '\\n').replace('\r', '\\r')
+    return quote + escaped + quote
 
 
 def js_num(n):
@@ -53,6 +55,7 @@ def serialize(r):
         f"dietTags:{js_arr_str(r.get('dietTags', []))}",
         f"badges:{js_arr_str(r.get('badges', []))}",
         f"containsRefs:{js_arr_str(r.get('containsRefs', []))}",
+        f"ingredientsText:{js_str(r.get('ingredientsText'), chr(34))}",
     ]
     return '{' + ','.join(parts) + '}'
 

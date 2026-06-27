@@ -231,6 +231,11 @@ input[type=range]{height:18px;}
 <div id="grabgodetail-body"></div>
 </div>
 
+<div class="screen" id="screen-saucedetail">
+<button onclick="showScreen('discover')" style="border:none;background:none;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--color-text-secondary);padding:12px 16px 4px;cursor:pointer;"><i class="ti ti-arrow-left" aria-hidden="true"></i>Back</button>
+<div id="saucedetail-body"></div>
+</div>
+
 <div class="screen" id="screen-plan">
 <p style="font-weight:600;font-size:16px;margin:16px 16px 4px;">Today's meal plan</p>
 <p id="planDateLine" style="font-size:12px;color:var(--color-text-secondary);margin:0 16px 12px;"></p>
@@ -1994,11 +1999,11 @@ var SAUCE_SECTIONS=[
 function isDislikedItem(item){
  return (item.containsRefs||[]).some(function(ref){return dislikes.has(ref);});
 }
-function renderSectionedRows(box, allItems, sections, addable){
+function renderSectionedRows(box, allItems, sections, kind){
  box.innerHTML=sections.map(function(sec){
   var items=allItems.filter(function(i){return sec.groups.indexOf(i.group)>-1 && !isDislikedItem(i);});
   if(!items.length) return '';
-  var tiles=items.map(function(item){return discoverTileHtml(item, addable);}).join('');
+  var tiles=items.map(function(item){return discoverTileHtml(item, kind);}).join('');
   return '<div class="discover-section">'
    +'<div class="discover-section-head"><p class="discover-section-title">'+sec.title+'</p><span class="discover-section-count">'+items.length+'</span></div>'
    +'<div class="discover-row">'+tiles+'</div>'
@@ -2008,12 +2013,14 @@ function renderSectionedRows(box, allItems, sections, addable){
 function renderDiscover(){
  var box=document.getElementById('discoverGroups');
  if(!box) return;
- renderSectionedRows(box, GRABGO, GRABGO_SECTIONS, true);
+ renderSectionedRows(box, GRABGO, GRABGO_SECTIONS, 'grabgo');
 }
-function discoverTileHtml(item, addable){
+function discoverTileHtml(item, kind){
+ var addable=kind==='grabgo';
+ var detailFn=kind==='grabgo'?'openGrabgoDetail':'openSauceDetail';
  var badge=item.badges&&item.badges[0];
  var addBtn=addable?'<button class="discover-tile-add" onclick="event.stopPropagation();openGrabgoConfirm(\''+item.ean+'\')" aria-label="Add"><i class="ti ti-plus" aria-hidden="true"></i></button>':'';
- var onclick=addable?' onclick="openGrabgoDetail(\''+item.ean+'\')"':'';
+ var onclick=' onclick="'+detailFn+'(\''+item.ean+'\')"';
  return '<div class="discover-tile"'+onclick+'>'
   +(badge?'<span class="discover-tile-badge">'+badge+'</span>':'')
   +'<div class="discover-tile-img">'+grabgoImgOrIconHtml(item,124,'26px')+'</div>'
@@ -2071,13 +2078,45 @@ function openGrabgoDetail(ean){
  showScreen('grabgodetail');
  window.scrollTo(0,0);
 }
+function openSauceDetail(ean){
+ var item=SAUCES.find(function(s){return s.ean===ean;});
+ if(!item) return;
+ var bannerHtml='<img src="'+prodImgUrl(item.ean,800)+'" loading="lazy" alt="" style="width:100%;height:200px;object-fit:cover;display:block;" data-fallback-icon="'+item.icon+'" data-icon-size="40px" onerror="tuoreImgFallback(this)"/>';
+ var tagsHtml=(item.badges||[]).concat(item.dietTags||[]).map(function(t){return '<span class="tag" style="margin-right:6px;">'+t+'</span>';}).join('');
+ var unitLabel=item.unitPriceUnit==='kilogramma'?'kg':item.unitPriceUnit==='litra'?'l':item.unitPriceUnit;
+ var priceLine='€'+item.price.toFixed(2)+(item.unit?(' / '+item.unit):'')+(item.unitPrice?(' · €'+item.unitPrice.toFixed(2)+' per '+unitLabel):'');
+ var macrosHtml='<div class="ing-card" style="margin-top:12px;">'
+  +'<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:0 0 4px;">Per 100g</p>'
+  +grabgoMacroRow('Calories', item.kcal100, 'kcal')
+  +grabgoMacroRow('Carbs', item.carbs100)
+  +grabgoMacroRow('  of which sugars', item.sugar100)
+  +grabgoMacroRow('Fat', item.fat100)
+  +grabgoMacroRow('  of which saturated', item.fatSat100)
+  +grabgoMacroRow('Salt', item.salt100)
+  +'</div>';
+ var ingredientsHtml='<p style="font-size:12px;font-weight:600;color:var(--color-text-secondary);margin:16px 16px 6px;">Ingredients</p>'
+  +(item.ingredientsText
+    ?'<p style="font-size:13px;margin:0 16px 4px;line-height:1.5;">'+item.ingredientsText+'</p>'
+    :'<p style="font-size:12px;color:var(--color-text-tertiary);margin:0 16px 4px;">Full ingredients list not available for this product.</p>');
+ document.getElementById('saucedetail-body').innerHTML=
+  bannerHtml
+  +'<div style="padding:12px 16px 0;">'
+  +(tagsHtml?('<div style="margin-bottom:8px;">'+tagsHtml+'</div>'):'')
+  +'<p style="font-weight:600;font-size:16px;margin:0 0 4px;">'+item.name+'</p>'
+  +'<p style="font-size:13px;color:var(--color-text-secondary);margin:0 0 12px;">'+priceLine+'</p>'
+  +'</div>'
+  +macrosHtml
+  +ingredientsHtml;
+ showScreen('saucedetail');
+ window.scrollTo(0,0);
+}
 function renderSauces(){
  var section=document.getElementById('saucesSection');
  var box=document.getElementById('saucesGroups');
  if(!box||!section) return;
  if(typeof SAUCES==='undefined'||!SAUCES.length){ section.style.display='none'; return; }
  section.style.display='block';
- renderSectionedRows(box, SAUCES, SAUCE_SECTIONS, false);
+ renderSectionedRows(box, SAUCES, SAUCE_SECTIONS, 'sauce');
 }
 var pendingGrabgo=null;
 function openGrabgoConfirm(ean){
@@ -2335,7 +2374,7 @@ function openMeal(id){
 function showScreen(id){
  document.querySelectorAll('.screen').forEach(function(el){el.classList.remove('active');});
  document.getElementById('screen-'+id).classList.add('active');
- var tabId=id==='grabgodetail'?'discover':(id.indexOf('detail')===0?'home':id);
+ var tabId=(id==='grabgodetail'||id==='saucedetail')?'discover':(id.indexOf('detail')===0?'home':id);
  document.querySelectorAll('.tab-btn').forEach(function(el){el.classList.remove('active');});
  var tab=document.querySelector('.tab-btn[data-tab="'+tabId+'"]');
  if(tab) tab.classList.add('active');
