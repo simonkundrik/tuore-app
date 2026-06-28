@@ -141,7 +141,13 @@ def process_item(page, item):
     item['nutritionSource'] = 'openfoodfacts' if off_used else ('kruoka' if nutrition else None)
     item['ingredientsText'] = ingredients_text
     item['nutritionChecked'] = True
-    return nutrition is not None
+    # the page loaded and we got a real product page -- whether nutrition
+    # data actually exists for this specific product is a separate
+    # question (niche brands genuinely lack it on both K-Ruoka and OFF)
+    # and varies naturally by category, so it's not a sign of blocking.
+    # the guard should only fire on real technical failures (the except
+    # branch above), not on "this product has no nutrition panel".
+    return True
 
 
 def main():
@@ -168,7 +174,7 @@ def main():
             done_this_run = 0
             for batch_start in range(0, len(todo), BATCH_SIZE):
                 batch = todo[batch_start:batch_start + BATCH_SIZE]
-                guard = FailureRateGuard(max_failure_rate=0.4, min_samples=20)
+                guard = FailureRateGuard(max_failure_rate=0.3, min_samples=15)
                 for idx in batch:
                     ok = process_item(page, catalog[idx])
                     guard.record(ok)
