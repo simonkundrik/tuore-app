@@ -1989,39 +1989,87 @@ function parsePackAmount(name){
  return {amount:n, unit:unit};
 }
 // Hand-curated grams-if-frac-were-1.0, for ingredients whose matched
-// product has no labeled size at all (loose produce, potted herbs) --
-// calibrated against each ingredient's typical real-world recipe
-// quantity, not derived from frac (which doesn't reliably mean a real
-// weight for these -- see ingredientAmount). Marked as an estimate (~)
-// wherever shown, since it's a culinary judgment call, not a scraped fact.
+// product has no labeled size at all (loose produce sold by weight,
+// e.g. fish fillets) -- calibrated against each ingredient's typical
+// real-world recipe quantity, not derived from frac (which doesn't
+// reliably mean a real weight for these -- see ingredientAmount).
+// Marked as an estimate (~) wherever shown, since it's a culinary
+// judgment call, not a scraped fact.
 var BULK_GRAMS_PER_FULL_FRAC={
- salmon:400, onion:110, cucumber:300, banana:120, garlic:30, lemon:60,
- sweetpotato:150, leek:150, avocado:140, apple:180, cabbage:1000,
- cauliflower:600, zucchini:200, orange:150, basil:20, parsley:20,
- dill:20, fennel:300, rutabaga:400, pumpkin:350, mango:200,
+ salmon:400,
 };
+// Whole-piece produce (garlic, onion, fruit, ...): described as a count
+// of natural pieces instead of weight -- "2 cloves" reads far better
+// than "~10g" for things nobody actually weighs. atFrac1 = how many
+// pieces frac=1.0 represents for that ingredient; scaled by the
+// recipe's actual frac and rounded to a friendly fraction/half-step.
+var BULK_PIECE_UNIT={
+ garlic:{atFrac1:6, singular:'clove', plural:'cloves'},
+ onion:{atFrac1:1, singular:'onion', plural:'onions'},
+ lemon:{atFrac1:1, singular:'lemon', plural:'lemons'},
+ banana:{atFrac1:1, singular:'banana', plural:'bananas'},
+ avocado:{atFrac1:1, singular:'avocado', plural:'avocados'},
+ apple:{atFrac1:1, singular:'apple', plural:'apples'},
+ orange:{atFrac1:1, singular:'orange', plural:'oranges'},
+ mango:{atFrac1:1, singular:'mango', plural:'mangos'},
+ cucumber:{atFrac1:1, singular:'cucumber', plural:'cucumbers'},
+ leek:{atFrac1:1, singular:'leek', plural:'leeks'},
+ fennel:{atFrac1:1, singular:'fennel bulb', plural:'fennel bulbs'},
+ zucchini:{atFrac1:1, singular:'zucchini', plural:'zucchini'},
+ cauliflower:{atFrac1:1, singular:'cauliflower', plural:'cauliflowers'},
+ cabbage:{atFrac1:1, singular:'cabbage', plural:'cabbages'},
+ rutabaga:{atFrac1:0.5, singular:'rutabaga', plural:'rutabagas'},
+ pumpkin:{atFrac1:0.33, singular:'pumpkin', plural:'pumpkins'},
+ sweetpotato:{atFrac1:1, singular:'sweet potato', plural:'sweet potatoes'},
+};
+// Fresh herbs: a precise count/weight is meaningless for "a sprig" of
+// something, so these get a fixed, simple phrase instead of scaling.
+var BULK_HERB_PHRASE={
+ basil:'a small handful',
+ parsley:'a small handful',
+ dill:'a few sprigs',
+};
+function withArticle(word){ return /^[aeiou]/i.test(word)?'an '+word:'a '+word; }
+function formatPieceQty(qty,singular,plural){
+ if(qty<=0) return null;
+ if(qty<1){
+  var fracWords=[[0.25,'a quarter of '],[0.33,'a third of '],[0.5,'half '],[0.67,'two thirds of '],[0.75,'three quarters of ']];
+  var best=fracWords[0], bestDiff=Math.abs(qty-fracWords[0][0]);
+  fracWords.forEach(function(f){ var d=Math.abs(qty-f[0]); if(d<bestDiff){ best=f; bestDiff=d; } });
+  return best[1]+withArticle(singular);
+ }
+ var whole=Math.round(qty*2)/2;
+ if(whole%1===0) return whole+' '+(whole===1?singular:plural);
+ return Math.floor(whole)+'½ '+plural;
+}
 // frac already means "fraction of this real product" -- the same number
 // the price calc uses (offRow's pr.price*frac) -- so multiplying it by
 // the product's real pack size (parsed from its own name, e.g. "25g",
-// "1kg", "500ml") gives a genuine amount-to-use in metric units.
-// Falls back to the hand-curated BULK_GRAMS_PER_FULL_FRAC table when the
-// product's name has no labeled size at all (loose produce, herb pots);
-// that path is flagged as an estimate. If neither applies, returns null
-// rather than guessing.
+// "1kg", "500ml") gives a genuine amount-to-use in metric units. Falls
+// back to natural-piece/herb phrasing, then the hand-curated weight
+// table, when the product's name has no labeled size at all (loose
+// produce). If nothing applies, returns null rather than guessing.
 function ingredientAmount(pr,frac,ref){
  var parsed=parsePackAmount(pr.product);
  if(parsed){
   var amt=Math.round(parsed.amount*frac);
-  return amt>0?{amount:amt, unit:parsed.unit, estimated:false}:null;
+  return amt>0?{kind:'metric', amount:amt, unit:parsed.unit, estimated:false}:null;
  }
+ var piece=BULK_PIECE_UNIT[ref];
+ if(piece){
+  var label=formatPieceQty(piece.atFrac1*frac, piece.singular, piece.plural);
+  return label?{kind:'text', text:label}:null;
+ }
+ if(BULK_HERB_PHRASE[ref]) return {kind:'text', text:BULK_HERB_PHRASE[ref]};
  var bulk=BULK_GRAMS_PER_FULL_FRAC[ref];
  if(bulk){
   var est=Math.round(bulk*frac);
-  return est>0?{amount:est, unit:'g', estimated:true}:null;
+  return est>0?{kind:'metric', amount:est, unit:'g', estimated:true}:null;
  }
  return null;
 }
 function formatAmount(a){
+ if(a.kind==='text') return a.text;
  var s;
  if(a.amount>=1000){
   var big=a.amount/1000;
