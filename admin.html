@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Tuore Admin</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.44.0/dist/tabler-icons.min.css" />
+<style>
+:root{
+ --color-background-primary:#ffffff;
+ --color-background-secondary:#F4F3EF;
+ --color-background-tertiary:#FAFAF8;
+ --color-background-info:#E6F1FB;
+ --color-background-success:#EAF3DE;
+ --color-background-warning:#FAEEDA;
+ --color-background-danger:#FCEBEB;
+ --color-text-primary:#1A1A18;
+ --color-text-secondary:#6B6A64;
+ --color-text-tertiary:#9A9A92;
+ --color-text-info:#0C447C;
+ --color-text-success:#27500A;
+ --color-text-warning:#854F0B;
+ --color-text-danger:#791F1F;
+ --color-border-tertiary:rgba(0,0,0,0.12);
+ --color-border-secondary:rgba(0,0,0,0.22);
+ --border-radius-md:8px;
+ --border-radius-lg:12px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--color-background-secondary);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--color-text-primary);}
+.wrap{max-width:720px;margin:0 auto;padding:20px 16px 60px;}
+.top{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;}
+h1{font-size:20px;margin:0;}
+.sub{color:var(--color-text-secondary);font-size:13px;margin:0 0 20px;}
+.refreshline{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--color-text-tertiary);margin-bottom:18px;}
+.refreshline button{font-size:12px;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);border-radius:var(--border-radius-md);padding:4px 9px;cursor:pointer;color:var(--color-text-primary);}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:16px;margin-bottom:14px;}
+.card h2{font-size:14px;margin:0 0 10px;display:flex;align-items:center;gap:7px;}
+.card h2 .ti{font-size:16px;color:var(--color-text-secondary);}
+.row{display:flex;justify-content:space-between;font-size:13px;padding:3px 0;}
+.row .k{color:var(--color-text-secondary);}
+.row .v{font-weight:600;}
+.bar{height:8px;border-radius:5px;background:var(--color-background-secondary);overflow:hidden;margin:8px 0;}
+.bar > div{height:100%;background:var(--color-text-info);border-radius:5px;transition:width .4s;}
+.badge{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;}
+.badge.live{background:var(--color-background-success);color:var(--color-text-success);}
+.badge.idle{background:var(--color-background-secondary);color:var(--color-text-tertiary);}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+.badge.live .dot{animation:pulse 1.4s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.25;}}
+.loglines{margin-top:8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:var(--color-text-secondary);white-space:pre-wrap;word-break:break-word;}
+.empty{color:var(--color-text-tertiary);font-size:13px;}
+.err{background:var(--color-background-danger);color:var(--color-text-danger);border-radius:var(--border-radius-md);padding:10px 12px;font-size:13px;margin-bottom:14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="top"><h1>Tuore Admin</h1></div>
+ <p class="sub">Internal monitoring only -- not part of the app, not linked from it.</p>
+ <div class="refreshline"><span id="lastFetched">Loading...</span><button onclick="load()">Refresh now</button></div>
+ <div id="errBox"></div>
+ <div id="content"></div>
+</div>
+<script>
+function relTime(iso){
+ if(!iso) return 'never';
+ var d=new Date(iso), diffSec=Math.round((Date.now()-d.getTime())/1000);
+ if(diffSec<0) diffSec=0;
+ if(diffSec<60) return diffSec+'s ago';
+ var m=Math.round(diffSec/60); if(m<60) return m+'m ago';
+ var h=Math.round(m/60); if(h<48) return h+'h ago';
+ var days=Math.round(h/24); return days+'d ago';
+}
+function esc(s){ return (s==null?'':String(s)).replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+function pct(a,b){ return b?Math.round(100*a/b):0; }
+
+function catalogCard(c, running){
+ if(!c) return '<div class="card"><h2><i class="ti ti-database"></i>Catalog nutrition enrichment</h2><p class="empty">No data yet -- this file only exists on the VM.</p></div>';
+ var p=pct(c.checked,c.total);
+ var badge=running && running.running
+   ? '<span class="badge live"><span class="dot"></span>running now</span>'
+   : '<span class="badge idle"><span class="dot"></span>idle</span>';
+ var log='';
+ if(running && running.running){
+  var lines=[running.lastProgressLine,running.lastMemoryLine].filter(Boolean).map(esc).join('\n');
+  log='<div class="loglines">'+(lines||'(no progress line seen yet)')+'</div>';
+ }
+ return '<div class="card">'
+  +'<h2><i class="ti ti-database"></i>Catalog nutrition enrichment '+badge+'</h2>'
+  +'<div class="bar"><div style="width:'+p+'%"></div></div>'
+  +'<div class="row"><span class="k">Checked</span><span class="v">'+c.checked+' / '+c.total+' ('+p+'%)</span></div>'
+  +'<div class="row"><span class="k">With nutrition found</span><span class="v">'+c.withNutrition+'</span></div>'
+  +'<div class="row"><span class="k">Hard failures</span><span class="v">'+c.errors+'</span></div>'
+  +'<div class="row"><span class="k">Data file last written</span><span class="v">'+relTime(c.lastFileUpdate)+'</span></div>'
+  +log
+  +'</div>';
+}
+function stockCard(s){
+ if(!s) return '<div class="card"><h2><i class="ti ti-shopping-cart"></i>Ingredient stock &amp; price</h2><p class="empty">No data yet.</p></div>';
+ return '<div class="card">'
+  +'<h2><i class="ti ti-shopping-cart"></i>Ingredient stock &amp; price</h2>'
+  +'<div class="row"><span class="k">Last scraped</span><span class="v">'+relTime(s.scrapedAt)+'</span></div>'
+  +'<div class="row"><span class="k">Confident matches</span><span class="v">'+s.confident+' / '+s.total+'</span></div>'
+  +'<div class="row"><span class="k">No match at all</span><span class="v">'+s.noMatch+'</span></div>'
+  +'</div>';
+}
+function listCard(title, icon, d){
+ if(!d) return '<div class="card"><h2><i class="ti '+icon+'"></i>'+title+'</h2><p class="empty">No data yet.</p></div>';
+ return '<div class="card">'
+  +'<h2><i class="ti '+icon+'"></i>'+title+'</h2>'
+  +'<div class="row"><span class="k">Items</span><span class="v">'+d.count+'</span></div>'
+  +'<div class="row"><span class="k">Last updated</span><span class="v">'+relTime(d.lastFileUpdate)+'</span></div>'
+  +'</div>';
+}
+function recipeCard(r){
+ if(!r) return '';
+ return '<div class="card">'
+  +'<h2><i class="ti ti-tools-kitchen-2"></i>Recipe catalog</h2>'
+  +'<div class="row"><span class="k">Total recipes</span><span class="v">'+r.meals+'</span></div>'
+  +'<div class="row"><span class="k">Ingredients in P dict</span><span class="v">'+r.pDictIngredients+'</span></div>'
+  +'</div>';
+}
+
+function render(status){
+ document.getElementById('errBox').innerHTML='';
+ document.getElementById('lastFetched').textContent='Status snapshot generated '+relTime(status.generatedAt)+' (on the VM)';
+ document.getElementById('content').innerHTML=
+   catalogCard(status.catalogNutrition, status.runningScrape)
+  +stockCard(status.ingredientStock)
+  +listCard('Grab &amp; Go','ti-shopping-bag',status.grabAndGo)
+  +listCard('Sauces','ti-bottle',status.sauces)
+  +recipeCard(status.recipeCatalog);
+}
+
+function load(){
+ document.getElementById('lastFetched').textContent='Refreshing...';
+ fetch('admin_status.json?t='+Date.now())
+  .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(render)
+  .catch(function(e){
+   document.getElementById('errBox').innerHTML='<div class="err">Could not load admin_status.json ('+esc(e.message)+'). It may not have been generated yet -- run scraper/write_admin_status.py on the VM once.</div>';
+   document.getElementById('lastFetched').textContent='Fetch failed';
+  });
+}
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>
