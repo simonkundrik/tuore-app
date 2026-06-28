@@ -114,7 +114,7 @@ TO_NEW = {
  'worcestershire sauce':'worcestershiresauce',
  'nutmeg':'nutmeg',
  'lime juice':'lime','lime':'lime',
- 'cornstarch':'cornstarch',
+ 'cornstarch':'cornstarch','corn starch':'cornstarch',
  'dijon mustard':'mustard','mustard':'mustard','dry mustard':'mustard','prepared mustard':'mustard',
  'pecans':'pecans',
  'orange juice':'orange',

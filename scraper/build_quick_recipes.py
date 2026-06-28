@@ -62,7 +62,10 @@ def instructions_text(r):
 
 def existing_bucket_sets(html):
     sets = set()
-    for m in re.finditer(r"ing:\[(.*?)\]\}", html):
+    # don't require the array to be the object's last field -- K-Ruoka-sourced
+    # meals have a trailing photo:'...' after ing, so a closing "]}"
+    # requirement silently misses every one of them
+    for m in re.finditer(r"ing:\[(.*?)\]", html):
         refs = tuple(sorted(set(re.findall(r"ref:'(\w+)'", m.group(1)))))
         if refs:
             sets.add(refs)

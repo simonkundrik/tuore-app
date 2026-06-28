@@ -31,6 +31,11 @@ scraper/grabgo_details_raw.json
 scraper/budgetbytes_raw.json
 scraper/budgetbytes_quick_raw.json
 
+# Fork To Spoon air-fryer recipes (c) Fork To Spoon -- same policy as the
+# Budget Bytes raw files above: only our own scripts and the
+# freshly-authored forktospoon_recipes.json get published
+scraper/forktospoon_airfryer_raw.json
+
 # Food.com Kaggle dataset (c) original authors -- never publish raw/derived
 # extracts, only our own scripts and the freshly-authored foodcom_recipes.json
 data/RAW_*.csv
