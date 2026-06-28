@@ -52,6 +52,13 @@ h1{font-size:20px;margin:0;}
 .loglines{margin-top:8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;color:var(--color-text-secondary);white-space:pre-wrap;word-break:break-word;}
 .empty{color:var(--color-text-tertiary);font-size:13px;}
 .err{background:var(--color-background-danger);color:var(--color-text-danger);border-radius:var(--border-radius-md);padding:10px 12px;font-size:13px;margin-bottom:14px;}
+.health{border-radius:var(--border-radius-lg);padding:13px 14px;font-size:13px;margin-bottom:14px;display:flex;gap:9px;align-items:flex-start;}
+.health .ti{font-size:17px;margin-top:1px;}
+.health.stuck{background:var(--color-background-danger);color:var(--color-text-danger);}
+.health.idle_incomplete{background:var(--color-background-warning);color:var(--color-text-warning);}
+.health.idle_complete{background:var(--color-background-success);color:var(--color-text-success);}
+.health b{display:block;margin-bottom:2px;}
+.health code{display:block;margin-top:7px;background:rgba(0,0,0,0.06);border-radius:6px;padding:6px 8px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11px;white-space:pre-wrap;word-break:break-word;}
 </style>
 </head>
 <body>
@@ -122,11 +129,31 @@ function recipeCard(r){
   +'</div>';
 }
 
+var RECOVERY_CMD='ssh -i ~/.ssh/tuore_vm_recovery opc@145.241.232.87 "cd ~/tuore-app/scraper && python3 restart_catalog_scrape.py --yes"';
+function healthBanner(h){
+ if(!h || h.status==='unknown' || h.status==='running') return '';
+ if(h.status==='stuck'){
+  return '<div class="health stuck"><i class="ti ti-alert-triangle"></i><div><b>Scrape looks stuck</b>'
+   +esc(h.message)+' -- the process is still marked running but has made no progress.'
+   +'<code>'+esc(RECOVERY_CMD)+'</code></div></div>';
+ }
+ if(h.status==='idle_incomplete'){
+  return '<div class="health idle_incomplete"><i class="ti ti-player-pause"></i><div><b>Not currently running</b>'
+   +esc(h.message)+'. If this wasn\'t intentional, it likely crashed (e.g. the failure-rate circuit breaker tripped).'
+   +'<code>'+esc(RECOVERY_CMD)+'</code></div></div>';
+ }
+ if(h.status==='idle_complete'){
+  return '<div class="health idle_complete"><i class="ti ti-circle-check"></i><div><b>Done</b>'+esc(h.message)+'</div></div>';
+ }
+ return '';
+}
+
 function render(status){
  document.getElementById('errBox').innerHTML='';
  document.getElementById('lastFetched').textContent='Status snapshot generated '+relTime(status.generatedAt)+' (on the VM)';
  document.getElementById('content').innerHTML=
-   catalogCard(status.catalogNutrition, status.runningScrape)
+   healthBanner(status.scrapeHealth)
+  +catalogCard(status.catalogNutrition, status.runningScrape)
   +stockCard(status.ingredientStock)
   +listCard('Grab &amp; Go','ti-shopping-bag',status.grabAndGo)
   +listCard('Sauces','ti-bottle',status.sauces)

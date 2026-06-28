@@ -104,6 +104,44 @@ def recipe_catalog_status():
     return {"meals": meals, "pDictIngredients": p_dict}
 
 
+# how long a running scrape can go with no new log line before we call it
+# "stuck" rather than just slow -- generously above the longest normal gap
+# (a single retried page load, or the 90s inter-batch cooldown)
+STUCK_AFTER_MIN = 15
+
+
+def compute_health(catalog, running):
+    """Surfaces two failure modes admin.html can't tell apart from the raw
+    fields alone: "stuck" (process alive, but no log progress in a long
+    time -- the exact pattern that needed manual SSH diagnosis earlier in
+    this project) and "idle_incomplete" (process died, e.g. the
+    FailureRateGuard tripped, and nobody restarted it yet)."""
+    if catalog is None:
+        return {"status": "unknown", "message": "No catalog data yet"}
+    remaining = catalog["total"] - catalog["checked"]
+
+    if running and running.get("running"):
+        stale_min = None
+        log_update = running.get("logLastUpdate")
+        if log_update:
+            try:
+                dt = datetime.fromisoformat(log_update)
+                stale_min = (datetime.now(timezone.utc) - dt).total_seconds() / 60
+            except Exception:
+                pass
+        if stale_min is not None and stale_min > STUCK_AFTER_MIN:
+            return {"status": "stuck", "staleMinutes": round(stale_min, 1),
+                    "message": f"No log progress in {stale_min:.0f} min while marked running"}
+        return {"status": "running",
+                "staleMinutes": round(stale_min, 1) if stale_min is not None else None,
+                "message": "Healthy"}
+
+    if remaining <= 0:
+        return {"status": "idle_complete", "message": "All products checked"}
+    return {"status": "idle_incomplete", "remaining": remaining,
+            "message": f"Not running, {remaining} product(s) still need checking"}
+
+
 def main():
     status = {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -114,6 +152,7 @@ def main():
         "sauces": list_status("sauces_recommendations.json"),
         "recipeCatalog": recipe_catalog_status(),
     }
+    status["scrapeHealth"] = compute_health(status["catalogNutrition"], status["runningScrape"])
 
     old = safe_load(STATUS_PATH)
     # skip the commit if nothing meaningful changed since last write --
