@@ -22,6 +22,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).parent.parent
 SCRAPER_DIR = Path(__file__).parent
+sys.path.insert(0, str(SCRAPER_DIR))
+from git_sync import safe_push
 
 RECIPE_PIPELINE = [
     "scrape_recipes.py", "analyze_coverage.py", "select_batch.py",
@@ -85,8 +87,7 @@ def main():
     msg = "Monthly recipe + sauces refresh (automated)\n\nCo-Authored-By: Tuore Scraper <noreply@example.com>"
     run_git(["-c", "user.name=Tuore Scraper", "-c", "user.email=you@example.com",
              "commit", "-m", msg], check=True)
-    run_git(["push", "origin", "main"], check=True)
-    print("Pushed.")
+    safe_push(REPO_ROOT)
 
 
 if __name__ == "__main__":

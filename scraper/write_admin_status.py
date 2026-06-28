@@ -11,8 +11,12 @@ quiet periods between scrapes don't spam the commit history."""
 import json
 import re
 import subprocess
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).parent))
+from git_sync import safe_push
 
 REPO_ROOT = Path(__file__).parent.parent
 SCRAPER_DIR = Path(__file__).parent
@@ -175,8 +179,7 @@ def main():
     if result.returncode != 0:
         print("Nothing to commit:", result.stdout, result.stderr)
         return
-    subprocess.run(["git", "push", "origin", "main"], cwd=str(REPO_ROOT), check=True)
-    print("Pushed.")
+    safe_push(REPO_ROOT)
 
 
 if __name__ == "__main__":

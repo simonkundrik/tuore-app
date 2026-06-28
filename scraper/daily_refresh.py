@@ -12,6 +12,7 @@ REPO_ROOT = Path(__file__).parent.parent
 SCRAPER_DIR = Path(__file__).parent
 
 sys.path.insert(0, str(SCRAPER_DIR))
+from git_sync import safe_push
 
 
 def run(cmd, **kwargs):
@@ -93,8 +94,7 @@ def main():
     msg = "Daily stock/price refresh (automated)\n\nCo-Authored-By: Tuore Scraper <noreply@example.com>"
     run(["git", "-c", "user.name=Tuore Scraper", "-c", "user.email=you@example.com",
          "commit", "-m", msg], check=True)
-    run(["git", "push", "origin", "main"], check=True)
-    print("Pushed.")
+    safe_push(REPO_ROOT)
 
 
 if __name__ == "__main__":
