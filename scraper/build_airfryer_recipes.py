@@ -43,7 +43,15 @@ UNIT_WORDS = {
  'to', 'taste', 'of', 'for', 'garnish', 'optional', 'divided', 'extra', 'or', 'and',
  'thinly', 'roughly', 'finely', 'about', 'plus', 'more',
 }
-ALL_KEYS_BY_LEN = sorted(set(TO_EXISTING) | set(TO_NEW), key=lambda k: (-len(k.split()), -len(k)))
+# sorting a set by a key with ties (e.g. "chorizo" and "sausage" are both one
+# word, seven characters) leaves the tie order dependent on set iteration,
+# which Python randomizes per-process (PYTHONHASHSEED) -- without the
+# trailing `k` tiebreak, a real "chorizo sausage" ingredient line matched
+# 'chorizo' or 'sausage' non-deterministically depending on which process
+# ran the matcher, confirmed live across two consecutive runs of the same
+# script. The alphabetical tiebreak is arbitrary but fixed, which is what
+# matters here -- not which specific word it favors.
+ALL_KEYS_BY_LEN = sorted(set(TO_EXISTING) | set(TO_NEW), key=lambda k: (-len(k.split()), -len(k), k))
 
 
 def clean_ingredient(raw):
