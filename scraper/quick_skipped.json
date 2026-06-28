@@ -1,0 +1,2313 @@
+[
+ {
+  "name": "Spaghetti Aglio e Olio Recipe",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Smash Burger Tacos",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Chocolate Mug Cake",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "flour",
+   "darkchocolate",
+   "vegetableoil",
+   "milk",
+   "peanutbutter"
+  ],
+  "missing_new_ingredients": [
+   "bakingpowder",
+   "sugar"
+  ],
+  "unmatched": [
+   "a salt"
+  ]
+ },
+ {
+  "name": "One Pot Creamy Pesto Chicken Pasta",
+  "reason": "too calorie-dense (748.68 kcal/serving)"
+ },
+ {
+  "name": "Easy Lemon Cream Pie",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vanilla",
+   "butter",
+   "milk",
+   "lemon",
+   "cream"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Garlic Butter Baked Cod",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "oliveoil",
+   "garlic",
+   "paprika",
+   "parsley",
+   "lemon"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "salt",
+   "cod"
+  ]
+ },
+ {
+  "name": "Classic Three Bean Salad",
+  "reason": "not actually quick (45 min)"
+ },
+ {
+  "name": "Quick Veggie Pasta",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Pimento Cheese",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Homemade Ranch Dressing",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "mayo",
+   "yogurt",
+   "lemon",
+   "garlic",
+   "onion",
+   "parsley",
+   "milk"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": [
+   "cracked pepper"
+  ]
+ },
+ {
+  "name": "5 Minute Nacho Cheese Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "flour",
+   "milk",
+   "chiliflakes"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "cheddar",
+   "salt"
+  ]
+ },
+ {
+  "name": "Grilled Peaches and Cream",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Homemade Taco Seasoning",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "chiliflakes",
+   "paprika",
+   "cumin"
+  ],
+  "missing_new_ingredients": [
+   "oregano"
+  ],
+  "unmatched": [
+   "salt",
+   "black pepper"
+  ]
+ },
+ {
+  "name": "Easy French Bread Pizza",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "mozzarella"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "french loaf",
+   "pizza sauce",
+   "toppings your choice"
+  ]
+ },
+ {
+  "name": "Dan Dan Noodles",
+  "reason": "too calorie-dense (980.0 kcal/serving)"
+ },
+ {
+  "name": "Olive Oil Bread Dips",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Gingerbread Pancakes",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Lentil and Cranberry Salad",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Cauliflower Tabbouleh",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Tuna Wrap Recipe",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Easy Homemade Teriyaki Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "soysauce",
+   "garlic"
+  ],
+  "missing_new_ingredients": [
+   "cornstarch",
+   "ginger",
+   "sugar"
+  ],
+  "unmatched": [
+   "water",
+   "water"
+  ]
+ },
+ {
+  "name": "Witches Brew",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Homemade Mac and Cheese Recipe",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "flour",
+   "milk",
+   "onion",
+   "garlic",
+   "paprika",
+   "cheese"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "macaroni",
+   "salt",
+   "black pepper",
+   "hot sauce"
+  ]
+ },
+ {
+  "name": "Shrimp Boil",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Poultry Seasoning Blend",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "basil",
+   "paprika",
+   "onion",
+   "garlic"
+  ],
+  "missing_new_ingredients": [
+   "oregano",
+   "rosemary",
+   "thyme"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Grilled Sirloin Tenders",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "garlic",
+   "paprika",
+   "vegetableoil"
+  ],
+  "missing_new_ingredients": [
+   "mustard",
+   "rosemary",
+   "sugar",
+   "thyme"
+  ],
+  "unmatched": [
+   "sirloin tender steaks",
+   "salt",
+   "black pepper"
+  ]
+ },
+ {
+  "name": "Dunkaroos Recipe",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Classic Tuna Salad",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "walnuts",
+   "onion",
+   "mayo",
+   "lemon"
+  ],
+  "missing_new_ingredients": [
+   "celery"
+  ],
+  "unmatched": [
+   "chunk light tuna in water",
+   "black pepper",
+   "salt"
+  ]
+ },
+ {
+  "name": "Classic BLT Sandwich",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Grilled Peach Salad",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Honey Peach Grilled Cheese",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Brazilian Lemonade",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "milk"
+  ],
+  "missing_new_ingredients": [
+   "lime"
+  ],
+  "unmatched": [
+   "water"
+  ]
+ },
+ {
+  "name": "Chocolate Buttercream Frosting",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Budget-Friendly Pesto",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Homemade BBQ Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "tomato",
+   "vinegar",
+   "honey",
+   "paprika",
+   "garlic",
+   "onion",
+   "chiliflakes"
+  ],
+  "missing_new_ingredients": [
+   "mustard",
+   "sugar",
+   "worcestershiresauce"
+  ],
+  "unmatched": [
+   "black pepper",
+   "salt"
+  ]
+ },
+ {
+  "name": "Smoky Grilled Mushroom Kebabs",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Grilled Vegetables",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Alabama White Sauce",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Zucchini, Corn, and Toasted Almond Salad",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Tomato Butter",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Tomato Cracker Salad",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Chicken Burger Recipe",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Bruschetta Rigatoni alla Vodka",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Bloody Mary Mix Recipe",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Strawberry Chicken Salad",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Onion Chutney Recipe",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Grilled Shrimp",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Tuna &amp; White Bean Salad",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "onion",
+   "oliveoil",
+   "lemon"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "white beans",
+   "chunk light tuna in water",
+   "salt pepper"
+  ]
+ },
+ {
+  "name": "Baked Chicken Chimichangas",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Crab Cakes Recipe",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Fruit Dip",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "BLT Avocado Brunch Salad Recipe",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Cauliflower Steak Recipe",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "French Dressing Recipe",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Strawberry Mango Smoothie Recipe",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Wedge Salad Recipe",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Deviled Eggs",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "eggs",
+   "mayo",
+   "dill"
+  ]
+ },
+ {
+  "name": "Blue Cheese Dressing Recipe",
+  "reason": "low rating (3.0)"
+ },
+ {
+  "name": "Easy Red Enchilada Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vegetableoil",
+   "flour",
+   "chiliflakes",
+   "tomato",
+   "cumin",
+   "garlic"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "water",
+   "salt pepper"
+  ]
+ },
+ {
+  "name": "Glazed Carrots",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "cinnamon"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": [
+   "salt"
+  ]
+ },
+ {
+  "name": "Strawberry Cheesecake Smoothie Recipe",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Asparagus Soup Recipe",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Chicken Club Sandwich Recipe",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Chicken Pasta Primavera Recipe",
+  "reason": "too calorie-dense (749.0 kcal/serving)"
+ },
+ {
+  "name": "Reuben Sandwich Recipe",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Cream of Broccoli Soup",
+  "reason": "too calorie-dense (807.0 kcal/serving)"
+ },
+ {
+  "name": "Homemade Fajita Seasoning",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "chiliflakes",
+   "cumin",
+   "paprika",
+   "garlic"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "salt",
+   "black pepper"
+  ]
+ },
+ {
+  "name": "Black Bean Dip Recipe",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Steak Marinade Recipe",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Cheesy Skillet Ravioli Recipe",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Marinated Olives Recipe",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Easy Cranberry Sauce Recipe",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "orange"
+  ],
+  "missing_new_ingredients": [
+   "cranberries",
+   "sugar"
+  ],
+  "unmatched": [
+   "water"
+  ]
+ },
+ {
+  "name": "Shrimp Scampi Recipe",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Mashed Potatoes Recipe",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "potato",
+   "butter",
+   "milk"
+  ]
+ },
+ {
+  "name": "Smoothie Bowl Recipe",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Ricotta Toast Recipe",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Cranberry Orange Relish Recipe",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Turkey Gravy Recipe",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "S'mores Dip",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "darkchocolate"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "mini marshmallows",
+   "box graham crackers"
+  ]
+ },
+ {
+  "name": "Creamed Corn Recipe",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Cream of Chicken Soup",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Sauteed Brussels Sprouts Recipe",
+  "reason": "low rating (3.84)"
+ },
+ {
+  "name": "Pear, Celery and Candied Pecans Salad Recipe",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Shaved Brussels Sprouts Salad Recipe",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Cream of Celery Soup",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Grilled Salmon",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Grilled Cabbage",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Cheese Tortellini And Sausage Skillet",
+  "reason": "too calorie-dense (730.0 kcal/serving)"
+ },
+ {
+  "name": "Stovetop Baked Beans Recipe",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "oliveoil",
+   "paprika",
+   "onion",
+   "vinegar"
+  ],
+  "missing_new_ingredients": [
+   "ketchup",
+   "mustard",
+   "sugar",
+   "worcestershiresauce"
+  ],
+  "unmatched": [
+   "salt",
+   "pinto beans",
+   "water"
+  ]
+ },
+ {
+  "name": "Barley Salad Recipe",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Grilled Corn on the Cob",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Red White and Blue Fruit Salad",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Caprese Salad",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Sorbet",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Avocado Smoothie",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Taco Dip",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Orange Julius",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "milk",
+   "vanilla"
+  ],
+  "missing_new_ingredients": [
+   "orange",
+   "sugar"
+  ],
+  "unmatched": [
+   "ice"
+  ]
+ },
+ {
+  "name": "Ham and Cheese Sliders",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "cheese",
+   "butter"
+  ],
+  "missing_new_ingredients": [
+   "ham",
+   "mustard",
+   "worcestershiresauce"
+  ],
+  "unmatched": [
+   "hawaiian sweet rolls*",
+   "everything bagel seasoning"
+  ]
+ },
+ {
+  "name": "7 Layer Dip",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Sauteed Asparagus",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Scrambled Eggs with Rice",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Christmas Punch",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Easy Chocolate Pudding",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "darkchocolate",
+   "cream",
+   "vanilla"
+  ],
+  "missing_new_ingredients": [
+   "cornstarch",
+   "sugar"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Creamy Polenta",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Apple Slaw",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Green Goddess Salad",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Homemade Oat Milk",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vanilla",
+   "oats"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": [
+   "cold water",
+   "salt"
+  ]
+ },
+ {
+  "name": "Tartar Sauce",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Sweet Cream Cold Foam",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "milk",
+   "cream",
+   "vanilla"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Tostones",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Breakfast Pizza Recipe",
+  "reason": "too calorie-dense (726.0 kcal/serving)"
+ },
+ {
+  "name": "Salmorejo",
+  "reason": "low rating (3.75)"
+ },
+ {
+  "name": "Mayo Ketchup",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "mayo"
+  ],
+  "missing_new_ingredients": [
+   "ketchup"
+  ],
+  "unmatched": [
+   "hot sauce"
+  ]
+ },
+ {
+  "name": "Chilaquiles",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Cherry Sauce",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Bruschetta Pasta",
+  "reason": "low rating (3.88)"
+ },
+ {
+  "name": "Tomato Sandwiches",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "freshtomato",
+   "bread",
+   "mayo"
+  ]
+ },
+ {
+  "name": "Pinto Bean Soup",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "garlic",
+   "oliveoil",
+   "chiliflakes",
+   "cumin",
+   "stockcube"
+  ],
+  "missing_new_ingredients": [
+   "oregano"
+  ],
+  "unmatched": [
+   "pinto beans"
+  ]
+ },
+ {
+  "name": "Creamy Chicken and Gnocchi",
+  "reason": "too calorie-dense (756.0 kcal/serving)"
+ },
+ {
+  "name": "Chinese Steamed Eggs",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Burger Seasoning",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "paprika",
+   "onion",
+   "garlic",
+   "chiliflakes"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "black pepper",
+   "salt"
+  ]
+ },
+ {
+  "name": "Potato and Green Bean Skillet",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "potato",
+   "bacon",
+   "onion"
+  ]
+ },
+ {
+  "name": "Trail Mix",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Maizena",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "milk",
+   "cinnamon",
+   "vanilla",
+   "cream"
+  ],
+  "missing_new_ingredients": [
+   "cornstarch",
+   "nutmeg",
+   "sugar"
+  ],
+  "unmatched": [
+   "salt"
+  ]
+ },
+ {
+  "name": "Parmesan Beans",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "garlic",
+   "oliveoil",
+   "stockcube"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "cannellini beans",
+   "parmesan",
+   "cracked pepper"
+  ]
+ },
+ {
+  "name": "Nashville Hot Deviled Eggs",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Nashville Hot Seasoning",
+  "reason": "low rating (3.5)"
+ },
+ {
+  "name": "Homemade Caesar Dressing",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Beer Cheese Dip",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Peanut Noodles with Chicken",
+  "reason": "too calorie-dense (727.0 kcal/serving)"
+ },
+ {
+  "name": "Crab Dip",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Chicken Nachos",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Easy Nacho Cheese",
+  "reason": "low rating (3.75)"
+ },
+ {
+  "name": "Everything Bagel Rice Bowl",
+  "reason": "too calorie-dense (713.0 kcal/serving)"
+ },
+ {
+  "name": "Easy Caramel Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "cream",
+   "vanilla"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "How To Make Sour Cream",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "cream",
+   "vinegar"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": []
+ },
+ {
+  "name": "Blueberry Sauce",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Peanut Butter Banana Smoothie",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "banana",
+   "peanutbutter",
+   "vanilla",
+   "milk"
+  ]
+ },
+ {
+  "name": "Chipotle Peach Salsa",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Spinach Mushroom French Bread Pizzas",
+  "reason": "not actually quick (50 min)"
+ },
+ {
+  "name": "Pesto Mozzarella Roll Ups",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Lemony White Bean Salad",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "oliveoil",
+   "lemon",
+   "vinegar",
+   "garlic",
+   "onion",
+   "parsley"
+  ],
+  "missing_new_ingredients": [
+   "mustard"
+  ],
+  "unmatched": [
+   "salt",
+   "black pepper",
+   "cannellini beans"
+  ]
+ },
+ {
+  "name": "Strawberry Syrup",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Sausage and Vegetable Skillet",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vegetableoil",
+   "onion"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "italian sausage",
+   "frozen cauliflower florets",
+   "frozen kale",
+   "seasoning salt seasoning blend"
+  ]
+ },
+ {
+  "name": "Wilted Spinach Salad",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Muesli",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "walnuts",
+   "cinnamon"
+  ],
+  "missing_new_ingredients": [
+   "cranberries",
+   "sugar"
+  ],
+  "unmatched": [
+   "dry old fashioned oats",
+   "sunflower seeds"
+  ]
+ },
+ {
+  "name": "Cheesy Pinto Beans",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "garlic",
+   "vegetableoil",
+   "paprika",
+   "cumin"
+  ],
+  "missing_new_ingredients": [
+   "cheddar"
+  ],
+  "unmatched": [
+   "jalapeño",
+   "pinto beans*",
+   "cracked black pepper",
+   "dashes hot sauce"
+  ]
+ },
+ {
+  "name": "Pasta with Bacon and Peas",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Chocolate Overnight Oats",
+  "reason": "not actually quick (1450 min)"
+ },
+ {
+  "name": "15-Minute Vegetable Curry",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "stockcube",
+   "coconutmilk",
+   "currypaste"
+  ],
+  "missing_new_ingredients": [
+   "ginger"
+  ],
+  "unmatched": [
+   "frozen mixed vegetables*",
+   "salt pepper"
+  ]
+ },
+ {
+  "name": "Herby Potato Salad",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Homemade Hot Chocolate",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "darkchocolate",
+   "milk",
+   "cream",
+   "vanilla"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": [
+   "semi sweet chocolate",
+   "salt"
+  ]
+ },
+ {
+  "name": "Gingerbread Coffee Creamer",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "cream",
+   "honey",
+   "vanilla",
+   "cinnamon"
+  ],
+  "missing_new_ingredients": [
+   "ginger"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Coconut Curry Ramen",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "coconutmilk",
+   "currypaste"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "frozen mixed vegetables",
+   "water",
+   "instant ramen"
+  ]
+ },
+ {
+  "name": "Easy Buffalo Sauce",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Thanksgiving Leftovers Tortilla Wrap",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Glazed Ham Steaks",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vinegar",
+   "garlic",
+   "butter"
+  ],
+  "missing_new_ingredients": [
+   "ham",
+   "mustard",
+   "sugar",
+   "worcestershiresauce"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Homemade Balsamic Glaze",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "vinegar"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Sweet Corn Salsa",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Homemade Ranch Seasoning Mix",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Cheese Grits",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "stockcube",
+   "milk",
+   "garlic",
+   "butter"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "quick cooking grits",
+   "salt",
+   "cracked black pepper",
+   "cheddar"
+  ]
+ },
+ {
+  "name": "Homemade Italian Dressing",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "oliveoil",
+   "vinegar",
+   "lemon",
+   "garlic"
+  ],
+  "missing_new_ingredients": [
+   "mustard",
+   "oregano",
+   "sugar"
+  ],
+  "unmatched": [
+   "salt",
+   "black pepper",
+   "parmesan"
+  ]
+ },
+ {
+  "name": "Cinnamon Pecan Cauli Oats",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "oats",
+   "butter",
+   "cinnamon",
+   "milk"
+  ],
+  "missing_new_ingredients": [
+   "pecans",
+   "sugar"
+  ],
+  "unmatched": [
+   "riced cauliflower",
+   "salt",
+   "water"
+  ]
+ },
+ {
+  "name": "Funfetti Mug Cake",
+  "reason": "low rating (3.96)"
+ },
+ {
+  "name": "Lemon Tahini Dressing",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "lemon",
+   "garlic",
+   "cumin",
+   "chiliflakes"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "tahini",
+   "water",
+   "salt"
+  ]
+ },
+ {
+  "name": "Cheddar Drop Biscuits",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "flour",
+   "garlic",
+   "onion",
+   "cream"
+  ],
+  "missing_new_ingredients": [
+   "bakingpowder",
+   "cheddar",
+   "sugar"
+  ],
+  "unmatched": [
+   "salt"
+  ]
+ },
+ {
+  "name": "Homemade Biscuits",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "flour",
+   "milk",
+   "vinegar"
+  ],
+  "missing_new_ingredients": [
+   "bakingpowder",
+   "bakingsoda"
+  ],
+  "unmatched": [
+   "salt"
+  ]
+ },
+ {
+  "name": "Tomato Basil Vinaigrette",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "tomato",
+   "vinegar",
+   "basil",
+   "garlic",
+   "oliveoil"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": [
+   "salt",
+   "cracked black pepper"
+  ]
+ },
+ {
+  "name": "Lemon Garlic Roasted Asparagus",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "asparagus",
+   "garlic",
+   "oliveoil",
+   "lemon"
+  ]
+ },
+ {
+  "name": "Mediterranean Turkey Burgers",
+  "reason": "not actually quick (45 min)"
+ },
+ {
+  "name": "Spicy Peanut Butter Ramen Noodles",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "peanutbutter",
+   "garlic",
+   "soysauce",
+   "onion"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": [
+   "packet instant ramen"
+  ]
+ },
+ {
+  "name": "Creamy Avocado Dressing",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Lemon Pepper Zucchini",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "zucchini",
+   "lemon",
+   "oliveoil"
+  ]
+ },
+ {
+  "name": "Gochujang Tuna Salad",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "mayo",
+   "onion"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "gochujang",
+   "chunk light tuna in water"
+  ]
+ },
+ {
+  "name": "Sesame Roasted Green Beans",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vegetableoil",
+   "soysauce",
+   "garlic",
+   "sesameseeds"
+  ],
+  "missing_new_ingredients": [
+   "greenbeans",
+   "sesameoil"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Comeback Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "mayo",
+   "paprika",
+   "garlic"
+  ],
+  "missing_new_ingredients": [
+   "ketchup",
+   "mustard",
+   "worcestershiresauce"
+  ],
+  "unmatched": [
+   "hot sauce*",
+   "cracked black pepper",
+   "salt"
+  ]
+ },
+ {
+  "name": "Pico de Gallo",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Sesame Ginger Dressing",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "garlic",
+   "vegetableoil",
+   "vinegar",
+   "soysauce",
+   "honey"
+  ],
+  "missing_new_ingredients": [
+   "ginger",
+   "sesameoil"
+  ],
+  "unmatched": [
+   "tahini"
+  ]
+ },
+ {
+  "name": "Easy Green Chile Enchilada Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vegetableoil",
+   "flour",
+   "cumin",
+   "garlic",
+   "onion"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "green chiles",
+   "water",
+   "salt"
+  ]
+ },
+ {
+  "name": "Honey Vanilla Cottage Cheese Fruit Dip",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Garlic Herb Whipped Cottage Cheese Dip",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "parsley",
+   "basil",
+   "garlic",
+   "onion",
+   "ricotta",
+   "lemon"
+  ],
+  "missing_new_ingredients": [
+   "oregano"
+  ],
+  "unmatched": [
+   "salt",
+   "cracked pepper"
+  ]
+ },
+ {
+  "name": "No-Yeast Pizza Dough",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "flour",
+   "oliveoil"
+  ],
+  "missing_new_ingredients": [
+   "bakingpowder"
+  ],
+  "unmatched": [
+   "salt",
+   "water"
+  ]
+ },
+ {
+  "name": "No Bake Strawberry Cheesecake for Two",
+  "reason": "too calorie-dense (726.55 kcal/serving)"
+ },
+ {
+  "name": "Easy Stovetop Popcorn Recipe",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vegetableoil",
+   "butter"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "popcorn kernels",
+   "seasoning salt"
+  ]
+ },
+ {
+  "name": "Homemade Whipped Cream",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vanilla",
+   "cream"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Kale Pesto",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Apple Walnut Stuffing",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "BBQ Beef and Beans",
+  "reason": "too calorie-dense (742.13 kcal/serving)"
+ },
+ {
+  "name": "Homemade Sweet and Sour Sauce Recipe",
+  "reason": "low rating (3.93)"
+ },
+ {
+  "name": "Peanut Lime Dressing",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "peanutbutter",
+   "garlic",
+   "soysauce",
+   "vegetableoil"
+  ],
+  "missing_new_ingredients": [
+   "ginger",
+   "lime",
+   "sugar"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Honey Mustard Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "mayo",
+   "honey",
+   "vinegar",
+   "garlic",
+   "paprika"
+  ],
+  "missing_new_ingredients": [
+   "mustard"
+  ],
+  "unmatched": [
+   "salt",
+   "black pepper"
+  ]
+ },
+ {
+  "name": "Cinnamon Nut Swirl Mug Cake",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "flour",
+   "cinnamon",
+   "walnuts",
+   "butter",
+   "milk"
+  ],
+  "missing_new_ingredients": [
+   "bakingpowder",
+   "sugar"
+  ],
+  "unmatched": [
+   "salt"
+  ]
+ },
+ {
+  "name": "Sriracha Nooch Popcorn",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vegetableoil",
+   "butter"
+  ],
+  "missing_new_ingredients": [
+   "yeast"
+  ],
+  "unmatched": [
+   "popcorn kernels",
+   "sriracha"
+  ]
+ },
+ {
+  "name": "Homemade Cajun Seasoning",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "paprika",
+   "garlic",
+   "onion",
+   "chiliflakes"
+  ],
+  "missing_new_ingredients": [
+   "oregano",
+   "thyme"
+  ],
+  "unmatched": [
+   "black pepper",
+   "salt"
+  ]
+ },
+ {
+  "name": "Easy Lo Mein",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "soysauce",
+   "vegetableoil"
+  ],
+  "missing_new_ingredients": [
+   "sesameoil",
+   "sugar"
+  ],
+  "unmatched": [
+   "noodles",
+   "water",
+   "mixed vegetables"
+  ]
+ },
+ {
+  "name": "Kale Salad with Toasted Pita and Parmesan",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Miracle Mac and Cheese",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "milk",
+   "paprika"
+  ],
+  "missing_new_ingredients": [
+   "cheddar",
+   "mustard"
+  ],
+  "unmatched": [
+   "dry macaroni",
+   "salt",
+   "cranks cracked pepper"
+  ]
+ },
+ {
+  "name": "Garlic Herb Seasoning",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "parsley",
+   "basil",
+   "garlic",
+   "onion"
+  ],
+  "missing_new_ingredients": [
+   "oregano"
+  ],
+  "unmatched": [
+   "salt",
+   "cracked pepper*"
+  ]
+ },
+ {
+  "name": "Rice Cooker Mac and Cheese",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "stockcube",
+   "milk"
+  ],
+  "missing_new_ingredients": [
+   "creamcheese"
+  ],
+  "unmatched": [
+   "uncooked macaroni noodles",
+   "cheddar"
+  ]
+ },
+ {
+  "name": "Lime Crema",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "garlic"
+  ],
+  "missing_new_ingredients": [
+   "lime",
+   "sourcream"
+  ],
+  "unmatched": [
+   "salt"
+  ]
+ },
+ {
+  "name": "Easy Sweet Chili Sauce",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "vinegar"
+  ],
+  "missing_new_ingredients": [
+   "cornstarch",
+   "sugar"
+  ],
+  "unmatched": [
+   "water",
+   "sambal oelek"
+  ]
+ },
+ {
+  "name": "Homemade Chili Seasoning",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "chiliflakes",
+   "cumin",
+   "garlic",
+   "onion"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "salt",
+   "pepper"
+  ]
+ },
+ {
+  "name": "Peanut Butter Fluff Cups",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "cream",
+   "vanilla",
+   "peanutbutter",
+   "milk"
+  ],
+  "missing_new_ingredients": [
+   "creamcheese",
+   "sugar"
+  ],
+  "unmatched": [
+   "chocolate graham crackers"
+  ]
+ },
+ {
+  "name": "Spinach Chickpea and Quinoa Salad",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "oliveoil",
+   "vinegar",
+   "lemon",
+   "garlic",
+   "spinach",
+   "freshtomato",
+   "chickpeas"
+  ]
+ },
+ {
+  "name": "Loaded Mashed Potato Bowls",
+  "reason": "too calorie-dense (705.6 kcal/serving)"
+ },
+ {
+  "name": "Sriracha Pimento Cheese Spread",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "mayo",
+   "onion"
+  ],
+  "missing_new_ingredients": [
+   "creamcheese"
+  ],
+  "unmatched": [
+   "sharp cheddar shredded*",
+   "sriracha",
+   "roasted red peppers"
+  ]
+ },
+ {
+  "name": "Scallion Herb Cream Cheese Spread",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "parsley",
+   "onion",
+   "garlic",
+   "lemon"
+  ],
+  "missing_new_ingredients": [
+   "cilantro",
+   "creamcheese"
+  ],
+  "unmatched": [
+   "salt"
+  ]
+ },
+ {
+  "name": "Cinnamon Pita Crisps",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "vanilla",
+   "cinnamon"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": [
+   "wheat pita breads"
+  ]
+ },
+ {
+  "name": "Golden Chai",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "cinnamon",
+   "vanilla",
+   "honey",
+   "milk"
+  ],
+  "missing_new_ingredients": [
+   "ginger",
+   "turmeric"
+  ],
+  "unmatched": [
+   "cracked pepper",
+   "water",
+   "bags black tea"
+  ]
+ },
+ {
+  "name": "5 Minute Savory Microwave Breakfast Mug",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "bread",
+   "cheese",
+   "butter",
+   "milk",
+   "eggs"
+  ]
+ },
+ {
+  "name": "Easy Pineapple Salsa",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Lemon Poppy Seed Two-Bite Scones",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "lemon",
+   "flour",
+   "cream"
+  ],
+  "missing_new_ingredients": [
+   "bakingpowder",
+   "sugar"
+  ],
+  "unmatched": [
+   "salt",
+   "poppy seeds"
+  ]
+ },
+ {
+  "name": "5 Ingredient Freezer Biscuits",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "flour",
+   "cream"
+  ],
+  "missing_new_ingredients": [
+   "bakingpowder",
+   "sugar"
+  ],
+  "unmatched": [
+   "salt"
+  ]
+ },
+ {
+  "name": "Spicy Hot Cocoa",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "darkchocolate",
+   "cinnamon",
+   "chiliflakes",
+   "milk"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": []
+ },
+ {
+  "name": "Warm Brussels Sprouts and Pear Salad with Dijon Vinaigrette",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "garlic",
+   "oliveoil",
+   "vinegar"
+  ],
+  "missing_new_ingredients": [
+   "cranberries",
+   "mustard",
+   "sugar"
+  ],
+  "unmatched": [
+   "salt",
+   "cracked pepper",
+   "brussels sprouts",
+   "d'anjou pear",
+   "salt pepper"
+  ]
+ },
+ {
+  "name": "Creamy Roasted Red Pepper Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "garlic",
+   "basil",
+   "cream"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "jar roasted red peppers",
+   "cracked black pepper"
+  ]
+ },
+ {
+  "name": "Sesame Kale",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "vegetableoil",
+   "garlic",
+   "soysauce",
+   "sesameseeds"
+  ],
+  "missing_new_ingredients": [
+   "sesameoil"
+  ],
+  "unmatched": [
+   "lacinato"
+  ]
+ },
+ {
+  "name": "Marinated White Beans",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "parsley",
+   "oliveoil",
+   "lemon",
+   "garlic"
+  ],
+  "missing_new_ingredients": [
+   "oregano"
+  ],
+  "unmatched": [
+   "salt pepper"
+  ]
+ },
+ {
+  "name": "Pumpkin Cream Cheese Spread",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Pesto Hummus",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Creamy Spinach Artichoke Pasta",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "butter",
+   "garlic",
+   "stockcube",
+   "milk",
+   "spinach"
+  ]
+ },
+ {
+  "name": "Lemon Butter Green Beans",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "lemon"
+  ],
+  "missing_new_ingredients": [
+   "greenbeans"
+  ],
+  "unmatched": [
+   "salt cracked pepper"
+  ]
+ },
+ {
+  "name": "Tropical Yogurt Parfaits",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Peanut Butter S'mores Pots",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "peanutbutter",
+   "darkchocolate"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": [
+   "graham crackers",
+   "marshmallows"
+  ]
+ },
+ {
+  "name": "Easy Garlic Parmesan Broccoli",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "broccoli",
+   "lemon",
+   "oliveoil",
+   "garlic"
+  ]
+ },
+ {
+  "name": "Dilly Vegetable Dip",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Taco Salad",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Easy Spinach Ricotta Pasta",
+  "reason": "low rating (3.94)"
+ },
+ {
+  "name": "Toasted Coconut Oat Bran",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "coconutmilk"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "water",
+   "oat bran",
+   "salt"
+  ]
+ },
+ {
+  "name": "Thin and Crispy Pizza Crust",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "flour"
+  ],
+  "missing_new_ingredients": [
+   "sugar",
+   "yeast"
+  ],
+  "unmatched": [
+   "warm water",
+   "salt"
+  ]
+ },
+ {
+  "name": "Spinach and Feta Mashed Potatoes",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "potato",
+   "butter",
+   "garlic",
+   "milk"
+  ]
+ },
+ {
+  "name": "The Quick Fix Salad Bar Pizza",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "tortilla"
+  ],
+  "missing_new_ingredients": [
+   "oregano"
+  ],
+  "unmatched": [
+   "mozzarella",
+   "mixed vegetables from a salad bar"
+  ]
+ },
+ {
+  "name": "Sausage and Kale Skillet",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "chickpeas"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "italian sausage",
+   "kale",
+   "marinara sauce",
+   "mozzarella"
+  ]
+ },
+ {
+  "name": "Blackened Tilapia",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "paprika",
+   "cumin",
+   "chiliflakes",
+   "garlic",
+   "butter"
+  ],
+  "missing_new_ingredients": [
+   "oregano",
+   "thyme"
+  ],
+  "unmatched": [
+   "salt",
+   "pepper",
+   "each tilapia filets"
+  ]
+ },
+ {
+  "name": "Green Chile Breakfast Quesadillas",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "eggs"
+  ],
+  "missing_new_ingredients": [
+   "cilantro"
+  ],
+  "unmatched": [
+   "monterrey jack pepper jack",
+   "mild green chiles",
+   "fajita size \" diameter tortillas"
+  ]
+ },
+ {
+  "name": "Teriyaki Noodle Bowls",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "soysauce",
+   "vinegar",
+   "chiliflakes",
+   "garlic",
+   "vegetableoil"
+  ],
+  "missing_new_ingredients": [
+   "cornstarch",
+   "ginger",
+   "sesameoil",
+   "sugar"
+  ],
+  "unmatched": [
+   "water",
+   "buckwheat soba noodles",
+   "frozen stir fry vegetables"
+  ]
+ },
+ {
+  "name": "Hummus Breakfast Mug",
+  "reason": "only 1 real ingredient(s) in stock",
+  "mapped": [
+   "eggs"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "hummus"
+  ]
+ },
+ {
+  "name": "Parsley Pesto Pasta",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "parsley",
+   "lemon",
+   "garlic",
+   "oliveoil"
+  ],
+  "missing_new_ingredients": [],
+  "unmatched": [
+   "fettuccini",
+   "parmesan",
+   "salt"
+  ]
+ },
+ {
+  "name": "cucumber raita",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Easy Egg Salad",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "eggs",
+   "mayo",
+   "dill",
+   "lemon"
+  ]
+ },
+ {
+  "name": "Coconut Lentils",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "garlic",
+   "coconutmilk"
+  ],
+  "missing_new_ingredients": [
+   "turmeric"
+  ],
+  "unmatched": [
+   "red lentils",
+   "salt",
+   "water"
+  ]
+ },
+ {
+  "name": "Creamy Tuna Pasta with Peas",
+  "reason": "duplicate ingredient combo of an existing recipe",
+  "mapped": [
+   "pasta",
+   "butter",
+   "garlic",
+   "peas",
+   "cream"
+  ]
+ },
+ {
+  "name": "Peanut Soba Stir Fry",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "peanutbutter",
+   "soysauce",
+   "vegetableoil",
+   "garlic",
+   "onion"
+  ],
+  "missing_new_ingredients": [
+   "ginger"
+  ],
+  "unmatched": [
+   "hot water",
+   "sriracha hot sauce",
+   "frozen stir fry vegetables",
+   "soba noodles"
+  ]
+ },
+ {
+  "name": "Avocado Breakfast Pita",
+  "reason": "too few reviews (4.0)"
+ },
+ {
+  "name": "Asparagus Breakfast Wraps",
+  "reason": "too few reviews (3.0)"
+ },
+ {
+  "name": "Chili Cheese Cornbread",
+  "reason": "low rating (3.0)"
+ },
+ {
+  "name": "Chipotle Mashed Sweet Potatoes",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Chai Concentrate",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "cinnamon",
+   "vanilla"
+  ],
+  "missing_new_ingredients": [
+   "ginger",
+   "sugar"
+  ],
+  "unmatched": [
+   "bags black tea"
+  ]
+ },
+ {
+  "name": "Spicy Hawaiian Pizza",
+  "reason": "too few reviews (2.0)"
+ },
+ {
+  "name": "Spicy Peanut Sauce",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "peanutbutter",
+   "coconutmilk",
+   "garlic",
+   "soysauce"
+  ],
+  "missing_new_ingredients": [
+   "cilantro",
+   "ginger",
+   "lime",
+   "sesameoil",
+   "sugar"
+  ],
+  "unmatched": [
+   "sriracha sauce rooster hot sauce",
+   "water"
+  ]
+ },
+ {
+  "name": "Polvorones",
+  "reason": "no real protein/veg/carb/fruit body -- only oil/aromatics/seasoning mapped",
+  "mapped": [
+   "butter",
+   "vanilla",
+   "flour",
+   "cinnamon"
+  ],
+  "missing_new_ingredients": [
+   "sugar"
+  ],
+  "unmatched": [
+   "salt"
+  ]
+ },
+ {
+  "name": "Quick Lemon Garlic Fish",
+  "reason": "too few reviews (1.0)"
+ },
+ {
+  "name": "Marinated Mushrooms",
+  "reason": "too few reviews (1.0)"
+ }
+]

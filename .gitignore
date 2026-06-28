@@ -24,11 +24,12 @@ scraper/coverage_clean.json
 scraper/grabgo_candidates_raw.json
 scraper/grabgo_details_raw.json
 
-# Budget Bytes air-fryer recipes (c) Budget Bytes -- raw scrape includes their
+# Budget Bytes recipes (c) Budget Bytes -- raw scrape includes their
 # written descriptions/instructions; never publish raw/derived extracts, only
-# our own scripts and the freshly-authored airfryer_recipes.json (their name/
-# nutrition/ingredients as facts, our own steps)
+# our own scripts and the freshly-authored airfryer_recipes.json/quick_recipes.json
+# (their name/nutrition/ingredients as facts, our own steps)
 scraper/budgetbytes_raw.json
+scraper/budgetbytes_quick_raw.json
 
 # Food.com Kaggle dataset (c) original authors -- never publish raw/derived
 # extracts, only our own scripts and the freshly-authored foodcom_recipes.json

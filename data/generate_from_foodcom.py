@@ -84,7 +84,11 @@ def classify(buckets):
         return 'grainbowl'
     if not has_carb and not (veg_body & STURDY_VEG) and (veg_body or (b & SALAD_VEG) or has_fruit):
         return 'salad'
-    if 'stockcube' in b or (veg_body and not has_carb and not has_protein_meatfish and len(b) >= 5):
+    # a stock cube/broth is just as common in a skillet or braise as in an
+    # actual soup -- only call it soup if there's no meaty/egg body that
+    # would make "blend if you like a smooth soup" nonsensical
+    if not has_protein_meatfish and not has_eggs and (
+            'stockcube' in b or (veg_body and not has_carb and len(b) >= 5)):
         return 'soup'
     roastable_protein = (b & PROTEIN_SET) - DELICATE_PROTEIN
     if (not (b & DELICATE_PROTEIN)) and (roastable_protein or (veg_body & ROASTABLE_VEG)) and 'oliveoil' in b and len(b) >= 4:
