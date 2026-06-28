@@ -30,12 +30,17 @@ run, so it's deliberately paced harder than the others:
   errors -- nothing for the FailureRateGuard to catch, since pages were
   still loading, just slower. This check catches that pattern
   automatically instead of needing a human to notice the slowdown.
-- Blocks image/font/media requests on every page load -- we only ever
-  read page.inner_text("body"), never anything visual, and product pages
-  carry several photos each. Cuts both load time and per-page memory
-  without touching anything Cloudflare's bot detection looks at (TLS/JS
-  fingerprint, automation flags) -- it's just normal request filtering,
-  the same thing a data-saver mode or ad blocker does.
+- Does NOT block images/fonts/media, even though we only ever read
+  page.inner_text("body") and never anything visual -- tried that
+  (2026-06-28) to cut load time/memory, and every single page load
+  immediately started timing out at domcontentloaded. Unlike Budget
+  Bytes, k-ruoka.fi sits behind Cloudflare specifically, and a real
+  browser that mysteriously stops loading most of its own page's
+  resources is exactly the kind of behavioral signal bot detection on a
+  protected site can act on, even though the JS-visible fingerprint
+  (navigator.*, automation flags) never changed. Reverted; the memory/
+  pace work here is limited to things that don't touch network behavior
+  (Chrome's own background-service flags, the per-batch memory check).
 
 Run with an optional --limit N to do a bounded test batch first."""
 import json
@@ -128,13 +133,6 @@ def parse_nutrition(text):
         'kcal100': kcal, 'fat100': fat, 'fatSat100': fat_sat, 'carbs100': carbs,
         'sugar100': sugar, 'fiber100': fiber, 'protein100': protein, 'salt100': salt,
     }
-
-
-def block_heavy_resources(route):
-    if route.request.resource_type in ("image", "media", "font"):
-        route.abort()
-    else:
-        route.continue_()
 
 
 def load_product_page(page, ean):
@@ -230,7 +228,6 @@ def main():
                 browser = p.chromium.connect_over_cdp(f"http://localhost:{DEBUG_PORT}")
                 ctx = browser.contexts[0]
                 page = ctx.pages[0] if ctx.pages else ctx.new_page()
-                page.route("**/*", block_heavy_resources)
                 ensure_store_selected(page)
                 _, baseline_swap = get_memory_stats()
 
