@@ -239,6 +239,26 @@ def jittered_wait(page, base_ms, spread_ms=400):
     page.wait_for_timeout(base_ms + random.uniform(0, spread_ms))
 
 
+def get_memory_stats():
+    """Returns (available_mb, swap_used_mb) from /proc/meminfo, or
+    (None, None) if unavailable (e.g. not running on Linux). Used by
+    long-running scrapes to detect memory creep before it silently
+    degrades every subsequent page load -- see Linux-only assumption is
+    fine here, this only ever runs on the Oracle VM."""
+    try:
+        info = {}
+        with open('/proc/meminfo') as f:
+            for line in f:
+                parts = line.split()
+                if len(parts) >= 2 and parts[1].isdigit():
+                    info[parts[0].rstrip(':')] = int(parts[1])
+        available_mb = info.get('MemAvailable', 0) / 1024
+        swap_used_mb = (info.get('SwapTotal', 0) - info.get('SwapFree', 0)) / 1024
+        return available_mb, swap_used_mb
+    except Exception:
+        return None, None
+
+
 class FailureRateGuard:
     """Aborts a scrape run early once too many requests come back empty or
     unmatched -- that pattern usually means we're starting to get rate-

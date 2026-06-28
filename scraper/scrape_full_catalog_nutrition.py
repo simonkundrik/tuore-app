@@ -15,6 +15,16 @@ run, so it's deliberately paced harder than the others:
   left off instead of starting over.
 - Uses the shared startup_jitter/jittered_wait/FailureRateGuard from
   scraper.py.
+- Self-healing against memory creep: restarts Chrome every batch
+  regardless, AND checks available memory/swap every MEMORY_CHECK_EVERY
+  items, ending the current batch early (well before the 400-item
+  boundary) the moment it crosses a threshold. Discovered live: a
+  single Chrome session running 5.5+ hours across thousands of page
+  loads pushed VM swap past 500MB, degrading pace from ~800 items/20min
+  to ~100 items/30min with no hard errors -- nothing for the
+  FailureRateGuard to catch, since pages were still loading, just
+  slower. This check catches that pattern automatically instead of
+  needing a human to notice the slowdown and intervene by hand.
 
 Run with an optional --limit N to do a bounded test batch first."""
 import json
@@ -23,7 +33,8 @@ import sys
 import time
 import urllib.request
 from pathlib import Path
-from scraper import launch_chrome, ensure_store_selected, startup_jitter, jittered_wait, FailureRateGuard
+from scraper import (launch_chrome, ensure_store_selected, startup_jitter, jittered_wait,
+                      FailureRateGuard, get_memory_stats)
 from playwright.sync_api import sync_playwright
 
 DEBUG_PORT = 9333
@@ -31,6 +42,9 @@ CATALOG_PATH = Path(__file__).parent / "full_catalog_raw.json"
 BATCH_SIZE = 400
 COOLDOWN_SECONDS = 90
 CHECKPOINT_EVERY = 100
+MEMORY_CHECK_EVERY = 25
+MIN_AVAILABLE_MB = 250
+MAX_SWAP_MB = 300
 
 
 def parse_ingredients_text(text):
@@ -184,10 +198,15 @@ def main():
     # ~100 items/30min as swap usage climbed past 500MB). Restarting
     # Chrome every batch keeps memory bounded regardless of total run
     # length, at the cost of one extra ~5-10s launch per batch.
+    #
+    # `pos` (not a fixed batch slice) tracks overall progress, so a batch
+    # that ends early on memory pressure doesn't skip or duplicate work --
+    # the next batch just picks up exactly where this one stopped.
+    pos = 0
     done_this_run = 0
-    for batch_start in range(0, len(todo), BATCH_SIZE):
-        batch = todo[batch_start:batch_start + BATCH_SIZE]
+    while pos < len(todo):
         chrome_proc = launch_chrome()
+        batch_processed = 0
         try:
             with sync_playwright() as p:
                 browser = p.chromium.connect_over_cdp(f"http://localhost:{DEBUG_PORT}")
@@ -196,27 +215,42 @@ def main():
                 ensure_store_selected(page)
 
                 guard = FailureRateGuard(max_failure_rate=0.3, min_samples=15)
-                for idx in batch:
+                while pos < len(todo) and batch_processed < BATCH_SIZE:
+                    idx = todo[pos]
                     ok = process_item(page, catalog[idx])
                     guard.record(ok)
+                    pos += 1
+                    batch_processed += 1
                     done_this_run += 1
+
                     if done_this_run % 25 == 0:
-                        with_nutrition = sum(1 for i in todo[:batch_start + len(batch)] if catalog[i].get('nutrition'))
+                        with_nutrition = sum(1 for i in todo[:pos] if catalog[i].get('nutrition'))
                         print(f"  {done_this_run}/{len(todo)} this run "
-                              f"({with_nutrition}/{batch_start + len(batch)} with nutrition so far)")
+                              f"({with_nutrition}/{pos} with nutrition so far)")
                     # checkpoint every CHECKPOINT_EVERY items, not just once
                     # per (much larger) batch -- a crash mid-batch should
                     # lose at most this many items' worth of work, not 400
                     if done_this_run % CHECKPOINT_EVERY == 0:
                         json.dump(catalog, open(CATALOG_PATH, "w", encoding="utf-8"), ensure_ascii=False)
                         print(f"Checkpoint saved after {done_this_run}/{len(todo)} this run")
+                    # self-healing memory check: end this batch early (well
+                    # before the BATCH_SIZE boundary) the moment available
+                    # memory/swap crosses a threshold, rather than waiting
+                    # for a human to notice the pace has degraded
+                    if done_this_run % MEMORY_CHECK_EVERY == 0:
+                        avail, swap = get_memory_stats()
+                        if avail is not None:
+                            print(f"  memory check: available={avail:.0f}MB swap={swap:.0f}MB")
+                            if avail < MIN_AVAILABLE_MB or swap > MAX_SWAP_MB:
+                                print("  memory pressure detected -- ending this batch early to restart Chrome")
+                                break
         finally:
             chrome_proc.terminate()
 
         json.dump(catalog, open(CATALOG_PATH, "w", encoding="utf-8"), ensure_ascii=False)
         print(f"Checkpoint saved after {done_this_run}/{len(todo)}")
 
-        if batch_start + BATCH_SIZE < len(todo):
+        if pos < len(todo):
             print(f"Cooldown {COOLDOWN_SECONDS}s before next batch...")
             time.sleep(COOLDOWN_SECONDS)
 
