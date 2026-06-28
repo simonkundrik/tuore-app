@@ -1,17 +1,22 @@
 # -*- coding: utf-8 -*-
-"""Crawls Budget Bytes' own "Quick" category (already curated by the site as
-under-30-minute recipes) for recipe URLs, then fetches each recipe's own
-Recipe JSON-LD -- name, real ingredients, real rating, real time, real
-nutrition. Same schema as budgetbytes_raw.json (the air-fryer batch).
+"""Crawls Fork To Spoon's air-fryer category (a much larger, dedicated
+air-fryer recipe site -- ~105 pages, vs. Budget Bytes' 27 total air-fryer
+recipes) for recipe URLs, then fetches each recipe's own Recipe JSON-LD --
+name, real ingredients, real nutrition (including sodium and saturated
+fat, which Budget Bytes' schema didn't expose), real time, url.
 
-Plain HTTP only, no Chrome/CDP: budgetbytes.com carries no Cloudflare bot
-protection (unlike k-ruoka.fi), so this never needs the real-Chrome trick
-or the VM -- runs entirely locally, independent of whatever scrape is
-running on the Oracle VM at the same time.
+Note: this site's recipes carry no aggregateRating at all (confirmed by
+sampling several pages before writing this) -- unlike the Budget Bytes
+pipelines, there is no review-count/rating gate available here. Health
+filtering for this batch leans on the richer nutrition fields instead
+(see build_forktospoon_recipes.py).
 
-Resumable: skips any URL already in this file's own output, or already
-present in budgetbytes_raw.json, so re-running after a crash or to pick up
-later categories never re-fetches or duplicates a recipe."""
+Plain HTTP only, no Chrome/CDP: forktospoon.com carries no Cloudflare bot
+protection, so this never needs the real-Chrome trick or the VM -- runs
+entirely locally, independent of whatever scrape is running on the
+Oracle VM at the same time.
+
+Resumable: skips any URL already in this file's own output."""
 import json
 import random
 import re
@@ -21,28 +26,22 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-# real scraped titles can carry characters outside Windows' default
-# cp1252 console/file encoding -- without this, print() on an affected
-# title crashes the whole script (hit for real in the Fork To Spoon
-# scrape: a zero-width space killed the process mid-run)
+# real scraped titles can carry characters (zero-width spaces, smart
+# quotes, etc.) outside Windows' default cp1252 console/file encoding --
+# without this, print() on an affected title crashes the whole script
 sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
-CATEGORY_URL = "https://www.budgetbytes.com/category/recipes/quick/page/{}/"
-MAX_PAGES = 70
-OUT_PATH = Path(__file__).parent / "budgetbytes_quick_raw.json"
-EXISTING_RAW_PATH = Path(__file__).parent / "budgetbytes_raw.json"
+CATEGORY_URL = "https://forktospoon.com/method/air-fryer/page/{}/"
+MAX_PAGES = 120
+OUT_PATH = Path(__file__).parent / "forktospoon_airfryer_raw.json"
 USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) TuoreApp-research/1.0 (personal recipe app)"
 CHECKPOINT_EVERY = 25
 
-LINK_RE = re.compile(r'href="(https://www\.budgetbytes\.com/[a-z0-9-]+/)"')
-# infrastructure/static pages that are never themselves a Recipe page -- skipping
-# these avoids wasting a request on something we already know has no Recipe JSON-LD
+LINK_RE = re.compile(r'href="(https://forktospoon\.com/[a-z0-9-]+/)"')
 SKIP_PATH_PARTS = (
-    '/category/', '/page/', '/feed', '/wp-', '/comments/', 'xmlrpc',
-    '/join/', '/about/', '/contact/', '/faq/', '/welcome-to-budget-bytes/',
-    '/random/', '/index/', '/privacy-policy/', '/terms-conditions/',
-    '/budget-bytes-web-accessibility-policy/', '/kitchen-basics/',
-    '/stock-kitchen-pantry-staples/',
+    '/method/', '/page/', '/category/', '/feed', '/wp-', '/comments/', 'xmlrpc',
+    '/about/', '/cookbook/', '/contact/', '/privacy-policy/', '/terms/',
+    '/weekly-meal-plan', '/air-fryer-cooking-chart/',
 )
 
 
@@ -117,32 +116,23 @@ def fetch_recipe(url):
 
 
 def main():
-    existing_urls = set()
-    if EXISTING_RAW_PATH.exists():
-        for d in json.load(open(EXISTING_RAW_PATH, encoding="utf-8")):
-            existing_urls.add(d["url"])
-
     out = []
     done_urls = set()
     if OUT_PATH.exists():
         out = json.load(open(OUT_PATH, encoding="utf-8"))
         done_urls = {d["url"] for d in out}
-        print(f"Resuming: {len(out)} recipes already scraped in this batch")
+        print(f"Resuming: {len(out)} recipes already scraped")
 
-    print("Discovering recipe URLs from the Quick category...")
+    print("Discovering recipe URLs from the air-fryer category...")
     all_urls = discover_recipe_urls()
-    todo = [u for u in all_urls if u not in existing_urls and u not in done_urls]
-    print(f"\n{len(all_urls)} unique URLs found, {len(todo)} new to fetch "
-          f"({len(existing_urls)} already in the air-fryer batch, "
-          f"{len(done_urls)} already done in this batch)\n")
+    todo = [u for u in all_urls if u not in done_urls]
+    print(f"\n{len(all_urls)} unique URLs found, {len(todo)} new to fetch\n")
 
     for i, url in enumerate(todo, 1):
         d = fetch_recipe(url)
         if d:
             out.append(d)
-            name = d["recipe"].get("name", "?")
-            rating = (d["recipe"].get("aggregateRating") or {}).get("ratingValue")
-            print(f"  [{i}/{len(todo)}] {name} (rating {rating})")
+            print(f"  [{i}/{len(todo)}] {d['recipe'].get('name', '?')}")
         if i % CHECKPOINT_EVERY == 0:
             json.dump(out, open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
             print(f"  checkpoint saved ({len(out)} total)")
