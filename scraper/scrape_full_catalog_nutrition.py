@@ -18,13 +18,24 @@ run, so it's deliberately paced harder than the others:
 - Self-healing against memory creep: restarts Chrome every batch
   regardless, AND checks available memory/swap every MEMORY_CHECK_EVERY
   items, ending the current batch early (well before the 400-item
-  boundary) the moment it crosses a threshold. Discovered live: a
-  single Chrome session running 5.5+ hours across thousands of page
-  loads pushed VM swap past 500MB, degrading pace from ~800 items/20min
-  to ~100 items/30min with no hard errors -- nothing for the
-  FailureRateGuard to catch, since pages were still loading, just
-  slower. This check catches that pattern automatically instead of
-  needing a human to notice the slowdown and intervene by hand.
+  boundary) the moment swap has grown too much *since this Chrome
+  session started* (not an absolute threshold -- the VM's baseline swap
+  usage drifts over time for reasons unrelated to this script, e.g.
+  376MB resting swap was observed right after a fresh Chrome launch on
+  2026-06-28, which made an earlier absolute-300MB threshold fire on
+  almost every batch and throttle the run far below even the original
+  degraded pace). Discovered live: a single Chrome session running
+  5.5+ hours across thousands of page loads pushed VM swap past 500MB,
+  degrading pace from ~800 items/20min to ~100 items/30min with no hard
+  errors -- nothing for the FailureRateGuard to catch, since pages were
+  still loading, just slower. This check catches that pattern
+  automatically instead of needing a human to notice the slowdown.
+- Blocks image/font/media requests on every page load -- we only ever
+  read page.inner_text("body"), never anything visual, and product pages
+  carry several photos each. Cuts both load time and per-page memory
+  without touching anything Cloudflare's bot detection looks at (TLS/JS
+  fingerprint, automation flags) -- it's just normal request filtering,
+  the same thing a data-saver mode or ad blocker does.
 
 Run with an optional --limit N to do a bounded test batch first."""
 import json
@@ -44,7 +55,7 @@ COOLDOWN_SECONDS = 90
 CHECKPOINT_EVERY = 100
 MEMORY_CHECK_EVERY = 25
 MIN_AVAILABLE_MB = 250
-MAX_SWAP_MB = 300
+MAX_SWAP_GROWTH_MB = 200  # vs the swap level measured right after this Chrome session launched
 
 
 def parse_ingredients_text(text):
@@ -119,9 +130,16 @@ def parse_nutrition(text):
     }
 
 
+def block_heavy_resources(route):
+    if route.request.resource_type in ("image", "media", "font"):
+        route.abort()
+    else:
+        route.continue_()
+
+
 def load_product_page(page, ean):
     page.goto(f"https://www.k-ruoka.fi/kauppa/tuote/x-{ean}", wait_until="domcontentloaded", timeout=15000)
-    jittered_wait(page, 500, 600)
+    jittered_wait(page, 300, 600)
     try:
         page.get_by_text("Ravintosisältö", exact=True).first.click(timeout=4000)
         page.wait_for_timeout(500)
@@ -212,7 +230,9 @@ def main():
                 browser = p.chromium.connect_over_cdp(f"http://localhost:{DEBUG_PORT}")
                 ctx = browser.contexts[0]
                 page = ctx.pages[0] if ctx.pages else ctx.new_page()
+                page.route("**/*", block_heavy_resources)
                 ensure_store_selected(page)
+                _, baseline_swap = get_memory_stats()
 
                 guard = FailureRateGuard(max_failure_rate=0.3, min_samples=15)
                 while pos < len(todo) and batch_processed < BATCH_SIZE:
@@ -240,8 +260,10 @@ def main():
                     if done_this_run % MEMORY_CHECK_EVERY == 0:
                         avail, swap = get_memory_stats()
                         if avail is not None:
-                            print(f"  memory check: available={avail:.0f}MB swap={swap:.0f}MB")
-                            if avail < MIN_AVAILABLE_MB or swap > MAX_SWAP_MB:
+                            growth = (swap - baseline_swap) if baseline_swap is not None else 0
+                            print(f"  memory check: available={avail:.0f}MB swap={swap:.0f}MB "
+                                  f"(+{growth:.0f}MB since this Chrome session launched)")
+                            if avail < MIN_AVAILABLE_MB or growth > MAX_SWAP_GROWTH_MB:
                                 print("  memory pressure detected -- ending this batch early to restart Chrome")
                                 break
         finally:

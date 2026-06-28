@@ -104,13 +104,26 @@ def _ensure_xvfb():
     time.sleep(2)
 
 
+# background services Chrome runs by default that we never use during automated
+# scraping -- none of these touch the JS-visible fingerprint (navigator.*, automation
+# flags) that Cloudflare's bot detection actually checks, they just turn off extra
+# processes/threads, which matters more here than usual: the Oracle VM has under 1GB
+# total RAM, so every idle service Chrome doesn't spin up is memory back for the page itself
+MEMORY_SAVING_FLAGS = [
+    "--disable-background-networking", "--disable-sync", "--disable-translate",
+    "--disable-default-apps", "--mute-audio", "--metrics-recording-only",
+    "--disable-background-timer-throttling", "--disable-backgrounding-occluded-windows",
+    "--disable-renderer-backgrounding", "--disk-cache-size=1", "--media-cache-size=1",
+]
+
+
 def launch_chrome():
     env = None
-    extra_flags = []
+    extra_flags = list(MEMORY_SAVING_FLAGS)
     if not IS_WINDOWS:
         _ensure_xvfb()
         env = {**os.environ, "DISPLAY": XVFB_DISPLAY}
-        extra_flags = ["--disable-gpu", "--disable-dev-shm-usage"]
+        extra_flags += ["--disable-gpu", "--disable-dev-shm-usage"]
     proc = subprocess.Popen([
         CHROME_PATH,
         f"--remote-debugging-port={DEBUG_PORT}",
