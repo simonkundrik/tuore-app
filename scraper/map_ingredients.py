@@ -57,6 +57,12 @@ FI_STEM_TO_KEY = [
     ('tonnikala', 'tuna'),
     ('kirjolohifile', 'salmon'),
     ('valkoinen kalafile', 'whitefish'), ('kalafile', 'whitefish'),
+    # chicken/turkey mince must be checked before the generic jauheliha stem
+    # below, or "kanan jauhelihaa" (chicken mince) silently becomes beef --
+    # confirmed for real against recipes_raw.json: 114 ingredient lines
+    # contain both "kana" and "jauheliha", e.g. "Pirkka kanan jauhelihaa"
+    ('kanan jauheliha', 'chicken'), ('broilerin jauheliha', 'chicken'),
+    ('kalkkunan jauheliha', 'turkey'), ('porsaan jauheliha', 'pork'),
     ('naudan jauheliha', 'mince'), ('jauheliha', 'mince'),
     ('naudan ulkofile', 'beef'), ('naudanlihaa', 'beef'),
     ('porsaan sisäfile', 'pork'), ('porsaa', 'pork'),
@@ -64,8 +70,14 @@ FI_STEM_TO_KEY = [
     ('karitsa', 'lamb'), ('lampaan', 'lamb'),
     ('kanan fileesuikale', 'cookedchicken'), ('kanan fileepihv', 'chicken'),
     ('kanan ohutleik', 'chicken'), ('kanan rintafile', 'chicken'),
-    ('kanan koipireis', 'chicken'), ('broilerin', 'chicken'),
-    ('prosciutto', 'bacon'), ('kinkku', 'bacon'), ('pekoni', 'bacon'),
+    ('kanan koipireis', 'chicken'),
+    # compound chicken-based products must come before the generic
+    # 'broileri' stem below, or "broileripekonia" (chicken bacon) and
+    # "broilerinakkeja" (chicken sausages) -- both real products -- match
+    # chicken instead of the more specific bacon/sausage they actually are
+    ('broileripekoni', 'bacon'), ('broilerinakk', 'sausage'),
+    ('broileri', 'chicken'),
+    ('prosciutto', 'ham'), ('kinkku', 'ham'), ('pekoni', 'bacon'),
     ('chorizo', 'chorizo'), ('makkara', 'sausage'), ('nakki', 'sausage'),
     ('tofu', 'tofu'),
     ('kikherne', 'chickpeas'),

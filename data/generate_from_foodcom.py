@@ -102,6 +102,27 @@ def join_names(refs):
     if len(names) == 2: return f"{names[0]} and {names[1]}"
     return ', '.join(names[:-1]) + f" and {names[-1]}"
 
+# the full descriptive phrase to use for a vegetable/aromatic the first time a
+# recipe introduces it raw -- proteins are left out since their cut varies too
+# much by dish (steak vs. mince vs. strips) to state one default safely.
+# Stored as a complete phrase (not just a prefix) since some cuts read
+# naturally before the noun ("diced onion") and some after ("broccoli florets")
+PREP_HINT = {
+ 'onion':'diced onion', 'garlic':'minced garlic', 'carrot':'sliced carrot', 'pepper':'sliced pepper',
+ 'cucumber':'sliced cucumber', 'zucchini':'sliced zucchini', 'eggplant':'cubed eggplant',
+ 'potato':'cubed potato', 'sweetpotato':'cubed sweet potato', 'mushroom':'sliced mushroom',
+ 'cabbage':'shredded cabbage', 'leek':'sliced leek', 'broccoli':'broccoli florets',
+ 'cauliflower':'cauliflower florets', 'freshtomato':'diced tomato', 'beetroot':'diced beetroot',
+ 'fennel':'sliced fennel', 'asparagus':'trimmed asparagus', 'pumpkin':'cubed pumpkin',
+ 'rutabaga':'cubed rutabaga',
+}
+def prep_join(refs):
+    names = [PREP_HINT.get(r, T(r)) for r in refs]
+    if not names: return 'remaining ingredients'
+    if len(names) == 1: return names[0]
+    if len(names) == 2: return f"{names[0]} and {names[1]}"
+    return ', '.join(names[:-1]) + f" and {names[-1]}"
+
 BODY_ROLES = PROTEIN_SET | CARBY | FRUIT
 def has_body(buckets):
     b = set(buckets)
@@ -165,125 +186,124 @@ def gen_steps(archetype, buckets, minutes):
         liquid = [x for x in b if x in ('milk','plantmilk')]
         extra_dairy = [x for x in dairy if x not in liquid]
         batter_extra = f" and {join_names(extra_dairy)}" if extra_dairy else ""
-        steps.append(f"Whisk together the flour, {join_names(liquid+eggs)}{batter_extra} until smooth.")
+        steps.append(f"Whisk together the flour, {join_names(liquid+eggs)}{batter_extra} until smooth, with no lumps remaining.")
         meaty_protein = [x for x in proteins if x != 'eggs']
         if meaty_protein:
-            steps.append(f"Fry the {join_names(meaty_protein)} in a pan until cooked through, then set aside.")
-        steps.append("Pour spoonfuls of batter into a hot, lightly oiled pan and cook 2-3 min per side until golden.")
+            steps.append(f"Fry the {join_names(meaty_protein)} in a pan over medium heat until cooked through, then set aside to add back on top later.")
+        steps.append("Heat a lightly oiled pan over medium heat. Pour in spoonfuls of the batter and cook 2-3 min per side, flipping once bubbles form on the surface, until golden and set in the centre.")
         topping = fruit+nuts+meaty_protein+[x for x in ('honey',) if x in b]
         if topping:
-            steps.append(f"Serve with {join_names(topping)}.")
+            steps.append(f"Serve warm, topped with {join_names(topping)}.")
         equip=['pan']
     elif archetype == 'porridge':
         liquid = 'milk' if 'milk' in b else ('plantmilk' if 'plantmilk' in b else None)
-        steps.append(f"Bring the {T(liquid)} to a gentle simmer in a pot." if liquid else "Heat a splash of water in a pot.")
-        steps.append(f"Stir in the oats{(' and ' + join_names(herbs)) if herbs else ''}, cook 3-4 min.")
+        steps.append(f"Bring the {T(liquid)} to a gentle simmer in a pot over medium heat." if liquid else "Heat a splash of water in a pot over medium heat.")
+        steps.append(f"Stir in the oats{(' and ' + join_names(herbs)) if herbs else ''}, then reduce the heat to low and cook 3-4 min, stirring occasionally, until thickened.")
         topping = fruit+nuts+extras
         if topping:
-            steps.append(f"Top with {join_names(topping)}.")
+            steps.append(f"Top with {join_names(topping)} and serve warm.")
         equip=['pot']
     elif archetype == 'smoothie':
         items = [x for x in b if x not in AROMATIC]
-        steps.append(f"Add the {join_names(items)} to a blender.")
-        steps.append("Blend until smooth.")
+        steps.append(f"Add the {join_names(items)} to a blender, with a splash of water or extra liquid if needed to get it moving.")
+        steps.append("Blend on high until smooth and creamy, about 30-60 sec.")
         equip=['blender']
     elif archetype == 'bites':
-        steps.append(f"Mash or mix the {join_names(b)} together in a bowl until well combined.")
-        steps.append("Roll into small bites and chill in the fridge for at least 20 min.")
+        steps.append(f"Mash or mix the {join_names(b)} together in a bowl until well combined and the mixture holds together when pressed.")
+        steps.append("Roll into small, bite-sized balls and chill in the fridge for at least 20 min to firm up before serving.")
     elif archetype == 'breaded':
         main_protein = [x for x in proteins if x != 'eggs'][:1]
         season_note = f" and {join_names(aromatics)}" if aromatics else ""
-        steps.append(f"Season the {join_names(main_protein)} with salt, pepper{season_note}.")
+        steps.append(f"Season the {join_names(main_protein)} on both sides with salt, pepper{season_note}.")
         if 'eggs' in b:
-            steps.append("Beat the eggs in a shallow bowl, then coat the protein in breadcrumbs, dipping through the egg first.")
+            steps.append("Beat the eggs in a shallow bowl. Dip each piece of the protein in the egg, then coat thoroughly in the breadcrumbs, pressing gently so they stick.")
         else:
-            steps.append("Coat the protein in breadcrumbs.")
-        steps.append("Fry in a pan 3-4 min per side until golden and cooked through.")
+            steps.append("Coat the protein thoroughly in the breadcrumbs, pressing gently so they stick.")
+        steps.append("Fry in a pan over medium heat for 3-4 min per side until golden brown and cooked through.")
         topping = dairy+herbs+sauces+extras
         if topping:
-            steps.append(f"Serve topped with {join_names(topping)}.")
+            steps.append(f"Serve hot, topped with {join_names(topping)}.")
         equip=['pan']
     elif archetype == 'eggbreakfast':
         lead_extra = aromatics + [x for x in (proteins+vegs) if x != 'eggs']
         if lead_extra:
-            steps.append(f"Sauté the {join_names(lead_extra)} in a pan for 3-4 min.")
+            steps.append(f"Sauté the {prep_join(lead_extra)} in a pan over medium heat for 3-4 min until softened.")
         flour_note = ' and a spoonful of flour' if 'flour' in b else ''
-        steps.append(f"Whisk the eggs{flour_note} with a pinch of salt and pepper.")
-        tail = "Pour into the pan and cook, stirring gently, until just set."
+        steps.append(f"Meanwhile, whisk the eggs{flour_note} with a pinch of salt and pepper until well combined.")
         fold_in = dairy+herbs+sauces+extras
+        steps.append("Pour the egg mixture into the pan and cook over medium-low heat, stirring gently, until just set, about 2-3 min.")
         if fold_in:
-            tail = tail[:-1] + f", folding in the {join_names(fold_in)} at the end."
-        steps.append(tail)
+            steps.append(f"Fold in the {join_names(fold_in)} just before serving.")
         equip=['pan']
     elif archetype == 'toast':
         base = next(x for x in b if x in WRAP_BASE)
         rest = [x for x in b if x != base]
-        steps.append(f"Toast the {T(base)}.")
-        steps.append(f"Mix the {join_names(rest)} together and spread over the toast (warm gently in a pan first if you'd like it melted).")
+        steps.append(f"Toast the {T(base)} until golden and crisp.")
+        steps.append(f"Mix the {join_names(rest)} together in a bowl and spread generously over the toast (warm gently in a pan first if you'd like the topping melted).")
     elif archetype == 'wrap':
         base = next(x for x in b if x in WRAP_BASE)
         fillings = [x for x in b if x != base]
         cookable = [x for x in fillings if x in PROTEIN_SET or x=='halloumi']
         if cookable:
-            steps.append(f"Fry the {join_names(cookable)} in a pan until cooked through.")
+            steps.append(f"Fry the {join_names(cookable)} in a pan over medium heat until cooked through, about 5-8 min.")
             equip=['pan']
         rest = [x for x in fillings if x not in cookable]
-        steps.append(f"Spread or layer the {join_names(rest) if rest else join_names(fillings)} over the {T(base)}.")
-        steps.append("Roll up tightly (or fold, if using bread) and slice to serve.")
+        steps.append(f"Spread or layer the {join_names(rest) if rest else join_names(fillings)} over the {T(base)}, leaving a little space at the edges.")
+        steps.append("Roll up tightly, tucking in the sides (or fold in half, if using bread), and slice to serve.")
     elif archetype == 'pasta':
-        steps.append("Boil the pasta in a pot following the pack instructions.")
+        steps.append("Boil the pasta in a large pot of salted water following the pack instructions, until al dente.")
         cookable = [x for x in (proteins+vegs) if x != 'pasta']
         if cookable:
-            steps.append(f"Meanwhile, cook the {join_names(cookable)}{(' with ' + join_names(aromatics)) if aromatics else ''} in a pan for 4-6 min.")
+            steps.append(f"Meanwhile, cook the {prep_join(cookable)}{(' with the ' + prep_join(aromatics)) if aromatics else ''} in a pan over medium heat for 4-6 min, stirring occasionally, until cooked through.")
             equip=['pot','pan']
         elif aromatics:
-            steps.append(f"Meanwhile, sauté the {join_names(aromatics)} in a pan for 1-2 min.")
+            steps.append(f"Meanwhile, sauté the {prep_join(aromatics)} in a pan over medium heat for 1-2 min until fragrant.")
             equip=['pot','pan']
         else:
             equip=['pot']
         toss_in = dairy + sauces + herbs + extras
         if toss_in:
-            steps.append(f"Drain the pasta and toss through the {join_names(toss_in)}.")
+            steps.append(f"Drain the pasta, reserving a splash of the cooking water, then toss through the {join_names(toss_in)}, loosening with a little of the reserved water if needed.")
         else:
-            steps.append("Drain the pasta and toss everything together. Season with salt and pepper.")
+            steps.append("Drain the pasta and toss everything together. Season generously with salt and pepper.")
     elif archetype == 'curry':
-        steps.append(f"Sauté the {join_names(aromatics) if aromatics else 'aromatics'} in a pot for 1-2 min.")
+        steps.append(f"Sauté the {prep_join(aromatics) if aromatics else 'aromatics'} in a pot over medium heat for 1-2 min until fragrant.")
         if 'currypaste' in b:
-            steps.append("Stir in the curry paste, then add the coconut milk and a splash of water.")
+            steps.append("Stir in the curry paste and cook for 30 sec, then add the coconut milk and a splash of water.")
         else:
             steps.append("Add the coconut milk and a splash of water.")
         cookable = [x for x in (proteins+vegs) if x not in ('currypaste','coconutmilk')]
         if cookable:
-            steps.append(f"Add the {join_names(cookable)} and simmer 12-20 min until cooked through. Serve with rice.")
+            steps.append(f"Add the {prep_join(cookable)} and simmer over medium-low heat for 12-20 min, stirring occasionally, until cooked through. Serve hot with rice.")
         equip=['pot']
     elif archetype == 'grainbowl':
         grain = next(x for x in b if x in {'quinoa','barley','buckwheat','couscous'})
         steps.append(f"Cook the {T(grain)} in a pot following the pack instructions.")
         cookable = [x for x in (proteins+vegs) if x != grain]
         if cookable:
-            steps.append(f"Roast or pan-fry the {join_names(cookable)} until tender.")
+            steps.append(f"Meanwhile, roast or pan-fry the {prep_join(cookable)} until tender and lightly browned, about 10-15 min.")
         toss_in = dairy + sauces + herbs + extras
-        steps.append(f"Toss everything together{(' with ' + join_names(toss_in)) if toss_in else ''}.")
+        steps.append(f"Toss everything together{(' with the ' + join_names(toss_in)) if toss_in else ''}, season with salt and pepper, and serve warm or at room temperature.")
         equip=['pot']
     elif archetype == 'salad':
         mains = [x for x in b if x not in {'oliveoil','lemon','honey','vinegar'}]
-        steps.append(f"Toss the {join_names(mains)} together in a bowl.")
+        steps.append(f"Toss the {prep_join(mains)} together in a large bowl.")
         dressing = [x for x in ('oliveoil','lemon','honey','vinegar') if x in b]
         if dressing:
-            steps.append(f"Dress with {join_names(dressing)}. Season with salt and pepper.")
+            steps.append(f"Drizzle with the {join_names(dressing)} and toss gently to coat. Season with salt and pepper to taste.")
         else:
             steps.append("Season with salt and pepper to taste.")
     elif archetype == 'soup':
         if aromatics:
-            steps.append(f"Sauté the {join_names(aromatics)} in a pot for 3 min.")
+            steps.append(f"Sauté the {prep_join(aromatics)} in a pot over medium heat for 3 min until softened and fragrant.")
         body = [x for x in vegs+proteins+carbs if x not in aromatics]
-        liquid = "stock cube and enough water to cover" if 'stockcube' in b else "a splash of water"
-        steps.append(f"Add the {join_names(body)} and {liquid}, simmer 15-20 min until tender.")
+        liquid = "the stock cube and enough water to cover" if 'stockcube' in b else "a splash of water"
+        steps.append(f"Add the {prep_join(body)} and {liquid}, bring to a boil, then reduce the heat and simmer 15-20 min until tender.")
         finish_in = dairy + [x for x in sauces if x != 'stockcube'] + herbs + extras
         if finish_in:
-            steps.append(f"Stir in the {join_names(finish_in)}, blend if you like a smooth soup, and season with salt and pepper.")
+            steps.append(f"Stir in the {join_names(finish_in)}. Blend with an immersion blender if you'd like a smooth soup, then season with salt and pepper to taste.")
         else:
-            steps.append("Blend if you like a smooth soup, and season with salt and pepper.")
+            steps.append("Blend with an immersion blender if you'd like a smooth soup, then season with salt and pepper to taste.")
         equip=['pot']
     elif archetype == 'roast':
         steps.append("Preheat the oven to 200°C.")
@@ -293,26 +313,26 @@ def gen_steps(archetype, buckets, minutes):
         rest_veg = [x for x in oven_veg if x not in main]
         oil = ['oliveoil'] if 'oliveoil' in extras else []
         post = [x for x in extras+sauces if x not in oil]
-        steps.append(f"Toss the {join_names(main+rest_veg)} with {join_names(aromatics+oil) or 'a little oil'}{(' and ' + join_names(herbs)) if herbs else ''}, season with salt and pepper.")
-        tail = "Roast for 30-40 min, turning once, until cooked through."
+        steps.append(f"Toss the {prep_join(main+rest_veg)} with the {join_names(aromatics+oil) or 'a little oil'}{(' and ' + join_names(herbs)) if herbs else ''}, season generously with salt and pepper, and spread out in a single layer on a baking tray.")
+        tail = "Roast for 30-40 min, turning the pieces once halfway through, until golden and cooked through."
         if quick_veg:
-            tail += f" Stir in the {join_names(quick_veg)} for the last 5 min."
+            tail += f" Stir in the {prep_join(quick_veg)} for the last 5 min of roasting."
         steps.append(tail)
         if post or dairy:
-            steps.append(f"Finish with {join_names(post+dairy)}.")
+            steps.append(f"Finish with the {join_names(post+dairy)} and serve hot.")
         equip=['oven']
     else:  # skillet (default)
         if aromatics:
-            steps.append(f"Sauté the {join_names(aromatics)} in a pan for 2 min.")
+            steps.append(f"Sauté the {prep_join(aromatics)} in a pan over medium heat for 2 min until fragrant.")
         main = proteins+vegs+carbs
         if not main:
             main = [x for x in b if x not in aromatics]
-        steps.append(f"Add the {join_names(main)} and cook 8-12 min, stirring occasionally.")
+        steps.append(f"Add the {prep_join(main)} and cook over medium heat for 8-12 min, stirring occasionally, until cooked through.")
         finishing = [x for x in sauces+herbs+dairy+extras if x not in main]
         if finishing:
-            steps.append(f"Stir in the {join_names(finishing)} and season with salt and pepper.")
+            steps.append(f"Stir in the {join_names(finishing)}, season with salt and pepper, and serve hot.")
         else:
-            steps.append("Season with salt and pepper to taste.")
+            steps.append("Season with salt and pepper to taste and serve hot.")
         equip=['pan']
 
     # safety net: never silently drop an ingredient the shopping list charges for

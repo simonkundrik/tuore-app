@@ -24,6 +24,7 @@ TITLE = {
  'lamb':'lamb','sausage':'sausage','bacon':'bacon','chorizo':'chorizo','mince':'beef mince',
  'salmon':'salmon','tuna':'tuna','whitefish':'white fish','prawns':'prawn','mussels':'mussel',
  'herring':'herring','tofu':'tofu','chickpeas':'chickpea','lentils':'lentil','blackbeans':'bean',
+ 'ham':'ham','cod':'cod',
  'eggs':'egg','broccoli':'broccoli','cauliflower':'cauliflower','zucchini':'zucchini',
  'eggplant':'eggplant','cabbage':'cabbage','kale':'kale','leek':'leek','mushroom':'mushroom',
  'pepper':'pepper','cucumber':'cucumber','pumpkin':'pumpkin','rutabaga':'rutabaga',
@@ -50,7 +51,7 @@ def T(key): return TITLE.get(key, P[key]['nm'].lower())
 def Cap(s): return s[0].upper()+s[1:]
 MID = {'prawns':'prawns','mussels':'mussels','blackbeans':'beans'}
 def M(key): return MID.get(key, T(key))
-FISH = {'salmon','tuna','whitefish','prawns','mussels','herring'}
+FISH = {'salmon','tuna','whitefish','prawns','mussels','herring','cod'}
 def protein_icon(key):
     if key in FISH: return 'ti-fish'
     if key in {'tofu','chickpeas','lentils','blackbeans'}: return 'ti-bowl'
@@ -59,6 +60,7 @@ def protein_icon(key):
 FRAC = {
  'chicken':1,'cookedchicken':.5,'beef':.4,'pork':1,'turkey':1,'lamb':.4,'sausage':1,'bacon':.5,
  'chorizo':.5,'mince':1,'salmon':.4,'tuna':1,'whitefish':1,'prawns':1,'mussels':1,'herring':1,
+ 'ham':.3,'cod':1,
  'tofu':1,'chickpeas':1,'lentils':1,'blackbeans':1,'eggs':.3,
  'rice':.4,'pasta':.4,'quinoa':.4,'couscous':.4,'barley':.4,'buckwheat':.15,
  'broccoli':.5,'carrot':.5,'onion':1,'cauliflower':.5,'zucchini':1,'eggplant':1,'cabbage':.3,
@@ -77,7 +79,7 @@ FRAC = {
 }
 
 MEAT_FISH = {'chicken','cookedchicken','beef','pork','turkey','lamb','sausage','bacon','chorizo',
-             'mince','salmon','tuna','whitefish','prawns','mussels','herring'}
+             'mince','salmon','tuna','whitefish','prawns','mussels','herring','ham','cod'}
 ANIMAL_NONVEGAN = MEAT_FISH | {'eggs','cheese','feta','halloumi','mozzarella','parmesan','ricotta',
              'butter','cream','oatcream','yogurt','skyr','rahka','milk','honey'}
 CARBY = {'rice','pasta','quinoa','couscous','barley','buckwheat','bread','pita','tortilla',
@@ -86,7 +88,7 @@ RICHFAT = {'cream','cheese','feta','halloumi','mozzarella','parmesan','coconutmi
            'butter','tahini','ricotta'}
 PROTEIN_G = {'chicken':30,'cookedchicken':22,'beef':28,'pork':30,'turkey':26,'lamb':26,'sausage':18,
  'bacon':14,'chorizo':16,'mince':24,'salmon':26,'tuna':22,'whitefish':24,'prawns':18,'mussels':18,
- 'herring':20,'tofu':16,'chickpeas':13,'lentils':15,'blackbeans':11,'eggs':13,'feta':9,'halloumi':17,
+ 'herring':20,'ham':7,'cod':26,'tofu':16,'chickpeas':13,'lentils':15,'blackbeans':11,'eggs':13,'feta':9,'halloumi':17,
  'mozzarella':11,'parmesan':8,'ricotta':10,'cheese':7,'cream':2,'yogurt':9,'skyr':15,'rahka':11,
  'quinoa':6,'barley':4,'buckwheat':5,'almonds':5,'walnuts':4,'peanutbutter':6,'tahini':5}
 
@@ -99,6 +101,7 @@ CARB_G = {
  'lemon':2,'beetroot':8,'oliveoil':0,'mushroom':2,'sweetpotato':18,'halloumi':2,'prawns':1,
  'coconutmilk':2,'currypaste':2,'leek':5,'soysauce':1,'peanutbutter':3,'quinoa':20,'chorizo':1,
  'pita':20,'avocado':4,'rahka':4,'apple':14,'beef':0,'pork':0,'whitefish':0,'sausage':2,'bacon':0,
+ 'ham':1,'cod':0,
  'tofu':2,'cream':3,'butter':0,'mozzarella':2,'freshtomato':4,'cabbage':3,'cauliflower':3,
  'eggplant':4,'zucchini':3,'sweetcorn':10,'peas':7,'orange':12,'blueberries':14,'strawberries':6,
  'chickpeas':27,'couscous':25,'blackbeans':22,'basil':0,'parsley':0,'cumin':0,'cinnamon':1,
@@ -116,6 +119,7 @@ FAT_G = {
  'lemon':0,'beetroot':0,'oliveoil':13,'mushroom':0,'sweetpotato':0,'halloumi':18,'prawns':1,
  'coconutmilk':9,'currypaste':1,'leek':0,'soysauce':0,'peanutbutter':8,'quinoa':2,'chorizo':18,
  'pita':1,'avocado':15,'rahka':1,'apple':0,'beef':15,'pork':6,'whitefish':2,'sausage':20,'bacon':12,
+ 'ham':1,'cod':2,
  'tofu':9,'cream':15,'butter':12,'mozzarella':8,'freshtomato':0,'cabbage':0,'cauliflower':0,
  'eggplant':0,'zucchini':0,'sweetcorn':1,'peas':0,'orange':0,'blueberries':0,'strawberries':0,
  'chickpeas':3,'couscous':0,'blackbeans':1,'basil':0,'parsley':0,'cumin':0,'cinnamon':0,

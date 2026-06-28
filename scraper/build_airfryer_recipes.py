@@ -18,7 +18,7 @@ from recipe_lib import (P, existing_ids, T, Cap, M, protein_icon, FRAC,
     is_vegan, is_veg, is_lowcarb, price_per_serving, make_id,
     is_lowfat, is_lowcal, BUDGET_MAX_EUR, VERYBUDGET_MAX_EUR)
 from generate_from_foodcom import (PROTEIN_SET, AROMATIC, HERB_SPICE, FINISHING,
-    DAIRY, CARBY, FRUIT, veg_of, join_names)
+    DAIRY, CARBY, FRUIT, veg_of, join_names, prep_join, FISH)
 from canon_map import canon, SKIP, TO_EXISTING, TO_NEW
 
 IN_PATH = Path(__file__).parent / "budgetbytes_raw.json"
@@ -43,7 +43,15 @@ UNIT_WORDS = {
  'to', 'taste', 'of', 'for', 'garnish', 'optional', 'divided', 'extra', 'or', 'and',
  'thinly', 'roughly', 'finely', 'about', 'plus', 'more',
 }
-ALL_KEYS_BY_LEN = sorted(set(TO_EXISTING) | set(TO_NEW), key=lambda k: (-len(k.split()), -len(k)))
+# sorting a set by a key with ties (e.g. "chorizo" and "sausage" are both one
+# word, seven characters) leaves the tie order dependent on set iteration,
+# which Python randomizes per-process (PYTHONHASHSEED) -- without the
+# trailing `k` tiebreak, a real "chorizo sausage" ingredient line matched
+# 'chorizo' or 'sausage' non-deterministically depending on which process
+# ran the matcher, confirmed live across two consecutive runs of the same
+# script. The alphabetical tiebreak is arbitrary but fixed, which is what
+# matters here -- not which specific word it favors.
+ALL_KEYS_BY_LEN = sorted(set(TO_EXISTING) | set(TO_NEW), key=lambda k: (-len(k.split()), -len(k), k))
 
 
 def clean_ingredient(raw):
@@ -126,15 +134,35 @@ def air_fryer_steps(refs, temp_c, cook_min):
         excluded = set(aromatics) | set(herbs) | set(finishing) | set(dairy)
         main = [r for r in refs if r not in excluded] or list(refs)
     season = aromatics + herbs
-    steps = [f"Preheat the air fryer to {temp_c}°C."]
-    season_txt = f" with {join_names(season)}" if season else ""
-    steps.append(f"Toss the {join_names(main)}{season_txt}, season with salt and pepper.")
+    steps = [f"Preheat the air fryer to {temp_c}°C for a few minutes."]
+    season_txt = f" with the {prep_join(season)}" if season else ""
+    steps.append(f"Toss the {prep_join(main)}{season_txt} in a little oil, and season generously with salt and pepper.")
     cook_min = max(cook_min, 6)
+    # doneness cue tailored to what's actually in the basket -- "no pink
+    # remaining" doesn't mean anything for eggs or shellfish, and fish
+    # overcooks badly if you wait for the same cue red meat needs
+    mainset = set(main)
+    shellfish = {'prawns', 'mussels'}
+    true_fish = FISH - shellfish
+    if mainset & true_fish:
+        doneness = "until opaque and cooked through, flaking easily with a fork"
+    elif mainset & shellfish:
+        doneness = "until pink, opaque and cooked through"
+    elif 'eggs' in mainset:
+        doneness = "until just set"
+    elif mainset & (PROTEIN_SET - FISH - {'eggs'}):
+        doneness = "until cooked through with no pink remaining"
+    elif vegs and not proteins:
+        doneness = "until tender and lightly charred at the edges"
+    else:
+        doneness = "until cooked through and crisp"
     tail = (f"Air-fry at {temp_c}°C for {max(cook_min-3,3)}-{cook_min} min, "
-            "shaking the basket halfway, until cooked through and crisp.")
+            f"shaking the basket halfway through to crisp evenly, {doneness}.")
     finish = finishing + dairy
     if finish:
-        tail += f" Finish with {join_names(finish)}."
+        tail += f" Finish with the {join_names(finish)} and serve hot."
+    else:
+        tail += " Serve hot."
     steps.append(tail)
     return steps
 
