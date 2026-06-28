@@ -13,6 +13,7 @@ by Unsplash's API terms whenever a photo is displayed."""
 import json
 import re
 import sys
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -67,14 +68,18 @@ def find_meal_ids_missing_photo(target_ids=None):
     return out
 
 
-def main(target_ids=None):
+def main(target_ids=None, limit=None):
     if not KEY_PATH.exists():
         print(f"No Unsplash key found at {KEY_PATH}")
         sys.exit(1)
     key = KEY_PATH.read_text(encoding="utf-8").strip()
 
     todo = find_meal_ids_missing_photo(target_ids)
-    print(f"{len(todo)} recipes need a photo")
+    total_missing = len(todo)
+    if limit is not None:
+        todo = todo[:limit]
+    print(f"{total_missing} recipes need a photo"
+          + (f", processing this run's batch of {len(todo)}" if limit is not None else ""))
     if not todo:
         return
 
@@ -83,6 +88,13 @@ def main(target_ids=None):
         query = search_query_for(name)
         try:
             photo = fetch_photo(key, query)
+        except urllib.error.HTTPError as e:
+            if e.code in (401, 403):
+                print(f"  rate limit hit (HTTP {e.code}) -- stopping this batch early, "
+                      f"{len(existing)} saved so far")
+                break
+            print(f"  FAILED  {mid}  ({query!r}): {e}")
+            continue
         except Exception as e:
             print(f"  FAILED  {mid}  ({query!r}): {e}")
             continue
@@ -97,4 +109,7 @@ def main(target_ids=None):
 
 
 if __name__ == "__main__":
-    main()
+    lim = None
+    if '--limit' in sys.argv:
+        lim = int(sys.argv[sys.argv.index('--limit') + 1])
+    main(limit=lim)
