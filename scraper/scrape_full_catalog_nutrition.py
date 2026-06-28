@@ -30,6 +30,7 @@ DEBUG_PORT = 9333
 CATALOG_PATH = Path(__file__).parent / "full_catalog_raw.json"
 BATCH_SIZE = 400
 COOLDOWN_SECONDS = 90
+CHECKPOINT_EVERY = 100
 
 
 def parse_ingredients_text(text):
@@ -104,26 +105,38 @@ def parse_nutrition(text):
     }
 
 
+def load_product_page(page, ean):
+    page.goto(f"https://www.k-ruoka.fi/kauppa/tuote/x-{ean}", wait_until="domcontentloaded", timeout=15000)
+    jittered_wait(page, 500, 600)
+    try:
+        page.get_by_text("Ravintosisältö", exact=True).first.click(timeout=4000)
+        page.wait_for_timeout(500)
+    except Exception:
+        pass
+    try:
+        page.get_by_text("Tuotetiedot", exact=True).first.click(timeout=3000)
+        page.wait_for_timeout(400)
+    except Exception:
+        pass
+    return page.inner_text("body")
+
+
 def process_item(page, item):
     ean = item['ean']
     try:
-        page.goto(f"https://www.k-ruoka.fi/kauppa/tuote/x-{ean}", wait_until="domcontentloaded", timeout=15000)
-        jittered_wait(page, 500, 600)
+        text = load_product_page(page, ean)
+    except Exception as e1:
+        # one retry after a short pause -- distinguishes a real block
+        # (fails again) from a one-off network/render hiccup (succeeds)
+        print(f"  retrying {ean} after error: {e1}")
+        time.sleep(2)
         try:
-            page.get_by_text("Ravintosisältö", exact=True).first.click(timeout=4000)
-            page.wait_for_timeout(500)
-        except Exception:
-            pass
-        try:
-            page.get_by_text("Tuotetiedot", exact=True).first.click(timeout=3000)
-            page.wait_for_timeout(400)
-        except Exception:
-            pass
-        text = page.inner_text("body")
-    except Exception as e:
-        item['nutritionChecked'] = True
-        item['nutritionError'] = str(e)
-        return False
+            text = load_product_page(page, ean)
+        except Exception as e2:
+            print(f"  FAILED {ean} (retry also failed): {e2}")
+            item['nutritionChecked'] = True
+            item['nutritionError'] = str(e2)
+            return False
 
     nutrition = parse_nutrition(text)
     ingredients_text = parse_ingredients_text(text)
@@ -183,6 +196,12 @@ def main():
                         with_nutrition = sum(1 for i in todo[:batch_start + len(batch)] if catalog[i].get('nutrition'))
                         print(f"  {done_this_run}/{len(todo)} this run "
                               f"({with_nutrition}/{batch_start + len(batch)} with nutrition so far)")
+                    # checkpoint every CHECKPOINT_EVERY items, not just once
+                    # per (much larger) batch -- a crash mid-batch should
+                    # lose at most this many items' worth of work, not 400
+                    if done_this_run % CHECKPOINT_EVERY == 0:
+                        json.dump(catalog, open(CATALOG_PATH, "w", encoding="utf-8"), ensure_ascii=False)
+                        print(f"Checkpoint saved after {done_this_run}/{len(todo)} this run")
 
                 json.dump(catalog, open(CATALOG_PATH, "w", encoding="utf-8"), ensure_ascii=False)
                 print(f"Checkpoint saved after {done_this_run}/{len(todo)}")
