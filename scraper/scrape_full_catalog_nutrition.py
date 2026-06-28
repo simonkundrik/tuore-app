@@ -176,17 +176,25 @@ def main():
         todo = todo[:limit]
         print(f"--limit {limit}: processing only {len(todo)} this run")
 
-    chrome_proc = launch_chrome()
-    try:
-        with sync_playwright() as p:
-            browser = p.chromium.connect_over_cdp(f"http://localhost:{DEBUG_PORT}")
-            ctx = browser.contexts[0]
-            page = ctx.pages[0] if ctx.pages else ctx.new_page()
-            ensure_store_selected(page)
+    # A fresh Chrome process per batch, not one Chrome for the whole
+    # multi-hour run -- a long-lived Chrome session's memory usage creeps
+    # up over thousands of page navigations, eventually pushing the VM
+    # into swap and silently degrading every subsequent page load (this
+    # is exactly what happened: pace dropped from ~800 items/20min to
+    # ~100 items/30min as swap usage climbed past 500MB). Restarting
+    # Chrome every batch keeps memory bounded regardless of total run
+    # length, at the cost of one extra ~5-10s launch per batch.
+    done_this_run = 0
+    for batch_start in range(0, len(todo), BATCH_SIZE):
+        batch = todo[batch_start:batch_start + BATCH_SIZE]
+        chrome_proc = launch_chrome()
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.connect_over_cdp(f"http://localhost:{DEBUG_PORT}")
+                ctx = browser.contexts[0]
+                page = ctx.pages[0] if ctx.pages else ctx.new_page()
+                ensure_store_selected(page)
 
-            done_this_run = 0
-            for batch_start in range(0, len(todo), BATCH_SIZE):
-                batch = todo[batch_start:batch_start + BATCH_SIZE]
                 guard = FailureRateGuard(max_failure_rate=0.3, min_samples=15)
                 for idx in batch:
                     ok = process_item(page, catalog[idx])
@@ -202,15 +210,15 @@ def main():
                     if done_this_run % CHECKPOINT_EVERY == 0:
                         json.dump(catalog, open(CATALOG_PATH, "w", encoding="utf-8"), ensure_ascii=False)
                         print(f"Checkpoint saved after {done_this_run}/{len(todo)} this run")
+        finally:
+            chrome_proc.terminate()
 
-                json.dump(catalog, open(CATALOG_PATH, "w", encoding="utf-8"), ensure_ascii=False)
-                print(f"Checkpoint saved after {done_this_run}/{len(todo)}")
+        json.dump(catalog, open(CATALOG_PATH, "w", encoding="utf-8"), ensure_ascii=False)
+        print(f"Checkpoint saved after {done_this_run}/{len(todo)}")
 
-                if batch_start + BATCH_SIZE < len(todo):
-                    print(f"Cooldown {COOLDOWN_SECONDS}s before next batch...")
-                    time.sleep(COOLDOWN_SECONDS)
-    finally:
-        chrome_proc.terminate()
+        if batch_start + BATCH_SIZE < len(todo):
+            print(f"Cooldown {COOLDOWN_SECONDS}s before next batch...")
+            time.sleep(COOLDOWN_SECONDS)
 
     total_with_nutrition = sum(1 for item in catalog if item.get('nutrition'))
     print(f"\nDone. {total_with_nutrition}/{len(catalog)} products now have nutrition data.")
