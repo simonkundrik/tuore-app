@@ -1,0 +1,35 @@
+{
+ "generatedAt": "2026-06-28T13:20:04.152087+00:00",
+ "catalogNutrition": {
+  "total": 7266,
+  "checked": 2370,
+  "withNutrition": 2154,
+  "errors": 10,
+  "lastFileUpdate": "2026-06-28T12:55:40.953433+00:00"
+ },
+ "runningScrape": {
+  "running": true,
+  "logFile": "catalog_nutrition_full7.log",
+  "lastProgressLine": "150/4996 this run (94/150 with nutrition so far)",
+  "lastMemoryLine": "memory check: available=403MB swap=383MB (+102MB since this Chrome session launched)",
+  "logLastUpdate": "2026-06-28T13:17:39.552198+00:00"
+ },
+ "ingredientStock": {
+  "scrapedAt": "2026-06-26T13:34:17.670800+00:00",
+  "total": 109,
+  "confident": 74,
+  "noMatch": 33
+ },
+ "grabAndGo": {
+  "count": 55,
+  "lastFileUpdate": "2026-06-27T13:29:14.967218+00:00"
+ },
+ "sauces": {
+  "count": 43,
+  "lastFileUpdate": "2026-06-27T17:57:42.297700+00:00"
+ },
+ "recipeCatalog": {
+  "meals": 1449,
+  "pDictIngredients": 110
+ }
+}
