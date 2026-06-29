@@ -24,6 +24,10 @@ scraper/coverage_clean.json
 scraper/grabgo_candidates_raw.json
 scraper/grabgo_details_raw.json
 
+# Full catalog nutrition snapshot (7,266 products) -- regenerable
+# intermediate from the monthly catalog scrape, not final output.
+scraper/full_catalog_raw.json
+
 # Budget Bytes recipes (c) Budget Bytes -- raw scrape includes their
 # written descriptions/instructions; never publish raw/derived extracts, only
 # our own scripts and the freshly-authored airfryer_recipes.json/quick_recipes.json
