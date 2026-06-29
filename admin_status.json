@@ -1,12 +1,14 @@
 {
- "generatedAt": "2026-06-29T16:50:11.757080+00:00",
- "catalogNutrition": null,
+ "generatedAt": "2026-06-29T17:00:01.400609+00:00",
+ "catalogNutrition": {
+  "total": 7266,
+  "checked": 6770,
+  "withNutrition": 5274,
+  "errors": 77,
+  "lastFileUpdate": "2026-06-29T16:50:29.152701+00:00"
+ },
  "runningScrape": {
-  "running": true,
-  "logFile": "catalog_nutrition_full7.log",
-  "lastProgressLine": "4500/4996 this run (3180/4500 with nutrition so far)",
-  "lastMemoryLine": "memory check: available=330MB swap=1012MB (+158MB since this Chrome session launched)",
-  "logLastUpdate": "2026-06-29T16:50:06.553124+00:00"
+  "running": false
  },
  "ingredientStock": {
   "scrapedAt": "2026-06-26T13:34:17.670800+00:00",
@@ -27,7 +29,8 @@
   "pDictIngredients": 112
  },
  "scrapeHealth": {
-  "status": "unknown",
-  "message": "No catalog data yet"
+  "status": "idle_incomplete",
+  "remaining": 496,
+  "message": "Not running, 496 product(s) still need checking"
  }
 }
