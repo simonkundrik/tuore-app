@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-06-29T16:30:10.155972+00:00",
+ "generatedAt": "2026-06-29T16:40:21.053463+00:00",
  "catalogNutrition": {
   "total": 7266,
   "checked": 6670,
@@ -10,9 +10,9 @@
  "runningScrape": {
   "running": true,
   "logFile": "catalog_nutrition_full7.log",
-  "lastProgressLine": "4450/4996 this run (3145/4450 with nutrition so far)",
-  "lastMemoryLine": "memory check: available=342MB swap=1004MB (+150MB since this Chrome session launched)",
-  "logLastUpdate": "2026-06-29T16:28:24.450925+00:00"
+  "lastProgressLine": "4475/4996 this run (3160/4475 with nutrition so far)",
+  "lastMemoryLine": "memory check: available=330MB swap=1012MB (+158MB since this Chrome session launched)",
+  "logLastUpdate": "2026-06-29T16:38:56.551043+00:00"
  },
  "ingredientStock": {
   "scrapedAt": "2026-06-26T13:34:17.670800+00:00",
@@ -34,7 +34,7 @@
  },
  "scrapeHealth": {
   "status": "running",
-  "staleMinutes": 1.9,
+  "staleMinutes": 1.5,
   "message": "Healthy"
  }
 }
