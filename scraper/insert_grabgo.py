@@ -14,7 +14,7 @@ HTML_PATH = Path(__file__).parent.parent / "index.html"
 DATA_PATH = Path(__file__).parent / "grabgo_recommendations.json"
 
 GROUP_ORDER = ['fresh_fruit', 'raw_veg', 'berries', 'raw_veg_snack', 'dairy_snack', 'ready_meals',
-               'ready_salads', 'deli', 'smoked_fish', 'nuts', 'nuts_snacks', 'crackers',
+               'ready_salads', 'deli', 'smoked_fish', 'nuts', 'nuts_snacks', 'bakery',
                'healthy_snacks', 'sweets', 'crisps', 'savory_snacks', 'dips']
 
 

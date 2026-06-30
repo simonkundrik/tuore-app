@@ -9,10 +9,10 @@ Restricted to the 5 top-level K-Ruoka categories that are realistically
 "ready to eat without cooking" (fruit/veg, dairy & eggs, bread & crackers,
 candy & snacks, ready meals) -- raw meat/fish, dry baking ingredients,
 spices, oils and frozen goods are excluded outright since they need real
-prep, not because of any finer-grained taxonomy. Each is further split by
-name keywords into a richer set of `group`s (fresh fruit / vegetables &
-herbs / dairy / crackers / sweets / crisps / nuts / ready meals) so the
-UI can show distinct browsable sections instead of one big bucket.
+prep, not because of any finer-grained taxonomy. Each is further split into
+a richer set of `group`s (fresh fruit / vegetables & herbs / dairy /
+bakery / sweets / crisps / nuts / savory bites / ready meals) so the UI
+can show distinct browsable sections instead of one big bucket.
 
 health_score rewards protein/fiber and penalizes sugar/saturated fat/salt
 (same formula as the old build_grabgo.py), with one fix: some "sugar-free"
@@ -21,15 +21,15 @@ bulking agents like polydextrose/maltitol as dietary fiber, which let
 several candies outscore actual whole-grain crispbread in testing.
 Detected via their ingredient list and excluded from the fiber bonus.
 
-For 'sweets' and 'crisps' specifically, health_score alone would exclude
-almost everything -- a treat is a treat. Real feedback: dieting is about
-compromise, not all-or-nothing purity, so a lower-calorie option within
-an indulgent category is a legitimate, useful recommendation even when
-its protein/fiber profile doesn't justify a positive health_score on its
-own. Those two groups additionally qualify anything notably lower-calorie
-than is typical for that category (thresholds picked from the live
-calorie distribution: sweets median ~400kcal/100g, crisps median
-~517kcal/100g)."""
+For 'sweets', 'crisps' and 'bakery' specifically, health_score alone
+would exclude almost everything -- a treat is a treat. Real feedback:
+dieting is about compromise, not all-or-nothing purity, so a lower-calorie
+option within an indulgent category is a legitimate, useful recommendation
+even when its protein/fiber profile doesn't justify a positive
+health_score on its own. Those groups additionally qualify anything
+notably lower-calorie than is typical for that category (thresholds
+picked from the live calorie distribution: sweets/bakery median
+~400kcal/100g, crisps median ~517kcal/100g)."""
 import json
 import re
 import sys
@@ -47,22 +47,10 @@ VEG_KEYWORDS = ['tomaat', 'kurkku', 'paprika', 'salaatti', 'parsa', 'kaali', 'he
                 'rosmariin', 'timjam', 'oregano', 'salvia', 'ruohosipul', 'laventel',
                 'melissa', 'inkivä', 'fenkoli', 'sien', 'avokado', 'bataatti', 'chili',
                 'peruna', 'sipuli', 'porkkana', 'retiis', 'palsternak']
-CRACKER_KEYWORDS = ['näkk', 'hapankorppu', 'korppu', 'rinkeli', 'leipä', 'patonki', 'sämpyl']
-# 'tippaleipä' is a sweet fried-dough treat despite containing 'leipä'
-CRACKER_EXCLUDE = ['tippaleip']
 CRISPS_KEYWORDS = ['sipsi', 'chips', 'pringles', 'popcorn', 'snacks', 'snack',
                     'perunalastu', 'crisp']
 NUTS_KEYWORDS = ['pähkin', 'manteli', 'cashew', 'pistaasi', 'siemen', 'nut']
 
-# Real feedback: jerky, dip-mix powders, savory bread snacks, savory hand
-# pies, and rice/corn cakes were all falling through into 'sweets' since
-# it was the default for anything in candy/snacks or bread/pastries that
-# didn't match crisps/nuts/crackers -- these need their own positive
-# signals checked before that default, not just a better default. A
-# second audit (different product names) found the same gap recurring
-# for bagels/limppu/flatbread/oat-and-rye "pieces" bread and any
-# cheese-flavored snack, so those got dedicated keyword lists too rather
-# than patching one item at a time.
 JERKY_KEYWORDS = ['jerky', 'biltong', 'kuivaliha', 'palvattu']
 # fruit bars are a sweet treat, not a crisp -- needed since "hedelmäpatukka"
 # kept losing to the generic 'snack' crisps keyword whenever a product's
@@ -70,75 +58,35 @@ JERKY_KEYWORDS = ['jerky', 'biltong', 'kuivaliha', 'palvattu']
 # hedelmäpatukka") and it had no real category path to override that
 FRUIT_BAR_KEYWORDS = ['hedelmäpatukka', 'hedelmäpatukat']
 DIP_MIX_KEYWORDS = ['dipmix', 'dippimix', 'dippimauste', 'dippi']
-RICE_CORN_CAKE_KEYWORDS = ['riisikakku', 'maissikakku']
-SAVORY_PASTRY_KEYWORDS = ['pasteija', 'calzone', 'hot dog', 'nakkipiilo']
-SAVORY_BREAD_SNACK_KEYWORDS = ['rieska', 'grissini', 'krutonki', 'bruschetta', 'crostini',
-                                'leipätik', 'sandwich', 'bake rolls', 'suolakeksi',
-                                'voileipäkeksi', 'cream cracker', 'water biscuit',
-                                'flatbread', 'bagel', 'limppu', 'paahto', 'kaurapala',
-                                'ruispala', 'viljapala', 'jyväpala', 'siemenpala',
-                                'pehmopala', 'puikula', 'porkkanapala']
-# riisipiirakka/perunapiirakka/lihapiirakka etc are savory Finnish hand
-# pies; only exclude piirakka with a sweet fruit filling, which stays a
-# treat (mustikkapiirakka, vadelmapiirakka, ...)
-SWEET_PIIRAKKA_FILLINGS = ['mustikka', 'vadelma', 'omena', 'mansikka', 'marja', 'karviais',
-                            'persikka', 'päärynä', 'raparperi', 'mango']
-# plain/butter croissant is a sweet pastry; only ham/cheese-filled ones
-# are savory
-SAVORY_CROISSANT_PAIR = ['kinkku', 'juusto']
 # last-resort check right before something would default to 'sweets':
 # any clearly savory flavor word means it's not actually a treat, even
-# if it didn't match a more specific bread/cracker/pastry pattern above.
-# Checked last (not as an early override) so it can't preempt an item
-# that already correctly matched a cracker keyword earlier.
+# if it didn't match dip-mix or nuts already.
 SAVORY_FLAVOR_RESCUE = ['juusto', 'valkosipuli', 'kermaviili', 'cheez', 'cheese']
 # frozen items need real cooking regardless of which category they're
 # filed under -- not a finer taxonomy question, just out of scope
 FROZEN_EXCLUDE = ['pakaste']
 
+# Real feedback: bread/crackers, sweet pastries, cookies, and savory
+# bakery-counter pies were scattered across Crackers/Sweets/Savory bites
+# depending on whether a given item happened to be sweet or savory -- not
+# how a real bakery presents its own range. Now everything K-Ruoka files
+# under its own "leivat-keksit-ja-leivonnaiset" (bread/cookies/pastries)
+# top category becomes one Bakery section regardless of sweet vs savory,
+# which also sidesteps the keyword-guessing this used to need entirely
+# (no more separately classifying crackers vs sweets vs savory hand pies
+# within that one category -- see classify_group below).
+#
 # K-Ruoka's own search API returns each product's real subcategory path
 # (confirmed live, e.g. "leivat-keksit-ja-leivonnaiset/leivat/tummat-leivat"
-# for rye bread vs ".../leivonnaiset/pullat-ja-kakut" for sweet buns) --
-# backfilled onto full_catalog_raw.json by backfill_category_path.py. This
-# is a far more reliable signal than guessing a product's type from
-# keywords in its name, which kept missing things a human would classify
-# correctly at a glance (e.g. bread without "leipä" anywhere in its name).
-# Used as the primary signal where available; keyword classification
-# below remains the fallback for items without a path (delisted products
-# the backfill couldn't find, or anything outside these two categories)
-# and for genuinely mixed subcategories like "paistopisteen-tuotteet"
-# (bakery counter -- has both bread rolls and sweet pastries) and
-# "piirakat-ja-tortut" (pies and tarts -- both savory and fruit-sweet).
+# for rye bread) -- backfilled onto full_catalog_raw.json by
+# backfill_category_path.py. Used here only for the "needs real home
+# baking" exclusion and for makeiset-ja-naposteltavat (candy/snacks),
+# which still benefits from precise subcategory-based splitting.
 CATEGORY_PATH_EXCLUDE = {
     'leivat-keksit-ja-leivonnaiset/leivat/kotona-paistettavat-leivat',
     'leivat-keksit-ja-leivonnaiset/leivonnaiset/kotona-paistettavat-leivonnaiset',
 }
 CATEGORY_PATH_GROUP = {
-    'leivat-keksit-ja-leivonnaiset/leivat/vaaleat-leivat': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/leivat/tummat-leivat': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/keksit': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/valipalakeksit-ja--patukat': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/suola--ja-valipalakeksit': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/pikkuleivat': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/vohvelit': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/piparkakut': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/leivonnaiset/pullat-ja-kakut': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/leivonnaiset/leivokset-ja-wienerit': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/leivonnaiset/munkit-ja-muffinsit': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/leivonnaiset/muut-leivonnaiset': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/nakkileivat-ja-hapankorput/nakkileivat': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/nakkileivat-ja-hapankorput/krutongit-ja-muut-kuivatut-leivat': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/nakkileivat-ja-hapankorput/hapankorput': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/nakkileivat-ja-hapankorput/kovat-rukiiset-leivat': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/gluteenittomat/gluteenittomat-leivat': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/gluteenittomat/gluteenittomat-keksit': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/gluteenittomat/gluteenittomat-nakkileivat': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/riisikakut/maustetut-riisikakut': 'savory_snacks',
-    'leivat-keksit-ja-leivonnaiset/riisikakut/maustamattomat-riisikakut': 'savory_snacks',
-    'leivat-keksit-ja-leivonnaiset/suolaiset-valipalat/piirakat-ja-pizzat': 'savory_snacks',
-    'leivat-keksit-ja-leivonnaiset/korput-ja-rinkelit/makeat-korput': 'sweets',
-    'leivat-keksit-ja-leivonnaiset/korput-ja-rinkelit/suolaiset-korput': 'crackers',
-    'leivat-keksit-ja-leivonnaiset/korput-ja-rinkelit/rinkelit': 'crackers',
     'makeiset-ja-naposteltavat/karkkipussit/karkkipussit': 'sweets',
     'makeiset-ja-naposteltavat/sipsit-ja-snacksit/sipsit': 'crisps',
     'makeiset-ja-naposteltavat/suklaat/suklaapatukat': 'sweets',
@@ -166,22 +114,24 @@ CATEGORY_GROUPS = {
 }
 GROUP_LABELS = {
     'fresh_fruit': 'Fresh fruit', 'raw_veg': 'Vegetables & herbs',
-    'dairy_snack': 'Yogurt & dairy snacks', 'crackers': 'Crackers & bread',
+    'dairy_snack': 'Yogurt & dairy snacks', 'bakery': 'Bakery',
     'sweets': 'Healthy(ish) sweets', 'crisps': 'Crisps & savory snacks',
     'nuts': 'Nuts & seeds', 'savory_snacks': 'Savory bites',
     'ready_meals': 'Ready meals',
 }
 GROUP_ICON = {
     'fresh_fruit': 'ti-apple', 'raw_veg': 'ti-leaf', 'dairy_snack': 'ti-bowl',
-    'crackers': 'ti-bread', 'sweets': 'ti-candy', 'crisps': 'ti-stack',
+    'bakery': 'ti-bread', 'sweets': 'ti-candy', 'crisps': 'ti-stack',
     'nuts': 'ti-coffee', 'savory_snacks': 'ti-meat', 'ready_meals': 'ti-meat',
 }
 NEEDS_HEATING_GROUPS = {'ready_meals'}
 
 # groups where health_score alone would exclude almost everything -- a
 # notably lower-than-typical calorie count is also a legitimate
-# "compromise, not sacrifice" pick on its own
-LOW_CAL_THRESHOLD = {'sweets': 350, 'crisps': 450}
+# "compromise, not sacrifice" pick on its own. Bakery needs this too now
+# that it's a mix of genuinely good whole-grain bread (passes on
+# health_score alone) and sweet pastries/cookies (a treat is a treat).
+LOW_CAL_THRESHOLD = {'sweets': 350, 'crisps': 450, 'bakery': 350}
 
 # EU nutrition labeling counts these bulking/sweetening agents as dietary
 # fiber even though they don't behave like real whole-food fiber -- a
@@ -204,44 +154,28 @@ def classify_group(item):
         return None
     if any(k in name_low for k in JERKY_KEYWORDS):
         return 'savory_snacks'
+    if any(k in name_low for k in FRUIT_BAR_KEYWORDS):
+        return 'bakery' if cat == 'leivat-keksit-ja-leivonnaiset' else 'sweets'
+    # crisps show up in both the bakery and candy/snacks top categories
+    # (e.g. rye crisps are filed under bread) -- checked before the
+    # bakery-wide rule below so they stay in crisps rather than bakery
+    if cat in ('leivat-keksit-ja-leivonnaiset', 'makeiset-ja-naposteltavat') \
+            and any(k in name_low for k in CRISPS_KEYWORDS):
+        return 'crisps'
+    if cat == 'leivat-keksit-ja-leivonnaiset':
+        return 'bakery'
+
     if path in CATEGORY_PATH_GROUP:
         return CATEGORY_PATH_GROUP[path]
-
-    # the bread/crackers and candy/snacks K-Ruoka categories both contain
-    # a long tail of savory items that would otherwise fall through to
-    # 'sweets' (its default) -- check every savory signal before that
-    # category-specific split runs
-    if cat in ('leivat-keksit-ja-leivonnaiset', 'makeiset-ja-naposteltavat'):
-        if any(k in name_low for k in FRUIT_BAR_KEYWORDS):
-            return 'sweets'
-        if any(k in name_low for k in CRISPS_KEYWORDS):
-            return 'crisps'
-        if any(k in name_low for k in DIP_MIX_KEYWORDS):
-            return 'savory_snacks'
-        if any(k in name_low for k in RICE_CORN_CAKE_KEYWORDS):
-            return 'savory_snacks'
-        if any(k in name_low for k in SAVORY_BREAD_SNACK_KEYWORDS):
-            return 'crackers'
-        if 'piirakka' in name_low and not any(k in name_low for k in SWEET_PIIRAKKA_FILLINGS):
-            return 'savory_snacks'
-        if any(k in name_low for k in SAVORY_PASTRY_KEYWORDS):
-            return 'savory_snacks'
-        if 'croissant' in name_low and any(k in name_low for k in SAVORY_CROISSANT_PAIR):
-            return 'savory_snacks'
-
     if cat == 'hedelmat-ja-vihannekset':
         return 'raw_veg' if any(k in name_low for k in VEG_KEYWORDS) else 'fresh_fruit'
     if cat == 'maito-juusto-munat-ja-rasvat':
         return 'dairy_snack'
     if cat == 'valmisruoka':
         return 'ready_meals'
-    if cat == 'leivat-keksit-ja-leivonnaiset':
-        is_cracker = (any(k in name_low for k in CRACKER_KEYWORDS)
-                      and not any(k in name_low for k in CRACKER_EXCLUDE))
-        if is_cracker:
-            return 'crackers'
-        return 'savory_snacks' if any(k in name_low for k in SAVORY_FLAVOR_RESCUE) else 'sweets'
     if cat == 'makeiset-ja-naposteltavat':
+        if any(k in name_low for k in DIP_MIX_KEYWORDS):
+            return 'savory_snacks'
         if any(k in name_low for k in NUTS_KEYWORDS):
             return 'nuts'
         return 'savory_snacks' if any(k in name_low for k in SAVORY_FLAVOR_RESCUE) else 'sweets'
