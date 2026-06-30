@@ -63,7 +63,12 @@ NUTS_KEYWORDS = ['pähkin', 'manteli', 'cashew', 'pistaasi', 'siemen', 'nut']
 # for bagels/limppu/flatbread/oat-and-rye "pieces" bread and any
 # cheese-flavored snack, so those got dedicated keyword lists too rather
 # than patching one item at a time.
-JERKY_KEYWORDS = ['jerky', 'biltong', 'kuivaliha']
+JERKY_KEYWORDS = ['jerky', 'biltong', 'kuivaliha', 'palvattu']
+# fruit bars are a sweet treat, not a crisp -- needed since "hedelmäpatukka"
+# kept losing to the generic 'snack' crisps keyword whenever a product's
+# own brand name happened to contain "Snack" (e.g. "MySnack Mango
+# hedelmäpatukka") and it had no real category path to override that
+FRUIT_BAR_KEYWORDS = ['hedelmäpatukka', 'hedelmäpatukat']
 DIP_MIX_KEYWORDS = ['dipmix', 'dippimix', 'dippimauste', 'dippi']
 RICE_CORN_CAKE_KEYWORDS = ['riisikakku', 'maissikakku']
 SAVORY_PASTRY_KEYWORDS = ['pasteija', 'calzone', 'hot dog', 'nakkipiilo']
@@ -207,6 +212,8 @@ def classify_group(item):
     # 'sweets' (its default) -- check every savory signal before that
     # category-specific split runs
     if cat in ('leivat-keksit-ja-leivonnaiset', 'makeiset-ja-naposteltavat'):
+        if any(k in name_low for k in FRUIT_BAR_KEYWORDS):
+            return 'sweets'
         if any(k in name_low for k in CRISPS_KEYWORDS):
             return 'crisps'
         if any(k in name_low for k in DIP_MIX_KEYWORDS):
