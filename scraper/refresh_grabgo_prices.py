@@ -47,8 +47,10 @@ def percentile_rank(value, all_values, lower_is_better=False):
 def recompute_badges(item):
     n = item
     badges = []
-    if item['healthPct'] >= 75:
+    if item['healthScore'] >= 0 and item['healthPct'] >= 75:
         badges.append('Healthy pick')
+    elif item['healthScore'] < 0:
+        badges.append('Lighter choice')
     if item['valuePct'] >= 75 and len(badges) < 2:
         badges.append('Great value')
     if (n.get('protein100') or 0) >= 12 and len(badges) < 2:

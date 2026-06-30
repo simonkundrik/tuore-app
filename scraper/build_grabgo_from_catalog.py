@@ -1,33 +1,39 @@
 # -*- coding: utf-8 -*-
-"""One-off: builds a much larger Grab & Go selection from the full catalog
-nutrition snapshot (full_catalog_raw.json, 7,266 products / 5,668 with
-nutrition) rather than the narrow per-term search the regular weekly
-pipeline uses -- the catalog covers the whole store, so this surfaces far
-more genuinely healthy ready-to-eat options than a handful of curated
-search terms ever could.
+"""Builds the Grab & Go selection from the full catalog nutrition snapshot
+(full_catalog_raw.json, 7,266 products / 5,668 with nutrition) rather than
+the narrow per-term search the old pipeline used -- the catalog covers the
+whole store, so this surfaces far more genuinely useful ready-to-eat
+options than a handful of curated search terms ever could.
 
 Restricted to the 5 top-level K-Ruoka categories that are realistically
 "ready to eat without cooking" (fruit/veg, dairy & eggs, bread & crackers,
 candy & snacks, ready meals) -- raw meat/fish, dry baking ingredients,
 spices, oils and frozen goods are excluded outright since they need real
-prep, not because of any finer-grained taxonomy.
+prep, not because of any finer-grained taxonomy. Each is further split by
+name keywords into a richer set of `group`s (fresh fruit / vegetables &
+herbs / dairy / crackers / sweets / crisps / nuts / ready meals) so the
+UI can show distinct browsable sections instead of one big bucket.
 
-health_score is the same formula build_grabgo.py already uses (protein and
-fiber positive, sugar/saturated fat/salt negative), with one fix: some
-"sugar-free" candy reports 50-90g of "fiber" per 100g because EU labeling
-counts bulking agents like polydextrose/maltitol as dietary fiber, which
-let several candies outscore actual whole-grain crispbread in testing.
+health_score rewards protein/fiber and penalizes sugar/saturated fat/salt
+(same formula as the old build_grabgo.py), with one fix: some "sugar-free"
+candy reports 50-90g of "fiber" per 100g because EU labeling counts
+bulking agents like polydextrose/maltitol as dietary fiber, which let
+several candies outscore actual whole-grain crispbread in testing.
 Detected via their ingredient list and excluded from the fiber bonus.
 
-Maps each item onto the small set of `group` keys the frontend's
-GRABGO_SECTIONS already knows how to render (any other value would
-silently not appear in the UI) -- this is a mechanical category->group
-lookup, not a new taxonomy."""
+For 'sweets' and 'crisps' specifically, health_score alone would exclude
+almost everything -- a treat is a treat. Real feedback: dieting is about
+compromise, not all-or-nothing purity, so a lower-calorie option within
+an indulgent category is a legitimate, useful recommendation even when
+its protein/fiber profile doesn't justify a positive health_score on its
+own. Those two groups additionally qualify anything notably lower-calorie
+than is typical for that category (thresholds picked from the live
+calorie distribution: sweets median ~400kcal/100g, crisps median
+~517kcal/100g)."""
 import json
 import re
 import sys
 from pathlib import Path
-from statistics import median
 
 SCRAPER_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRAPER_DIR))
@@ -36,22 +42,38 @@ from map_ingredients import find_refs_in_text
 IN_PATH = SCRAPER_DIR / "full_catalog_raw.json"
 OUT_PATH = SCRAPER_DIR / "grabgo_recommendations.json"
 
-CATEGORY_TO_GROUP = {
-    'hedelmat-ja-vihannekset': 'fresh_fruit',
-    'maito-juusto-munat-ja-rasvat': 'dairy_snack',
-    'leivat-keksit-ja-leivonnaiset': 'healthy_snacks',
-    'makeiset-ja-naposteltavat': 'healthy_snacks',
-    'valmisruoka': 'ready_meals',
+VEG_KEYWORDS = ['tomaat', 'kurkku', 'paprika', 'salaatti', 'parsa', 'kaali', 'herne',
+                'papu', 'pinaatti', 'basilik', 'persilj', 'tilli', 'korianter', 'mintt',
+                'rosmariin', 'timjam', 'oregano', 'salvia', 'ruohosipul', 'laventel',
+                'melissa', 'inkivä', 'fenkoli', 'sien', 'avokado', 'bataatti', 'chili',
+                'peruna', 'sipuli', 'porkkana', 'retiis', 'palsternak']
+CRACKER_KEYWORDS = ['näkk', 'hapankorppu', 'korppu', 'rinkeli', 'leipä', 'patonki', 'sämpyl']
+# 'tippaleipä' is a sweet fried-dough treat despite containing 'leipä'
+CRACKER_EXCLUDE = ['tippaleip']
+CRISPS_KEYWORDS = ['sipsi', 'chips', 'pringles', 'popcorn', 'snacks', 'snack']
+NUTS_KEYWORDS = ['pähkin', 'manteli', 'cashew', 'pistaasi', 'siemen']
+
+CATEGORY_GROUPS = {
+    'hedelmat-ja-vihannekset', 'maito-juusto-munat-ja-rasvat',
+    'leivat-keksit-ja-leivonnaiset', 'makeiset-ja-naposteltavat', 'valmisruoka',
 }
 GROUP_LABELS = {
-    'fresh_fruit': 'Fresh fruit', 'dairy_snack': 'Yogurt & dairy snacks',
-    'ready_meals': 'Ready meals', 'healthy_snacks': 'Healthy snacks',
+    'fresh_fruit': 'Fresh fruit', 'raw_veg': 'Vegetables & herbs',
+    'dairy_snack': 'Yogurt & dairy snacks', 'crackers': 'Crackers & bread',
+    'sweets': 'Healthy(ish) sweets', 'crisps': 'Crisps & savory snacks',
+    'nuts': 'Nuts & seeds', 'ready_meals': 'Ready meals',
 }
 GROUP_ICON = {
-    'fresh_fruit': 'ti-apple', 'dairy_snack': 'ti-bowl',
-    'ready_meals': 'ti-meat', 'healthy_snacks': 'ti-coffee',
+    'fresh_fruit': 'ti-apple', 'raw_veg': 'ti-leaf', 'dairy_snack': 'ti-bowl',
+    'crackers': 'ti-bread', 'sweets': 'ti-candy', 'crisps': 'ti-stack',
+    'nuts': 'ti-coffee', 'ready_meals': 'ti-meat',
 }
 NEEDS_HEATING_GROUPS = {'ready_meals'}
+
+# groups where health_score alone would exclude almost everything -- a
+# notably lower-than-typical calorie count is also a legitimate
+# "compromise, not sacrifice" pick on its own
+LOW_CAL_THRESHOLD = {'sweets': 350, 'crisps': 450}
 
 # EU nutrition labeling counts these bulking/sweetening agents as dietary
 # fiber even though they don't behave like real whole-food fiber -- a
@@ -61,6 +83,32 @@ BULKING_AGENT_MARKERS = ['polydextrose', 'polydekstroosi', 'isomalto', 'maltitol
                           'oligofructo', 'oligofruktoosi', 'inuliini', 'inulin']
 
 HEALTH_SCORE_THRESHOLD = 0
+
+
+def classify_group(item):
+    cat = item['categorySlug']
+    name_low = item['name'].lower()
+    if cat == 'hedelmat-ja-vihannekset':
+        return 'raw_veg' if any(k in name_low for k in VEG_KEYWORDS) else 'fresh_fruit'
+    if cat == 'maito-juusto-munat-ja-rasvat':
+        return 'dairy_snack'
+    if cat == 'valmisruoka':
+        return 'ready_meals'
+    # crisps show up under both the bread/crackers AND candy/snacks K-Ruoka
+    # categories (e.g. "Vaasan Ruissipsi" rye crisps are filed under
+    # bread), so check this before the per-category split below
+    if cat in ('leivat-keksit-ja-leivonnaiset', 'makeiset-ja-naposteltavat') \
+            and any(k in name_low for k in CRISPS_KEYWORDS):
+        return 'crisps'
+    if cat == 'leivat-keksit-ja-leivonnaiset':
+        is_cracker = (any(k in name_low for k in CRACKER_KEYWORDS)
+                      and not any(k in name_low for k in CRACKER_EXCLUDE))
+        return 'crackers' if is_cracker else 'sweets'
+    if cat == 'makeiset-ja-naposteltavat':
+        if any(k in name_low for k in NUTS_KEYWORDS):
+            return 'nuts'
+        return 'sweets'
+    return None
 
 
 def is_fake_fiber(item):
@@ -74,6 +122,16 @@ def health_score(item):
     return (2 * (n.get('protein100') or 0) + 3 * fiber
             - 1.5 * (n.get('sugar100') or 0) - 2 * (n.get('fatSat100') or 0)
             - 6 * (n.get('salt100') or 0))
+
+
+def qualifies(item, group):
+    if item['_health'] >= HEALTH_SCORE_THRESHOLD:
+        return True
+    thresh = LOW_CAL_THRESHOLD.get(group)
+    if thresh is not None:
+        kcal = item['nutrition'].get('kcal100')
+        return kcal is not None and kcal <= thresh
+    return False
 
 
 def percentile_rank(value, all_values, lower_is_better=False):
@@ -96,11 +154,12 @@ def name_root(name):
 def main():
     data = json.load(open(IN_PATH, encoding="utf-8"))
 
-    pool = [d for d in data if d.get('categorySlug') in CATEGORY_TO_GROUP
+    pool = [d for d in data if d.get('categorySlug') in CATEGORY_GROUPS
             and d.get('nutrition') and d.get('price') is not None and d.get('unitPrice')]
     print(f"{len(pool)} candidates have a usable category, nutrition, and price")
 
     for item in pool:
+        item['_group'] = classify_group(item)
         item['_health'] = health_score(item)
 
     # dedup: same brand + first few name words (after stripping pack size)
@@ -118,8 +177,9 @@ def main():
         deduped.append(item)
     print(f"{len(deduped)} after dedup by brand+name-root")
 
-    qualifying = [i for i in deduped if i['_health'] >= HEALTH_SCORE_THRESHOLD]
-    print(f"{len(qualifying)} qualify at health_score >= {HEALTH_SCORE_THRESHOLD}")
+    qualifying = [i for i in deduped if qualifies(i, i['_group'])]
+    print(f"{len(qualifying)} qualify (health_score >= {HEALTH_SCORE_THRESHOLD}, "
+          f"or notably lower-calorie than typical for sweets/crisps)")
 
     health_scores = [i['_health'] for i in qualifying]
     prices = [i['unitPrice'] for i in qualifying]
@@ -130,7 +190,7 @@ def main():
     recommendations = []
     for item in qualifying:
         n = item['nutrition']
-        group = CATEGORY_TO_GROUP[item['categorySlug']]
+        group = item['_group']
         all_refs = set(find_refs_in_text(item['name']))
         if item.get('ingredientsText'):
             all_refs |= set(find_refs_in_text(item['ingredientsText']))
@@ -145,8 +205,10 @@ def main():
             ingredients_text = None
 
         badges = []
-        if item['_healthPct'] >= 75:
+        if item['_health'] >= HEALTH_SCORE_THRESHOLD and item['_healthPct'] >= 75:
             badges.append('Healthy pick')
+        elif item['_health'] < HEALTH_SCORE_THRESHOLD:
+            badges.append('Lighter choice')
         if item['_valuePct'] >= 75 and len(badges) < 2:
             badges.append('Great value')
         if (n.get('protein100') or 0) >= 12 and len(badges) < 2:
@@ -170,6 +232,7 @@ def main():
             'badges': badges[:2],
             'needsHeating': group in NEEDS_HEATING_GROUPS,
             'isWholeProduce': False,
+            'healthScore': item['_health'],
             'healthPct': item['_healthPct'], 'valuePct': item['_valuePct'],
             'containsRefs': sorted(all_refs),
             'ingredientsText': ingredients_text,
