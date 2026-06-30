@@ -1,11 +1,11 @@
 {
- "generatedAt": "2026-06-30T08:30:01.975082+00:00",
+ "generatedAt": "2026-06-30T11:40:02.060745+00:00",
  "catalogNutrition": {
   "total": 7266,
   "checked": 7266,
   "withNutrition": 5668,
   "errors": 78,
-  "lastFileUpdate": "2026-06-29T20:07:06.274833+00:00"
+  "lastFileUpdate": "2026-06-30T11:31:06.184529+00:00"
  },
  "runningScrape": {
   "running": false
@@ -17,8 +17,8 @@
   "noMatch": 35
  },
  "grabAndGo": {
-  "count": 1057,
-  "lastFileUpdate": "2026-06-30T08:26:01.451845+00:00"
+  "count": 1048,
+  "lastFileUpdate": "2026-06-30T11:30:55.297251+00:00"
  },
  "sauces": {
   "count": 43,
