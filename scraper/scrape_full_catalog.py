@@ -74,6 +74,12 @@ CATEGORIES = [
 def extract_row(hit, category_slug, category_label_fi):
     p = hit.get("product", {})
     pricing = p.get("mobilescan", {}).get("pricing", {}).get("normal", {})
+    # the search API returns K-Ruoka's own full category tree per product
+    # (e.g. "leivat-keksit-ja-leivonnaiset/leivat/tummat-leivat" -- bread,
+    # not cookies or pastries, despite all three being filed under the
+    # same broad top-level category) -- a much more reliable signal than
+    # guessing a product's type from keywords in its name
+    category = p.get("category", {})
     return {
         "ean": p.get("ean"),
         "name": p.get("localizedName", {}).get("finnish") or "",
@@ -86,6 +92,7 @@ def extract_row(hit, category_slug, category_label_fi):
         "isAvailable": p.get("isAvailable"),
         "categorySlug": category_slug,
         "categoryLabel": category_label_fi,
+        "categoryPath": category.get("path"),
     }
 
 
@@ -171,20 +178,15 @@ def main():
 
     all_products = {}
     previous_enrichment = {}
+    previous_counts = {}
     if OUT_PATH.exists():
         for row in json.load(open(OUT_PATH, encoding="utf-8")):
             all_products[row["ean"]] = row
             if row.get("nutritionChecked"):
                 previous_enrichment[row["ean"]] = {k: row[k] for k in NUTRITION_FIELDS if k in row}
+            previous_counts[row.get("categoryLabel")] = previous_counts.get(row.get("categoryLabel"), 0) + 1
         print(f"Loaded {len(all_products)} existing products from {OUT_PATH} "
               f"({len(previous_enrichment)} already nutrition-checked)")
-        # drop stale entries for categories we're about to re-crawl, so a
-        # partial previous run doesn't leave orphaned old rows behind --
-        # their nutrition enrichment (if any) is preserved separately above
-        # and reattached below, so a routine re-crawl doesn't force
-        # re-enriching every already-known product from scratch
-        all_products = {ean: row for ean, row in all_products.items()
-                         if row.get("categoryLabel") not in only_labels}
 
     chrome_proc = launch_chrome()
     try:
@@ -196,11 +198,27 @@ def main():
 
             for label in only_labels:
                 products, total_hits = crawl_category(page, label)
+                old_count = previous_counts.get(label, 0)
+                # a category crawl returning suspiciously few results
+                # (tab-click failure, transient site issue, Cloudflare
+                # hiccup) is far more likely than the category actually
+                # emptying out -- refuse to drop known-good existing data
+                # in that case rather than silently losing it
+                if old_count > 10 and len(products) < old_count * 0.5:
+                    print(f"  REFUSING to replace {label!r}: crawl found only {len(products)} "
+                          f"vs {old_count} previously known -- keeping existing data for this "
+                          f"category untouched (likely a crawl failure, not a real catalog change)")
+                    continue
                 for ean, row in products.items():
                     if ean in previous_enrichment:
                         row.update(previous_enrichment[ean])
+                # now safe to drop this category's old entries and replace
+                # with the freshly (successfully) crawled ones
+                all_products = {ean: row for ean, row in all_products.items()
+                                 if row.get("categoryLabel") != label}
                 all_products.update(products)
-                print(f"{label}: collected {len(products)} (site reports totalHits={total_hits})")
+                print(f"{label}: collected {len(products)} (site reports totalHits={total_hits}, "
+                      f"previously {old_count})")
 
             print(f"\nTotal unique products across all categories: {len(all_products)}")
             json.dump(list(all_products.values()), open(OUT_PATH, "w", encoding="utf-8"), ensure_ascii=False)

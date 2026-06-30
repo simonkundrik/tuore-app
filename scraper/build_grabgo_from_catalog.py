@@ -72,7 +72,7 @@ SAVORY_BREAD_SNACK_KEYWORDS = ['rieska', 'grissini', 'krutonki', 'bruschetta', '
                                 'voileipäkeksi', 'cream cracker', 'water biscuit',
                                 'flatbread', 'bagel', 'limppu', 'paahto', 'kaurapala',
                                 'ruispala', 'viljapala', 'jyväpala', 'siemenpala',
-                                'pehmopala', 'puikula']
+                                'pehmopala', 'puikula', 'porkkanapala']
 # riisipiirakka/perunapiirakka/lihapiirakka etc are savory Finnish hand
 # pies; only exclude piirakka with a sweet fruit filling, which stays a
 # treat (mustikkapiirakka, vadelmapiirakka, ...)
@@ -90,6 +90,70 @@ SAVORY_FLAVOR_RESCUE = ['juusto', 'valkosipuli', 'kermaviili', 'cheez', 'cheese'
 # frozen items need real cooking regardless of which category they're
 # filed under -- not a finer taxonomy question, just out of scope
 FROZEN_EXCLUDE = ['pakaste']
+
+# K-Ruoka's own search API returns each product's real subcategory path
+# (confirmed live, e.g. "leivat-keksit-ja-leivonnaiset/leivat/tummat-leivat"
+# for rye bread vs ".../leivonnaiset/pullat-ja-kakut" for sweet buns) --
+# backfilled onto full_catalog_raw.json by backfill_category_path.py. This
+# is a far more reliable signal than guessing a product's type from
+# keywords in its name, which kept missing things a human would classify
+# correctly at a glance (e.g. bread without "leipä" anywhere in its name).
+# Used as the primary signal where available; keyword classification
+# below remains the fallback for items without a path (delisted products
+# the backfill couldn't find, or anything outside these two categories)
+# and for genuinely mixed subcategories like "paistopisteen-tuotteet"
+# (bakery counter -- has both bread rolls and sweet pastries) and
+# "piirakat-ja-tortut" (pies and tarts -- both savory and fruit-sweet).
+CATEGORY_PATH_EXCLUDE = {
+    'leivat-keksit-ja-leivonnaiset/leivat/kotona-paistettavat-leivat',
+    'leivat-keksit-ja-leivonnaiset/leivonnaiset/kotona-paistettavat-leivonnaiset',
+}
+CATEGORY_PATH_GROUP = {
+    'leivat-keksit-ja-leivonnaiset/leivat/vaaleat-leivat': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/leivat/tummat-leivat': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/keksit': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/valipalakeksit-ja--patukat': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/suola--ja-valipalakeksit': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/pikkuleivat': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/vohvelit': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/keksit-ja-pikkuleivat/piparkakut': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/leivonnaiset/pullat-ja-kakut': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/leivonnaiset/leivokset-ja-wienerit': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/leivonnaiset/munkit-ja-muffinsit': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/leivonnaiset/muut-leivonnaiset': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/nakkileivat-ja-hapankorput/nakkileivat': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/nakkileivat-ja-hapankorput/krutongit-ja-muut-kuivatut-leivat': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/nakkileivat-ja-hapankorput/hapankorput': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/nakkileivat-ja-hapankorput/kovat-rukiiset-leivat': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/gluteenittomat/gluteenittomat-leivat': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/gluteenittomat/gluteenittomat-keksit': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/gluteenittomat/gluteenittomat-nakkileivat': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/riisikakut/maustetut-riisikakut': 'savory_snacks',
+    'leivat-keksit-ja-leivonnaiset/riisikakut/maustamattomat-riisikakut': 'savory_snacks',
+    'leivat-keksit-ja-leivonnaiset/suolaiset-valipalat/piirakat-ja-pizzat': 'savory_snacks',
+    'leivat-keksit-ja-leivonnaiset/korput-ja-rinkelit/makeat-korput': 'sweets',
+    'leivat-keksit-ja-leivonnaiset/korput-ja-rinkelit/suolaiset-korput': 'crackers',
+    'leivat-keksit-ja-leivonnaiset/korput-ja-rinkelit/rinkelit': 'crackers',
+    'makeiset-ja-naposteltavat/karkkipussit/karkkipussit': 'sweets',
+    'makeiset-ja-naposteltavat/sipsit-ja-snacksit/sipsit': 'crisps',
+    'makeiset-ja-naposteltavat/suklaat/suklaapatukat': 'sweets',
+    'makeiset-ja-naposteltavat/suklaat/suklaalevyt': 'sweets',
+    'makeiset-ja-naposteltavat/muut-makeiset/muut-makeiset': 'sweets',
+    'makeiset-ja-naposteltavat/muut-makeiset/kausimakeiset': 'sweets',
+    'makeiset-ja-naposteltavat/sipsit-ja-snacksit/snacks-pahkinat': 'nuts',
+    'makeiset-ja-naposteltavat/pastillit/karkkipastillit': 'sweets',
+    'makeiset-ja-naposteltavat/sipsit-ja-snacksit/juusto--ja-muotosnacksit': 'savory_snacks',
+    'makeiset-ja-naposteltavat/sipsit-ja-snacksit/muut-snacksit': 'crisps',
+    'makeiset-ja-naposteltavat/suklaat/konvehdit': 'sweets',
+    'makeiset-ja-naposteltavat/sipsit-ja-snacksit/dipit': 'savory_snacks',
+    'makeiset-ja-naposteltavat/sipsit-ja-snacksit/popcornit': 'crisps',
+    'makeiset-ja-naposteltavat/pastillit/kurkkupastillit': 'sweets',
+    'makeiset-ja-naposteltavat/purukumit/ksylitoli-isot': 'sweets',
+    'makeiset-ja-naposteltavat/pastillit/ksylitolipastillit': 'sweets',
+    'makeiset-ja-naposteltavat/karkkipussit/kurkkupastillipussit': 'sweets',
+    'makeiset-ja-naposteltavat/purukumit/ksylitoli-pienet': 'sweets',
+    'makeiset-ja-naposteltavat/purukumit/muut-purukumit': 'sweets',
+}
 
 CATEGORY_GROUPS = {
     'hedelmat-ja-vihannekset', 'maito-juusto-munat-ja-rasvat',
@@ -127,11 +191,16 @@ HEALTH_SCORE_THRESHOLD = 0
 def classify_group(item):
     cat = item['categorySlug']
     name_low = item['name'].lower()
+    path = item.get('categoryPath')
 
     if any(k in name_low for k in FROZEN_EXCLUDE):
         return None
+    if path in CATEGORY_PATH_EXCLUDE:
+        return None
     if any(k in name_low for k in JERKY_KEYWORDS):
         return 'savory_snacks'
+    if path in CATEGORY_PATH_GROUP:
+        return CATEGORY_PATH_GROUP[path]
 
     # the bread/crackers and candy/snacks K-Ruoka categories both contain
     # a long tail of savory items that would otherwise fall through to

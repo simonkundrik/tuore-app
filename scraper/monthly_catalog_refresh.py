@@ -16,6 +16,12 @@ change could take a while, so this runs on its own staggered cadence
 sauces pipeline (1st of the month) to avoid both heavy jobs overlapping
 on a sub-1GB-RAM VM.
 
+backfill_category_path.py is similarly resumable (only looks up EANs
+still missing a category path), so this also only spends real time on
+genuinely new products each month -- build_grabgo_from_catalog.py uses
+that real K-Ruoka subcategory data as its primary classification signal
+now, not just keyword-guessing from product names.
+
 Runs each pipeline stage as its own subprocess (rather than importing,
 since a couple of these started life as one-off analysis scripts without
 a callable main()) so a crash in one stage doesn't poison the next, and
@@ -31,7 +37,7 @@ from git_sync import safe_push
 
 PIPELINE = [
     "scrape_full_catalog.py", "scrape_full_catalog_nutrition.py",
-    "build_grabgo_from_catalog.py", "insert_grabgo.py",
+    "backfill_category_path.py", "build_grabgo_from_catalog.py", "insert_grabgo.py",
 ]
 
 
