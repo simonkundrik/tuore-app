@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-06-29T22:30:01.273427+00:00",
+ "generatedAt": "2026-06-30T03:40:01.525855+00:00",
  "catalogNutrition": {
   "total": 7266,
   "checked": 7266,
@@ -11,10 +11,10 @@
   "running": false
  },
  "ingredientStock": {
-  "scrapedAt": "2026-06-26T13:34:17.670800+00:00",
+  "scrapedAt": "2026-06-30T03:32:13.858641+00:00",
   "total": 109,
-  "confident": 74,
-  "noMatch": 33
+  "confident": 73,
+  "noMatch": 35
  },
  "grabAndGo": {
   "count": 896,
