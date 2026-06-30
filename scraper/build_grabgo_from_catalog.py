@@ -50,8 +50,46 @@ VEG_KEYWORDS = ['tomaat', 'kurkku', 'paprika', 'salaatti', 'parsa', 'kaali', 'he
 CRACKER_KEYWORDS = ['näkk', 'hapankorppu', 'korppu', 'rinkeli', 'leipä', 'patonki', 'sämpyl']
 # 'tippaleipä' is a sweet fried-dough treat despite containing 'leipä'
 CRACKER_EXCLUDE = ['tippaleip']
-CRISPS_KEYWORDS = ['sipsi', 'chips', 'pringles', 'popcorn', 'snacks', 'snack']
-NUTS_KEYWORDS = ['pähkin', 'manteli', 'cashew', 'pistaasi', 'siemen']
+CRISPS_KEYWORDS = ['sipsi', 'chips', 'pringles', 'popcorn', 'snacks', 'snack',
+                    'perunalastu', 'crisp']
+NUTS_KEYWORDS = ['pähkin', 'manteli', 'cashew', 'pistaasi', 'siemen', 'nut']
+
+# Real feedback: jerky, dip-mix powders, savory bread snacks, savory hand
+# pies, and rice/corn cakes were all falling through into 'sweets' since
+# it was the default for anything in candy/snacks or bread/pastries that
+# didn't match crisps/nuts/crackers -- these need their own positive
+# signals checked before that default, not just a better default. A
+# second audit (different product names) found the same gap recurring
+# for bagels/limppu/flatbread/oat-and-rye "pieces" bread and any
+# cheese-flavored snack, so those got dedicated keyword lists too rather
+# than patching one item at a time.
+JERKY_KEYWORDS = ['jerky', 'biltong', 'kuivaliha']
+DIP_MIX_KEYWORDS = ['dipmix', 'dippimix', 'dippimauste', 'dippi']
+RICE_CORN_CAKE_KEYWORDS = ['riisikakku', 'maissikakku']
+SAVORY_PASTRY_KEYWORDS = ['pasteija', 'calzone', 'hot dog', 'nakkipiilo']
+SAVORY_BREAD_SNACK_KEYWORDS = ['rieska', 'grissini', 'krutonki', 'bruschetta', 'crostini',
+                                'leipätik', 'sandwich', 'bake rolls', 'suolakeksi',
+                                'voileipäkeksi', 'cream cracker', 'water biscuit',
+                                'flatbread', 'bagel', 'limppu', 'paahto', 'kaurapala',
+                                'ruispala', 'viljapala', 'jyväpala', 'siemenpala',
+                                'pehmopala', 'puikula']
+# riisipiirakka/perunapiirakka/lihapiirakka etc are savory Finnish hand
+# pies; only exclude piirakka with a sweet fruit filling, which stays a
+# treat (mustikkapiirakka, vadelmapiirakka, ...)
+SWEET_PIIRAKKA_FILLINGS = ['mustikka', 'vadelma', 'omena', 'mansikka', 'marja', 'karviais',
+                            'persikka', 'päärynä', 'raparperi', 'mango']
+# plain/butter croissant is a sweet pastry; only ham/cheese-filled ones
+# are savory
+SAVORY_CROISSANT_PAIR = ['kinkku', 'juusto']
+# last-resort check right before something would default to 'sweets':
+# any clearly savory flavor word means it's not actually a treat, even
+# if it didn't match a more specific bread/cracker/pastry pattern above.
+# Checked last (not as an early override) so it can't preempt an item
+# that already correctly matched a cracker keyword earlier.
+SAVORY_FLAVOR_RESCUE = ['juusto', 'valkosipuli', 'kermaviili', 'cheez', 'cheese']
+# frozen items need real cooking regardless of which category they're
+# filed under -- not a finer taxonomy question, just out of scope
+FROZEN_EXCLUDE = ['pakaste']
 
 CATEGORY_GROUPS = {
     'hedelmat-ja-vihannekset', 'maito-juusto-munat-ja-rasvat',
@@ -61,12 +99,13 @@ GROUP_LABELS = {
     'fresh_fruit': 'Fresh fruit', 'raw_veg': 'Vegetables & herbs',
     'dairy_snack': 'Yogurt & dairy snacks', 'crackers': 'Crackers & bread',
     'sweets': 'Healthy(ish) sweets', 'crisps': 'Crisps & savory snacks',
-    'nuts': 'Nuts & seeds', 'ready_meals': 'Ready meals',
+    'nuts': 'Nuts & seeds', 'savory_snacks': 'Savory bites',
+    'ready_meals': 'Ready meals',
 }
 GROUP_ICON = {
     'fresh_fruit': 'ti-apple', 'raw_veg': 'ti-leaf', 'dairy_snack': 'ti-bowl',
     'crackers': 'ti-bread', 'sweets': 'ti-candy', 'crisps': 'ti-stack',
-    'nuts': 'ti-coffee', 'ready_meals': 'ti-meat',
+    'nuts': 'ti-coffee', 'savory_snacks': 'ti-meat', 'ready_meals': 'ti-meat',
 }
 NEEDS_HEATING_GROUPS = {'ready_meals'}
 
@@ -88,26 +127,48 @@ HEALTH_SCORE_THRESHOLD = 0
 def classify_group(item):
     cat = item['categorySlug']
     name_low = item['name'].lower()
+
+    if any(k in name_low for k in FROZEN_EXCLUDE):
+        return None
+    if any(k in name_low for k in JERKY_KEYWORDS):
+        return 'savory_snacks'
+
+    # the bread/crackers and candy/snacks K-Ruoka categories both contain
+    # a long tail of savory items that would otherwise fall through to
+    # 'sweets' (its default) -- check every savory signal before that
+    # category-specific split runs
+    if cat in ('leivat-keksit-ja-leivonnaiset', 'makeiset-ja-naposteltavat'):
+        if any(k in name_low for k in CRISPS_KEYWORDS):
+            return 'crisps'
+        if any(k in name_low for k in DIP_MIX_KEYWORDS):
+            return 'savory_snacks'
+        if any(k in name_low for k in RICE_CORN_CAKE_KEYWORDS):
+            return 'savory_snacks'
+        if any(k in name_low for k in SAVORY_BREAD_SNACK_KEYWORDS):
+            return 'crackers'
+        if 'piirakka' in name_low and not any(k in name_low for k in SWEET_PIIRAKKA_FILLINGS):
+            return 'savory_snacks'
+        if any(k in name_low for k in SAVORY_PASTRY_KEYWORDS):
+            return 'savory_snacks'
+        if 'croissant' in name_low and any(k in name_low for k in SAVORY_CROISSANT_PAIR):
+            return 'savory_snacks'
+
     if cat == 'hedelmat-ja-vihannekset':
         return 'raw_veg' if any(k in name_low for k in VEG_KEYWORDS) else 'fresh_fruit'
     if cat == 'maito-juusto-munat-ja-rasvat':
         return 'dairy_snack'
     if cat == 'valmisruoka':
         return 'ready_meals'
-    # crisps show up under both the bread/crackers AND candy/snacks K-Ruoka
-    # categories (e.g. "Vaasan Ruissipsi" rye crisps are filed under
-    # bread), so check this before the per-category split below
-    if cat in ('leivat-keksit-ja-leivonnaiset', 'makeiset-ja-naposteltavat') \
-            and any(k in name_low for k in CRISPS_KEYWORDS):
-        return 'crisps'
     if cat == 'leivat-keksit-ja-leivonnaiset':
         is_cracker = (any(k in name_low for k in CRACKER_KEYWORDS)
                       and not any(k in name_low for k in CRACKER_EXCLUDE))
-        return 'crackers' if is_cracker else 'sweets'
+        if is_cracker:
+            return 'crackers'
+        return 'savory_snacks' if any(k in name_low for k in SAVORY_FLAVOR_RESCUE) else 'sweets'
     if cat == 'makeiset-ja-naposteltavat':
         if any(k in name_low for k in NUTS_KEYWORDS):
             return 'nuts'
-        return 'sweets'
+        return 'savory_snacks' if any(k in name_low for k in SAVORY_FLAVOR_RESCUE) else 'sweets'
     return None
 
 
@@ -161,6 +222,10 @@ def main():
     for item in pool:
         item['_group'] = classify_group(item)
         item['_health'] = health_score(item)
+    excluded_frozen = sum(1 for i in pool if i['_group'] is None)
+    pool = [i for i in pool if i['_group'] is not None]
+    if excluded_frozen:
+        print(f"Excluded {excluded_frozen} frozen items (need real cooking despite their listed category)")
 
     # dedup: same brand + first few name words (after stripping pack size)
     # is almost always just a different pack size of the same product --

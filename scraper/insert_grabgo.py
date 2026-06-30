@@ -15,7 +15,7 @@ DATA_PATH = Path(__file__).parent / "grabgo_recommendations.json"
 
 GROUP_ORDER = ['fresh_fruit', 'raw_veg', 'berries', 'raw_veg_snack', 'dairy_snack', 'ready_meals',
                'ready_salads', 'deli', 'smoked_fish', 'nuts', 'nuts_snacks', 'crackers',
-               'healthy_snacks', 'sweets', 'crisps', 'dips']
+               'healthy_snacks', 'sweets', 'crisps', 'savory_snacks', 'dips']
 
 
 def js_str(s, quote="'"):
