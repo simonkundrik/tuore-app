@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Scheduled weekly job: re-run the Grab & Go pipeline only (re-search
-candidates, revisit each for nutrition/price, rescore), idempotently
+"""Scheduled weekly job: refresh Grab & Go's price/stock, idempotently
 replace its section of index.html, validate, and auto-commit+push only if
 validation passes and something actually changed.
 
@@ -11,6 +10,13 @@ Monday morning -- see cron schedule. K-Ruoka's own recipe catalog and
 Sauces (shelf-stable condiments) change far less often and were split out
 to monthly_refresh.py instead, partly to keep this run shorter (less time
 spent hitting k-ruoka.fi per week == lower Cloudflare/rate-limit exposure).
+
+The Grab & Go list itself is now built from the full catalog nutrition
+snapshot (build_grabgo_from_catalog.py, run against the much heavier
+monthly catalog scrape -- see monthly_refresh.py) rather than a handful of
+narrow search terms, since nutrition doesn't change week to week. This
+job only refreshes price/stock for that existing list and drops anything
+delisted or out of stock; it doesn't re-derive the list from scratch.
 
 Runs each pipeline stage as its own subprocess (rather than importing,
 since a couple of these started life as one-off analysis scripts without
@@ -25,10 +31,7 @@ SCRAPER_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRAPER_DIR))
 from git_sync import safe_push
 
-GRABGO_PIPELINE = [
-    "scrape_grabgo_candidates.py", "scrape_grabgo_details.py",
-    "build_grabgo.py", "insert_grabgo.py",
-]
+GRABGO_PIPELINE = ["refresh_grabgo_prices.py", "insert_grabgo.py"]
 
 
 def run_step(script):
