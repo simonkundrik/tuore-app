@@ -25,7 +25,14 @@ This is the broad listing pass only (name/EAN/price/stock/category) --
 nutrition enrichment is a separate, much more expensive step layered
 on top, since OFF-first + K-Ruoka-fallback across ~7,300 products is
 realistically hours, not something to run as part of the regular
-weekly refresh. Intended for a separate, slower (monthly) cadence."""
+weekly refresh. Intended for a separate, slower (monthly) cadence.
+
+Re-running this preserves nutrition enrichment for any EAN already
+marked nutritionChecked in the existing full_catalog_raw.json, rather
+than wiping it out along with the rest of that EAN's re-crawled row --
+otherwise every monthly re-run would force scrape_full_catalog_nutrition.py
+to redo its multi-day pass against the whole catalog instead of just the
+genuinely new products that appeared since last time."""
 import json
 import time
 from pathlib import Path
@@ -155,17 +162,27 @@ def crawl_category(page, label):
     return products, total_hits
 
 
+NUTRITION_FIELDS = ('nutrition', 'nutritionSource', 'ingredientsText', 'nutritionChecked', 'nutritionError')
+
+
 def main():
     import sys
     only_labels = sys.argv[1:] or CATEGORIES
 
     all_products = {}
+    previous_enrichment = {}
     if OUT_PATH.exists():
         for row in json.load(open(OUT_PATH, encoding="utf-8")):
             all_products[row["ean"]] = row
-        print(f"Loaded {len(all_products)} existing products from {OUT_PATH}")
+            if row.get("nutritionChecked"):
+                previous_enrichment[row["ean"]] = {k: row[k] for k in NUTRITION_FIELDS if k in row}
+        print(f"Loaded {len(all_products)} existing products from {OUT_PATH} "
+              f"({len(previous_enrichment)} already nutrition-checked)")
         # drop stale entries for categories we're about to re-crawl, so a
-        # partial previous run doesn't leave orphaned old rows behind
+        # partial previous run doesn't leave orphaned old rows behind --
+        # their nutrition enrichment (if any) is preserved separately above
+        # and reattached below, so a routine re-crawl doesn't force
+        # re-enriching every already-known product from scratch
         all_products = {ean: row for ean, row in all_products.items()
                          if row.get("categoryLabel") not in only_labels}
 
@@ -179,6 +196,9 @@ def main():
 
             for label in only_labels:
                 products, total_hits = crawl_category(page, label)
+                for ean, row in products.items():
+                    if ean in previous_enrichment:
+                        row.update(previous_enrichment[ean])
                 all_products.update(products)
                 print(f"{label}: collected {len(products)} (site reports totalHits={total_hits})")
 
