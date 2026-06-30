@@ -232,7 +232,7 @@ input[type=range]{height:18px;}
 </div>
 
 <div class="screen" id="screen-grabgodetail">
-<button onclick="showScreen('discover')" style="border:none;background:none;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--color-text-secondary);padding:12px 16px 4px;cursor:pointer;"><i class="ti ti-arrow-left" aria-hidden="true"></i>Back</button>
+<button onclick="closeGrabgoDetail()" style="border:none;background:none;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--color-text-secondary);padding:12px 16px 4px;cursor:pointer;"><i class="ti ti-arrow-left" aria-hidden="true"></i>Back</button>
 <div id="grabgodetail-body"></div>
 </div>
 
@@ -4194,9 +4194,15 @@ function grabgoMacroRow(label,val,unit){
  var shown=unit==='kcal'?Math.round(val):Math.round(val*10)/10;
  return '<div class="row"><span>'+label+'</span><span>'+shown+(unit==='kcal'?' kcal':'g')+'</span></div>';
 }
+var grabgoDetailFrom='discover';
+function closeGrabgoDetail(){
+ showScreen(grabgoDetailFrom);
+}
 function openGrabgoDetail(ean){
  var item=GRABGO.find(function(g){return g.ean===ean;});
  if(!item) return;
+ var activeScreen=document.querySelector('.screen.active');
+ if(activeScreen) grabgoDetailFrom=activeScreen.id.replace('screen-','');
  var bannerHtml='<img src="'+prodImgUrl(item.ean,800)+'" loading="lazy" alt="" style="width:100%;height:200px;object-fit:cover;display:block;" data-fallback-icon="'+item.icon+'" data-icon-size="40px" onerror="tuoreImgFallback(this)"/>';
  var tagsHtml=(item.badges||[]).concat(item.dietTags||[]).map(function(t){return '<span class="tag" style="margin-right:6px;">'+t+'</span>';}).join('');
  // K-Ruoka only sometimes attaches a real nutrition panel to raw produce, so
