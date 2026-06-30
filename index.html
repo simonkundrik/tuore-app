@@ -239,7 +239,8 @@ input[type=range]{height:18px;}
 <div class="screen" id="screen-grabgocategory">
 <button onclick="showScreen('discover')" style="border:none;background:none;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--color-text-secondary);padding:12px 16px 4px;cursor:pointer;"><i class="ti ti-arrow-left" aria-hidden="true"></i>Back</button>
 <p id="grabgocategory-title" style="font-weight:600;font-size:16px;margin:8px 16px 2px;"></p>
-<p id="grabgocategory-count" style="font-size:12px;color:var(--color-text-secondary);margin:0 16px 12px;"></p>
+<p id="grabgocategory-count" style="font-size:12px;color:var(--color-text-secondary);margin:0 16px 8px;"></p>
+<div id="grabgocategory-sorts" class="discover-tabs"></div>
 <div id="grabgocategory-body"></div>
 </div>
 
@@ -4113,14 +4114,65 @@ function renderDiscover(){
  if(!box) return;
  renderSectionedRows(box, GRABGO, GRABGO_SECTIONS, 'grabgo');
 }
+// Package weight isn't stored directly, but price ÷ unit price (€/kg or
+// €/l) recovers it (e.g. €2.24 ÷ €3.39/kg = 0.66kg, matching a real
+// 660g loaf) -- used so "lowest calories"/"lowest fat"/"lowest sugar"
+// can sort by what you'd actually eat in the whole snack, not just its
+// per-100g density, which is what someone grabbing one item cares about.
+var WEIGHT_UNITS=['kilogramma','kg','litra','l'];
+function estimatePackageGrams(item){
+ if(!item.unitPrice || !item.price) return null;
+ if(WEIGHT_UNITS.indexOf(item.unitPriceUnit)===-1) return null;
+ var grams=(item.price/item.unitPrice)*1000;
+ return grams>0 && isFinite(grams) ? grams : null;
+}
+function totalNutrient(item, per100Key){
+ var per100=item[per100Key];
+ if(per100===null || per100===undefined) return null;
+ var grams=estimatePackageGrams(item);
+ return grams===null ? per100 : per100*grams/100;
+}
+// "lower is better" macros (calories/fat/sugar) sort by the whole-package
+// total since you're grabbing one item, not measuring 100g of it; protein
+// stays a per-100g density sort since more protein from a bigger bag
+// isn't actually a better choice
+var GRABGO_SORTS=[
+ {id:'health', label:'Healthiest', cmp:function(a,b){return b.healthPct-a.healthPct;}},
+ {id:'kcal', label:'Lowest calories', cmp:function(a,b){return nullsLast(totalNutrient(a,'kcal100'),totalNutrient(b,'kcal100'));}},
+ {id:'fat', label:'Lowest fat', cmp:function(a,b){return nullsLast(totalNutrient(a,'fat100'),totalNutrient(b,'fat100'));}},
+ {id:'sugar', label:'Lowest sugar', cmp:function(a,b){return nullsLast(totalNutrient(a,'sugar100'),totalNutrient(b,'sugar100'));}},
+ {id:'protein', label:'Highest protein', cmp:function(a,b){return nullsLast(b.protein100,a.protein100);}},
+ {id:'price', label:'Lowest price', cmp:function(a,b){return nullsLast(a.price,b.price);}},
+ {id:'value', label:'Best value', cmp:function(a,b){return (b.valuePct||0)-(a.valuePct||0);}},
+];
+function nullsLast(x,y){
+ if(x===null||x===undefined) return y===null||y===undefined?0:1;
+ if(y===null||y===undefined) return -1;
+ return x-y;
+}
+var grabgoCategoryState={group:null, sort:'health'};
 function openGrabgoCategory(group){
+ grabgoCategoryState={group:group, sort:'health'};
+ renderGrabgoCategory();
+ showScreen('grabgocategory');
+}
+function setGrabgoCategorySort(sortId){
+ grabgoCategoryState.sort=sortId;
+ renderGrabgoCategory();
+}
+function renderGrabgoCategory(){
+ var group=grabgoCategoryState.group;
  var sec=GRABGO_SECTIONS.find(function(s){return s.groups.indexOf(group)>-1;});
  var items=GRABGO.filter(function(i){return i.group===group && !isDislikedItem(i);});
+ var sort=GRABGO_SORTS.find(function(s){return s.id===grabgoCategoryState.sort;}) || GRABGO_SORTS[0];
+ items=items.slice().sort(sort.cmp);
  var tiles=items.map(function(item){return discoverTileHtml(item, 'grabgo');}).join('');
  document.getElementById('grabgocategory-title').textContent=sec?sec.title:'';
  document.getElementById('grabgocategory-count').textContent=items.length+' item'+(items.length===1?'':'s');
+ document.getElementById('grabgocategory-sorts').innerHTML=GRABGO_SORTS.map(function(s){
+  return '<button class="discover-tab'+(s.id===grabgoCategoryState.sort?' active':'')+'" onclick="setGrabgoCategorySort(\''+s.id+'\')">'+s.label+'</button>';
+ }).join('');
  document.getElementById('grabgocategory-body').innerHTML='<div class="discover-grid">'+tiles+'</div>';
- showScreen('grabgocategory');
 }
 function discoverTileHtml(item, kind){
  var addable=kind==='grabgo';
