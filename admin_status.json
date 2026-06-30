@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-06-30T03:40:01.525855+00:00",
+ "generatedAt": "2026-06-30T07:50:01.758257+00:00",
  "catalogNutrition": {
   "total": 7266,
   "checked": 7266,
@@ -17,8 +17,8 @@
   "noMatch": 35
  },
  "grabAndGo": {
-  "count": 896,
-  "lastFileUpdate": "2026-06-29T22:20:21.493877+00:00"
+  "count": 800,
+  "lastFileUpdate": "2026-06-30T07:46:23.896286+00:00"
  },
  "sauces": {
   "count": 43,
