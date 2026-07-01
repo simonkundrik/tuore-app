@@ -7208,5 +7208,12 @@
   "photographerUrl": "https://unsplash.com/@pablogamedev?utm_source=tuore&utm_medium=referral",
   "downloadLocation": "https://api.unsplash.com/photos/F3Ubth-HgMM/download?ixid=M3w5ODcwNjF8MHwxfHNlYXJjaHwxfHxlYXN5JTIwaW5hJTIwZ2FydGVuJTIwc3BpY3klMjB0dXJrZXklMjBtZWF0YmFsbHN8ZW58MHwwfHx8MTc4Mjk0NDQwNXww",
   "query": "easy ina garten spicy turkey meatballs"
+ },
+ "f2stysonbonelesschickenwingsinairfryer": {
+  "url": "https://images.unsplash.com/photo-1627662168781-4345690f0bb3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5ODcwNjF8MHwxfHNlYXJjaHwxfHx0eXNvbiUyMGJvbmVsZXNzJTIwY2hpY2tlbiUyMHdpbmdzJTIwaW58ZW58MHwwfHx8MTc4Mjk0ODAwNHww&ixlib=rb-4.1.0&q=80&w=1080",
+  "photographer": "Tyson",
+  "photographerUrl": "https://unsplash.com/@tysonbrand?utm_source=tuore&utm_medium=referral",
+  "downloadLocation": "https://api.unsplash.com/photos/JTiXmaBDynQ/download?ixid=M3w5ODcwNjF8MHwxfHNlYXJjaHwxfHx0eXNvbiUyMGJvbmVsZXNzJTIwY2hpY2tlbiUyMHdpbmdzJTIwaW58ZW58MHwwfHx8MTc4Mjk0ODAwNHww",
+  "query": "tyson boneless chicken wings in"
  }
 }
