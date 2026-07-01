@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-01T03:40:01.805238+00:00",
+ "generatedAt": "2026-07-01T06:30:01.575918+00:00",
  "catalogNutrition": {
   "total": 7266,
   "checked": 7266,
@@ -25,7 +25,7 @@
   "lastFileUpdate": "2026-06-27T17:57:42.297700+00:00"
  },
  "recipeCatalog": {
-  "meals": 2052,
+  "meals": 2051,
   "pDictIngredients": 112
  },
  "scrapeHealth": {
