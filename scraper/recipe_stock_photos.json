@@ -7166,5 +7166,12 @@
   "photographerUrl": "https://unsplash.com/@americanheritagechocolate?utm_source=tuore&utm_medium=referral",
   "downloadLocation": "https://api.unsplash.com/photos/8lPKzLSWNgM/download?ixid=M3w5ODcwNjF8MHwxfHNlYXJjaHwxfHxjaG9jb2xhdGUlMjBsYXZhJTIwY2FrZSUyMGZvciUyMHR3byUyMG9yJTIwb25lfGVufDB8MHx8fDE3ODI5MTkyMDR8MA",
   "query": "chocolate lava cake for two or one"
+ },
+ "bbqquickcurriedchickpeas": {
+  "url": "https://images.unsplash.com/photo-1697155836261-f7afd5353e64?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w5ODcwNjF8MHwxfHNlYXJjaHwxfHxxdWljayUyMGN1cnJpZWQlMjBjaGljayUyMHBlYXN8ZW58MHwwfHx8MTc4MjkyMjgwM3ww&ixlib=rb-4.1.0&q=80&w=1080",
+  "photographer": "Rashpal Singh",
+  "photographerUrl": "https://unsplash.com/@rashpalsingh?utm_source=tuore&utm_medium=referral",
+  "downloadLocation": "https://api.unsplash.com/photos/CIv6Xc9UOSE/download?ixid=M3w5ODcwNjF8MHwxfHNlYXJjaHwxfHxxdWljayUyMGN1cnJpZWQlMjBjaGljayUyMHBlYXN8ZW58MHwwfHx8MTc4MjkyMjgwM3ww",
+  "query": "quick curried chick peas"
  }
 }
